@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.zeroxlab.momodict.reader.Reader;
+
 import java.io.File;
 
 public class FileImportActivity extends AppCompatActivity {
@@ -38,10 +40,12 @@ public class FileImportActivity extends AppCompatActivity {
         mButton.setEnabled(dict.exists());
 
         mButton.setOnClickListener((v) -> {
+            Reader reader = new Reader(sPATH);
+            reader.parse();
             Intent intent = new Intent();
-            intent.setData(Uri.parse(sPATH));
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            //intent.setData(Uri.parse(sPATH));
+            //setResult(Activity.RESULT_OK, intent);
+            //finish();
         });
     }
 }
