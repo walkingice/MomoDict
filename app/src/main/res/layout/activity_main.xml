@@ -11,8 +11,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="org.zeroxlab.momodict.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@id/btn_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:text="To import compressed dictionary file"/>
+
 </RelativeLayout>
