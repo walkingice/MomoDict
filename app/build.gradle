@@ -34,6 +34,9 @@ dependencies {
     compile 'org.apache.commons:commons-compress:1.13'
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
 
+    // use rx
+    compile 'io.reactivex:rxjava:1.1.6'
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
