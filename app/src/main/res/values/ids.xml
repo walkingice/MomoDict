@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="actionbar" type="id"/>
+    <item name="menu_import" type="id"/>
     <item name="btn_1" type="id"/>
     <item name="text_1" type="id"/>
 </resources>
