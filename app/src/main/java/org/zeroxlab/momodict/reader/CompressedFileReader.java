@@ -13,11 +13,10 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 
 public class CompressedFileReader {
-    private static final String TMP_PATH = "/tmp";
     private static final String DIR_PREFIX = "DICT.";
     private static final int RANDOM_BITS = 32;
 
-    public static DictionaryArchive readBzip2File(String path) {
+    public static DictionaryArchive readBzip2File(String cachePath, String path) {
         System.out.println(BZip2Utils.isCompressedFilename(path));
         System.out.println(BZip2Utils.getUncompressedFilename(path));
 
@@ -25,9 +24,12 @@ public class CompressedFileReader {
         SecureRandom random = new SecureRandom();
         BigInteger integer = new BigInteger(RANDOM_BITS, random);
         String randomText = integer.toString(RANDOM_BITS);
-        String dirPath = TMP_PATH + "/" + DIR_PREFIX + randomText;
+        String dirPath = cachePath + "/" + DIR_PREFIX + randomText;
         File tmpDir = new File(dirPath);
-        tmpDir.mkdirs();
+        boolean made = tmpDir.mkdirs();
+        if (!made) {
+            return null;
+        }
 
         try {
             FileInputStream fis = new FileInputStream(new File(path));

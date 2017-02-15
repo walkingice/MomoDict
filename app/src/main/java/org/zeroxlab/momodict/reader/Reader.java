@@ -11,8 +11,8 @@ public class Reader {
 
     private DictionaryArchive mArchive;
 
-    public Reader(String path) {
-        mArchive = CompressedFileReader.readBzip2File(path);
+    public Reader(String cachePath, String path) {
+        mArchive = CompressedFileReader.readBzip2File(cachePath, path);
     }
 
     public void parse() {
