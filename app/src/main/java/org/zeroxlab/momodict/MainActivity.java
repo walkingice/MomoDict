@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "Momodict";
+    public static final String TAG = Momodict.TAG;
 
     static final int REQ_CODE_IMPORT = 0x1002;
 
