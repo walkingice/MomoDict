@@ -9,12 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = Momodict.TAG;
 
     static final int REQ_CODE_IMPORT = 0x1002;
+
+    private TextView mText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         initActionBar();
+        mText = (TextView) findViewById(R.id.text_1);
     }
 
     private void initActionBar() {

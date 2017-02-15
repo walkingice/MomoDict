@@ -19,4 +19,10 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
+    <TextView
+        android:id="@id/text_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reading imported dictionary"/>
+
 </LinearLayout>
