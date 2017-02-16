@@ -44,7 +44,8 @@ public class Reader {
             if (idxReader.size() != 0) {
                 List<Word> words = DictReader.parse(idxReader.getEntries(),
                         mArchive.get(DictionaryArchive.Type.DICT));
-                for (int i = 0; i < 5 && i < words.size(); i++) {
+                int max = 1000;
+                for (int i = 0; i < max && i < words.size(); i++) {
                     System.out.println(String.format("Read %d th entry", i));
                     System.out.println(words.get(i));
                     System.out.println("");

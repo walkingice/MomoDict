@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.zeroxlab.momodict.db.realm.Dictionary;
+import org.zeroxlab.momodict.db.realm.WordEntry;
+import org.zeroxlab.momodict.widget.SelectorAdapter;
+import org.zeroxlab.momodict.widget.WordRowPresenter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -23,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     static final int REQ_CODE_IMPORT = 0x1002;
 
     private TextView mText;
+    private RecyclerView mList;
+    private SelectorAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         Realm.init(this);
+
+        Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
+        map.put(SelectorAdapter.Type.A, new WordRowPresenter());
+        mAdapter = new SelectorAdapter(map);
+        mList.setAdapter(mAdapter);
     }
 
     @Override
@@ -41,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         initActionBar();
         mText = (TextView) findViewById(R.id.text_1);
+        mList = (RecyclerView) findViewById(R.id.list);
     }
 
     private void initActionBar() {
@@ -91,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
         Realm realm = Realm.getDefaultInstance();
         final RealmResults<Dictionary> dics = realm.where(Dictionary.class).findAll();
         mText.setText("Dictionary num:" + dics.size());
+
+        if (dics.size() != 0) {
+            Dictionary d = dics.get(0);
+            for (WordEntry entry: d.words) {
+                mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
+            }
+            mAdapter.notifyDataSetChanged();
+        }
         realm.close();
     }
 
