@@ -11,6 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.zeroxlab.momodict.db.realm.Dictionary;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = Momodict.TAG;
@@ -24,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+        Realm.init(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        prepareDictionary();
     }
 
     private void initView() {
@@ -73,4 +85,13 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "Imported from file " + uri.getPath());
         }
     }
+
+    // TODO: move Realm to another layer
+    private void prepareDictionary() {
+        Realm realm = Realm.getDefaultInstance();
+        final RealmResults<Dictionary> dics = realm.where(Dictionary.class).findAll();
+        mText.setText("Dictionary num:" + dics.size());
+        realm.close();
+    }
+
 }
