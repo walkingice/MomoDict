@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
         Realm.init(this);
 
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
-        map.put(SelectorAdapter.Type.A, new WordRowPresenter());
+        map.put(SelectorAdapter.Type.A, new WordRowPresenter((view) -> {
+            onRowClicked((String) view.getTag());
+        }));
         mAdapter = new SelectorAdapter(map);
         mList.setAdapter(mAdapter);
     }
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (dics.size() != 0) {
             Dictionary d = dics.get(0);
-            for (WordEntry entry: d.words) {
+            for (WordEntry entry : d.words) {
                 mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
             }
             mAdapter.notifyDataSetChanged();
@@ -117,4 +119,8 @@ public class MainActivity extends AppCompatActivity {
         realm.close();
     }
 
+    private void onRowClicked(String text) {
+        Intent intent = WordActivity.createIntent(this, text);
+        startActivity(intent);
+    }
 }
