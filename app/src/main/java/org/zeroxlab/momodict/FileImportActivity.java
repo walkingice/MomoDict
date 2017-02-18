@@ -1,8 +1,10 @@
 package org.zeroxlab.momodict;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
@@ -52,12 +54,7 @@ public class FileImportActivity extends AppCompatActivity {
         mButton.setEnabled(mExists);
 
         mButton.setOnClickListener((v) -> {
-            Reader reader = new Reader(getCacheDir().getPath(), sPATH);
-            reader.parse(this);
-            Intent intent = new Intent();
-            //intent.setData(Uri.parse(sPATH));
-            //setResult(Activity.RESULT_OK, intent);
-            //finish();
+            onImportButtonClicked();
         });
     }
 
@@ -79,5 +76,31 @@ public class FileImportActivity extends AppCompatActivity {
                 && response[0] == PackageManager.PERMISSION_GRANTED) {
             mButton.setEnabled(mExists);
         }
+    }
+
+    private void onImportButtonClicked() {
+        //Observable.just(0)
+        //        .subscribeOn(Schedulers.io())
+        //        .concatMap((i) -> {
+        //            return Observable.just(i);
+        //        })
+        //        .observeOn(MainThread.this)
+        mButton.setEnabled(false);
+        mText.setText("Importing.....");
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Reader reader = new Reader(getCacheDir().getPath(), sPATH);
+                reader.parse(FileImportActivity.this);
+                Intent intent = new Intent();
+                //mButton.setEnabled(true);
+                //mText.setText("Imported");
+                intent.setData(Uri.parse(sPATH));
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+        };
+        Thread t = new Thread(runnable);
+        t.start();
     }
 }
