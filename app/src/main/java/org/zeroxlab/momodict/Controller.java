@@ -8,6 +8,7 @@ import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Controller {
@@ -21,10 +22,14 @@ public class Controller {
     }
 
     public List<Dictionary> getDictionaries() {
-       return mStore.getDictionaries();
+        return mStore.getDictionaries();
     }
 
     public List<Entry> getEntries(String keyWord) {
-        return mStore.getEntries(keyWord);
+        List<Entry> list = mStore.getEntries(keyWord);
+        Collections.sort(list, (left, right) -> {
+            return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
+        });
+        return list;
     }
 }
