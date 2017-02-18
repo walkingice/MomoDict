@@ -1,6 +1,6 @@
 package org.zeroxlab.momodict.reader;
 
-import org.zeroxlab.momodict.model.IdxEntry;
+import org.zeroxlab.momodict.archive.IdxEntry;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

@@ -31,7 +31,7 @@ public class TarExtractor implements Extractor {
         }
 
         if (!archive.isSane()) {
-            throw new Exception("Dictionary is malformed");
+            throw new Exception("RealmDictionary is malformed");
         }
         return archive;
     }

@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.zeroxlab.momodict.db.realm.Dictionary;
-import org.zeroxlab.momodict.db.realm.WordEntry;
+import org.zeroxlab.momodict.db.realm.RealmDictionary;
+import org.zeroxlab.momodict.db.realm.RealmEntry;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordRowPresenter;
 
@@ -106,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
     // TODO: move Realm to another layer
     private void prepareDictionary() {
         Realm realm = Realm.getDefaultInstance();
-        final RealmResults<Dictionary> dics = realm.where(Dictionary.class).findAll();
-        mText.setText("Dictionary num:" + dics.size());
+        final RealmResults<RealmDictionary> dics = realm.where(RealmDictionary.class).findAll();
+        mText.setText("RealmDictionary num:" + dics.size());
 
         if (dics.size() != 0) {
-            Dictionary d = dics.get(0);
-            for (WordEntry entry : d.words) {
+            RealmDictionary d = dics.get(0);
+            for (RealmEntry entry : d.words) {
                 mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
             }
             mAdapter.notifyDataSetChanged();

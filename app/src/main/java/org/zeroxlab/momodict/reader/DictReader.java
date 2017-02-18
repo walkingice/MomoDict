@@ -1,7 +1,7 @@
 package org.zeroxlab.momodict.reader;
 
-import org.zeroxlab.momodict.model.IdxEntry;
-import org.zeroxlab.momodict.model.Word;
+import org.zeroxlab.momodict.archive.IdxEntry;
+import org.zeroxlab.momodict.archive.Word;
 
 import java.io.BufferedInputStream;
 import java.io.File;

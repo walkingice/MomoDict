@@ -1,4 +1,4 @@
-package org.zeroxlab.momodict.model;
+package org.zeroxlab.momodict.archive;
 
 public class IdxEntry {
     public String wordStr;

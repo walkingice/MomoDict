@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import org.zeroxlab.momodict.db.realm.Dictionary;
-import org.zeroxlab.momodict.db.realm.WordEntry;
+import org.zeroxlab.momodict.db.realm.RealmDictionary;
+import org.zeroxlab.momodict.db.realm.RealmEntry;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -38,11 +38,11 @@ public class WordActivity extends AppCompatActivity {
 
     private void onDisplayDetail(String target) {
         final Realm realm = Realm.getDefaultInstance();
-        final RealmResults<Dictionary> dics = realm.where(Dictionary.class).findAll();
+        final RealmResults<RealmDictionary> dics = realm.where(RealmDictionary.class).findAll();
         final StringBuilder sb = new StringBuilder();
         // STUPID!
-        for (Dictionary d : dics) {
-            for (WordEntry entry : d.words) {
+        for (RealmDictionary d : dics) {
+            for (RealmEntry entry : d.words) {
                 if (entry.wordStr.equals(target)) {
                     sb.append(entry.data);
                     sb.append("\n\n\n");

@@ -1,6 +1,6 @@
 package org.zeroxlab.momodict.reader;
 
-import org.zeroxlab.momodict.model.Info;
+import org.zeroxlab.momodict.archive.Info;
 
 import java.io.BufferedReader;
 import java.io.File;

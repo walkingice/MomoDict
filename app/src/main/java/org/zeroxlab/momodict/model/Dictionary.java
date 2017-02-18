@@ -1,13 +1,10 @@
 package org.zeroxlab.momodict.model;
 
-public class Info {
-
+public class Dictionary {
     public String version;
     public String bookName;
     public int wordCount;
     public int syncWordCount;
-    public int idxFileSize;
-    public int idxOffsetBits;
     public String author;
     public String email;
     public String webSite;
@@ -15,7 +12,7 @@ public class Info {
     public String date;
     public String sameTypeSequence;
 
-    public Info() {
+    public Dictionary() {
     }
 
     public String toString() {
@@ -24,8 +21,6 @@ public class Info {
         sb.append("bookName:" + this.bookName + "\n");
         sb.append("wordCount:" + this.wordCount + "\n");
         sb.append("syncWordCount:" + this.syncWordCount + "\n");
-        sb.append("idxFileSize:" + this.idxFileSize + "\n");
-        sb.append("idxOffsetBits:" + this.idxOffsetBits + "\n");
         sb.append("author:" + this.author + "\n");
         sb.append("email:" + this.email + "\n");
         sb.append("webSite:" + this.webSite + "\n");

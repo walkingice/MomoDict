@@ -1,10 +1,10 @@
 package org.zeroxlab.momodict.reader;
 
 import org.zeroxlab.momodict.archive.DictionaryArchive;
-import org.zeroxlab.momodict.db.realm.Dictionary;
-import org.zeroxlab.momodict.db.realm.WordEntry;
-import org.zeroxlab.momodict.model.Info;
-import org.zeroxlab.momodict.model.Word;
+import org.zeroxlab.momodict.db.realm.RealmDictionary;
+import org.zeroxlab.momodict.db.realm.RealmEntry;
+import org.zeroxlab.momodict.archive.Info;
+import org.zeroxlab.momodict.archive.Word;
 
 import java.io.File;
 import java.util.List;
@@ -39,7 +39,7 @@ public class Reader {
             }
 
             realm.beginTransaction();
-            Dictionary dictionary = realm.createObject(Dictionary.class);
+            RealmDictionary dictionary = realm.createObject(RealmDictionary.class);
             dictionary.name = info.bookName;
             if (idxReader.size() != 0) {
                 List<Word> words = DictReader.parse(idxReader.getEntries(),
@@ -49,7 +49,7 @@ public class Reader {
                     System.out.println(String.format("Read %d th entry", i));
                     System.out.println(words.get(i));
                     System.out.println("");
-                    WordEntry entry = realm.createObject(WordEntry.class);
+                    RealmEntry entry = realm.createObject(RealmEntry.class);
                     entry.wordStr = words.get(i).entry.wordStr;
                     entry.data = words.get(i).data;
                     dictionary.words.add(entry);
