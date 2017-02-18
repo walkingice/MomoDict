@@ -56,17 +56,11 @@ public class Reader {
                 List<Word> words = DictReader.parse(idxReader.getEntries(),
                         mArchive.get(DictionaryArchive.Type.DICT));
                 List<Entry> entries = new ArrayList<>();
-                // FIXME
-                int max = 1000;
-                for (int i = 0; i < max && i < words.size(); i++) {
-                    System.out.println(String.format("Read %d th entry", i));
-                    System.out.println(words.get(i));
-                    System.out.println("");
-
+                for (Word word : words) {
                     Entry entry = new Entry();
                     entry.source = info.bookName;
-                    entry.wordStr = words.get(i).entry.wordStr;
-                    entry.data = words.get(i).data;
+                    entry.wordStr = word.entry.wordStr;
+                    entry.data = word.data;
                     entries.add(entry);
                 }
                 store.addEntries(entries);
