@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import org.zeroxlab.momodict.db.realm.RealmDictionary;
-import org.zeroxlab.momodict.db.realm.RealmEntry;
+import org.zeroxlab.momodict.db.Store;
+import org.zeroxlab.momodict.db.realm.RealmStore;
+import org.zeroxlab.momodict.model.Entry;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
+import java.util.List;
 
 public class WordActivity extends AppCompatActivity {
 
@@ -37,20 +37,12 @@ public class WordActivity extends AppCompatActivity {
     }
 
     private void onDisplayDetail(String target) {
-        final Realm realm = Realm.getDefaultInstance();
-        final RealmResults<RealmDictionary> dics = realm.where(RealmDictionary.class).findAll();
         final StringBuilder sb = new StringBuilder();
-        // STUPID!
-        for (RealmDictionary d : dics) {
-            for (RealmEntry entry : d.words) {
-                if (entry.wordStr.equals(target)) {
-                    sb.append(entry.data);
-                    sb.append("\n\n\n");
-                }
-            }
+        Store store = new RealmStore(this);
+        List<Entry> entries = store.getEntries(target);
+        for (Entry entry : entries) {
+            sb.append(entry.data);
         }
-        realm.close();
-
         mText.setText(sb.toString());
     }
 }

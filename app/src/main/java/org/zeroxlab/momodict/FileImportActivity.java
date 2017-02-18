@@ -53,7 +53,7 @@ public class FileImportActivity extends AppCompatActivity {
 
         mButton.setOnClickListener((v) -> {
             Reader reader = new Reader(getCacheDir().getPath(), sPATH);
-            reader.parse();
+            reader.parse(this);
             Intent intent = new Intent();
             //intent.setData(Uri.parse(sPATH));
             //setResult(Activity.RESULT_OK, intent);

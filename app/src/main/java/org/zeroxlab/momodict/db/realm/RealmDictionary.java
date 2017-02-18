@@ -1,6 +1,5 @@
 package org.zeroxlab.momodict.db.realm;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -16,6 +15,4 @@ public class RealmDictionary extends RealmObject {
     public String website;
     public String description;
     public String date;
-
-    public RealmList<RealmEntry> words = new RealmList<>();
 }

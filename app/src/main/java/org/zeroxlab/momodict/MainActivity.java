@@ -12,16 +12,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.zeroxlab.momodict.db.realm.RealmDictionary;
-import org.zeroxlab.momodict.db.realm.RealmEntry;
+import org.zeroxlab.momodict.db.Store;
+import org.zeroxlab.momodict.db.realm.RealmStore;
+import org.zeroxlab.momodict.model.Dictionary;
+import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordRowPresenter;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-        Realm.init(this);
 
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new WordRowPresenter((view) -> {
@@ -103,20 +102,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // TODO: move Realm to another layer
     private void prepareDictionary() {
-        Realm realm = Realm.getDefaultInstance();
-        final RealmResults<RealmDictionary> dics = realm.where(RealmDictionary.class).findAll();
+        Store store = new RealmStore(this);
+        List<Dictionary> dics = store.getDictionaries();
         mText.setText("RealmDictionary num:" + dics.size());
 
         if (dics.size() != 0) {
-            RealmDictionary d = dics.get(0);
-            for (RealmEntry entry : d.words) {
+            List<Entry> entries = store.getEntries(null);
+            for (Entry entry : entries) {
                 mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
             }
             mAdapter.notifyDataSetChanged();
         }
-        realm.close();
     }
 
     private void onRowClicked(String text) {
