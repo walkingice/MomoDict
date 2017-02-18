@@ -82,9 +82,6 @@ public class RealmStore implements Store {
     @Override
     public List<Entry> getEntries(String keyWord) {
         final Realm realm = Realm.getDefaultInstance();
-        final RealmResults<RealmDictionary> dics =
-                realm.where(RealmDictionary.class).findAll();
-        final StringBuilder sb = new StringBuilder();
         final List<Entry> entries = new ArrayList<>();
         final RealmResults<RealmEntry> managedEntries = TextUtils.isEmpty(keyWord)
                 ? realm.where(RealmEntry.class).findAll()

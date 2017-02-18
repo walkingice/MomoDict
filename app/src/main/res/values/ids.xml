@@ -5,4 +5,5 @@
     <item name="btn_1" type="id"/>
     <item name="text_1" type="id"/>
     <item name="list" type="id"/>
+    <item name="input_1" type="id"/>
 </resources>

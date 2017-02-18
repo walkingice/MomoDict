@@ -42,6 +42,12 @@ public class SelectorAdapter extends RecyclerView.Adapter {
         mTypes.add(type);
     }
 
+    public void clear() {
+        mData.clear();
+        mTypes.clear();
+        notifyDataSetChanged();
+    }
+
     public void replace(int location, @NonNull Object obj, @NonNull Type type) {
         mData.set(location, obj);
         mTypes.set(location, type);

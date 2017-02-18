@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.zeroxlab.momodict.db.Store;
@@ -32,11 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView mText;
     private RecyclerView mList;
     private SelectorAdapter mAdapter;
+    private EditText mInput;
+    private Store mStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mStore = new RealmStore(this);
         initView();
 
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
@@ -51,12 +57,28 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         prepareDictionary();
+        onUpdateList();
     }
 
     private void initView() {
         initActionBar();
         mText = (TextView) findViewById(R.id.text_1);
         mList = (RecyclerView) findViewById(R.id.list);
+        mInput = (EditText) findViewById(R.id.input_1);
+        mInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                onUpdateList();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
     private void initActionBar() {
@@ -103,21 +125,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareDictionary() {
-        Store store = new RealmStore(this);
+        final Store store = mStore;
         List<Dictionary> dics = store.getDictionaries();
         mText.setText("RealmDictionary num:" + dics.size());
-
-        if (dics.size() != 0) {
-            List<Entry> entries = store.getEntries(null);
-            for (Entry entry : entries) {
-                mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
+        mInput.setEnabled(dics.size() > 0);
     }
 
     private void onRowClicked(String text) {
         Intent intent = WordActivity.createIntent(this, text);
         startActivity(intent);
+    }
+
+    private void onUpdateList() {
+        String input = mInput.getText().toString();
+        Log.d(TAG, "Input: " + input);
+        mAdapter.clear();
+        List<Entry> entries = mStore.getEntries(input);
+        for (Entry entry : entries) {
+            mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 }
