@@ -3,11 +3,9 @@ package org.zeroxlab.momodict.reader;
 import android.content.Context;
 
 import org.zeroxlab.momodict.archive.DictionaryArchive;
-import org.zeroxlab.momodict.db.Store;
-import org.zeroxlab.momodict.db.realm.RealmDictionary;
-import org.zeroxlab.momodict.db.realm.RealmEntry;
 import org.zeroxlab.momodict.archive.Info;
 import org.zeroxlab.momodict.archive.Word;
+import org.zeroxlab.momodict.db.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
@@ -15,8 +13,6 @@ import org.zeroxlab.momodict.model.Entry;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.Realm;
 
 public class Reader {
 
