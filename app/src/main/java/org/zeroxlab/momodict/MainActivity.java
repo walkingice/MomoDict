@@ -15,8 +15,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.zeroxlab.momodict.db.Store;
-import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
@@ -36,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView mList;
     private SelectorAdapter mAdapter;
     private EditText mInput;
-    private Store mStore;
+    private Controller mCtrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mStore = new RealmStore(this);
+        mCtrl = new Controller(this);
         initView();
 
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
@@ -125,9 +123,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareDictionary() {
-        final Store store = mStore;
-        List<Dictionary> dics = store.getDictionaries();
-        mText.setText("RealmDictionary num:" + dics.size());
+        List<Dictionary> dics = mCtrl.getDictionaries();
+        mText.setText("Dictionary num:" + dics.size());
         mInput.setEnabled(dics.size() > 0);
     }
 
@@ -140,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         String input = mInput.getText().toString();
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
-        List<Entry> entries = mStore.getEntries(input);
+        List<Entry> entries = mCtrl.getEntries(input);
         for (Entry entry : entries) {
             mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
         }
