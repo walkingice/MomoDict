@@ -9,6 +9,9 @@ import org.zeroxlab.momodict.model.Entry;
 import java.util.List;
 
 public interface Store {
+
+    int MAX_LENGTH = 1000;
+
     boolean addDictionary(@NonNull Dictionary dictionary);
 
     Dictionary getDictionary(@NonNull String name);

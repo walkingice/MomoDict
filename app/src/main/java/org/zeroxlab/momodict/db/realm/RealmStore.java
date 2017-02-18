@@ -83,11 +83,13 @@ public class RealmStore implements Store {
     public List<Entry> getEntries(String keyWord) {
         final Realm realm = Realm.getDefaultInstance();
         final List<Entry> entries = new ArrayList<>();
+
         final RealmResults<RealmEntry> managedEntries = TextUtils.isEmpty(keyWord)
                 ? realm.where(RealmEntry.class).findAll()
                 : realm.where(RealmEntry.class).contains("wordStr", keyWord).findAll();
 
-        for (RealmEntry managedEntry : managedEntries) {
+        for (int i = 0; entries.size() < MAX_LENGTH && i < managedEntries.size(); i++) {
+            RealmEntry managedEntry = managedEntries.get(i);
             Entry entry = new Entry();
             entry.source = managedEntry.source;
             entry.wordStr = managedEntry.wordStr;
