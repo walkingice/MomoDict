@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
+import org.zeroxlab.momodict.widget.DictionaryRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordRowPresenter;
 
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
         initView();
 
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
-        map.put(SelectorAdapter.Type.A, new WordRowPresenter((view) -> {
+        map.put(SelectorAdapter.Type.A, new DictionaryRowPresenter());
+        map.put(SelectorAdapter.Type.B, new WordRowPresenter((view) -> {
             onRowClicked((String) view.getTag());
         }));
         mAdapter = new SelectorAdapter(map);
@@ -137,10 +140,18 @@ public class MainActivity extends AppCompatActivity {
         String input = mInput.getText().toString();
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
-        List<Entry> entries = mCtrl.getEntries(input);
-        for (Entry entry : entries) {
-            mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.A);
+        if (TextUtils.isEmpty(input)) {
+            List<Dictionary> dics = mCtrl.getDictionaries();
+            for (Dictionary d : dics) {
+                mAdapter.addItem(d.bookName, SelectorAdapter.Type.A);
+            }
+        } else {
+            List<Entry> entries = mCtrl.getEntries(input);
+            for (Entry entry : entries) {
+                mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B);
+            }
         }
+
         mAdapter.notifyDataSetChanged();
     }
 }
