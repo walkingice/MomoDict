@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private SelectorAdapter mAdapter;
     private EditText mInput;
     private Controller mCtrl;
+    private View mDel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        mDel = findViewById(R.id.btn_1);
+        mDel.setOnClickListener((v) -> clearInput());
     }
 
     private void initActionBar() {
@@ -134,6 +139,19 @@ public class MainActivity extends AppCompatActivity {
     private void onRowClicked(String text) {
         Intent intent = WordActivity.createIntent(this, text);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (TextUtils.isEmpty(mInput.getText())) {
+            super.onBackPressed();
+        } else {
+            clearInput();
+        }
+    }
+
+    private void clearInput() {
+        mInput.setText("");
     }
 
     private void onUpdateList() {
