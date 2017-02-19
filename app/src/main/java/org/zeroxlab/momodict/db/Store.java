@@ -22,7 +22,10 @@ public interface Store {
 
     boolean addEntries(@NonNull List<Entry> entries);
 
-    List<Entry> getEntries(@Nullable String keyWord);
+    List<Entry> queryEntries(@Nullable String keyWord);
 
-    List<Entry> getEntries(@Nullable String keyWord, @NonNull String dictionaryName);
+    List<Entry> queryEntries(@Nullable String keyWord, @NonNull String dictionaryName);
+
+
+    List<Entry> getEntries(@Nullable String keyWord);
 }

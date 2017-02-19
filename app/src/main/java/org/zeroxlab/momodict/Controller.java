@@ -26,7 +26,7 @@ public class Controller {
     }
 
     public List<Entry> getEntries(String keyWord) {
-        List<Entry> list = mStore.getEntries(keyWord);
+        List<Entry> list = mStore.queryEntries(keyWord);
         Collections.sort(list, (left, right) -> {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
         });

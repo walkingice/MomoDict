@@ -80,14 +80,40 @@ public class RealmStore implements Store {
     }
 
     @Override
-    public List<Entry> getEntries(String keyWord) {
+    public List<Entry> queryEntries(String keyWord) {
         final Realm realm = Realm.getDefaultInstance();
-        final List<Entry> entries = new ArrayList<>();
-
         final RealmResults<RealmEntry> managedEntries = TextUtils.isEmpty(keyWord)
                 ? realm.where(RealmEntry.class).findAll()
                 : realm.where(RealmEntry.class).contains("wordStr", keyWord).findAll();
 
+        List<Entry> mapped = map(managedEntries);
+        realm.close();
+        return mapped;
+    }
+
+    @Override
+    public List<Entry> getEntries(String keyWord) {
+        final Realm realm = Realm.getDefaultInstance();
+        if (TextUtils.isEmpty(keyWord)) {
+            throw new RuntimeException("Keyword is empty");
+        }
+        final RealmResults<RealmEntry> managedEntries = realm
+                .where(RealmEntry.class)
+                .equalTo("wordStr", keyWord)
+                .findAll();
+
+        List<Entry> mapped = map(managedEntries);
+        realm.close();
+        return mapped;
+    }
+
+    @Override
+    public List<Entry> queryEntries(String keyWord, String dictionaryName) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    private List<Entry> map(RealmResults<RealmEntry> managedEntries) {
+        final List<Entry> entries = new ArrayList<>();
         for (int i = 0; entries.size() < MAX_LENGTH && i < managedEntries.size(); i++) {
             RealmEntry managedEntry = managedEntries.get(i);
             Entry entry = new Entry();
@@ -96,13 +122,6 @@ public class RealmStore implements Store {
             entry.data = managedEntry.data;
             entries.add(entry);
         }
-
-        realm.close();
         return entries;
-    }
-
-    @Override
-    public List<Entry> getEntries(String keyWord, String dictionaryName) {
-        throw new RuntimeException("Not implemented yet");
     }
 }
