@@ -65,7 +65,7 @@ public class TarExtractor implements Extractor {
                 archive.set(DictionaryArchive.Type.IDX, out.getAbsolutePath());
             } else if (fileName.endsWith(".ifo")) {
                 archive.set(DictionaryArchive.Type.IFO, out.getAbsolutePath());
-            } else if (fileName.endsWith(".dict.dz")) {
+            } else if (fileName.endsWith(".dict.dz") || fileName.endsWith(".dict")) {
                 archive.set(DictionaryArchive.Type.DICT, out.getAbsolutePath());
             }
         }

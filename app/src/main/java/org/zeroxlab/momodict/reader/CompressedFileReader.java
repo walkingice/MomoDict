@@ -20,6 +20,14 @@ public class CompressedFileReader {
         System.out.println(BZip2Utils.isCompressedFilename(path));
         System.out.println(BZip2Utils.getUncompressedFilename(path));
 
+        // TODO: support .dz file
+        if (path.endsWith(".dz")) {
+            StringBuilder msg = new StringBuilder();
+            msg.append("Haven't support .dz (dictzip) file so far.\n");
+            msg.append("please provide '.dict' to instead of '.dict.dz'");
+            throw new RuntimeException(msg.toString());
+        }
+
         // to make a random path such as /tmp/DICT.ru9527
         SecureRandom random = new SecureRandom();
         BigInteger integer = new BigInteger(RANDOM_BITS, random);
