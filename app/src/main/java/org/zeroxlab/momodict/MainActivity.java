@@ -4,28 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
-import org.zeroxlab.momodict.model.Dictionary;
-import org.zeroxlab.momodict.model.Entry;
-import org.zeroxlab.momodict.widget.DictionaryRowPresenter;
-import org.zeroxlab.momodict.widget.SelectorAdapter;
-import org.zeroxlab.momodict.widget.WordRowPresenter;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.zeroxlab.momodict.ui.InputSearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,63 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQ_CODE_IMPORT = 0x1002;
 
-    private TextView mText;
-    private RecyclerView mList;
-    private SelectorAdapter mAdapter;
-    private EditText mInput;
-    private Controller mCtrl;
-    private View mDel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        mCtrl = new Controller(this);
+        setContentView(R.layout.activity_with_one_fragment);
         initView();
-
-        Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
-        map.put(SelectorAdapter.Type.A, new DictionaryRowPresenter());
-        map.put(SelectorAdapter.Type.B, new WordRowPresenter((view) -> {
-            onRowClicked((String) view.getTag());
-        }));
-        mAdapter = new SelectorAdapter(map);
-        mList.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        prepareDictionary();
-        onUpdateList();
-    }
-
-    private void initView() {
-        initActionBar();
-        mText = (TextView) findViewById(R.id.text_1);
-        mList = (RecyclerView) findViewById(R.id.list);
-        mInput = (EditText) findViewById(R.id.input_1);
-        mInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                onUpdateList();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
-        mDel = findViewById(R.id.btn_1);
-        mDel.setOnClickListener((v) -> clearInput());
-    }
-
-    private void initActionBar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.actionbar);
-        setSupportActionBar(toolbar);
+        setFragments();
     }
 
     @Override
@@ -117,6 +52,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setFragments() {
+        final InputSearchFragment inputFrg = new InputSearchFragment();
+        final FragmentManager mgr = getSupportFragmentManager();
+        mgr.beginTransaction()
+                .add(R.id.fragment_container, inputFrg)
+                .commit();
+    }
+
+    private void initView() {
+        initActionBar();
+    }
+
+    private void initActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.actionbar);
+        setSupportActionBar(toolbar);
+    }
+
     private void onImportClicked() {
         Intent i = new Intent();
         i.setClass(this, FileImportActivity.class);
@@ -128,48 +80,5 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = data.getData();
             Log.d(TAG, "Imported from file " + uri.getPath());
         }
-    }
-
-    private void prepareDictionary() {
-        List<Dictionary> dics = mCtrl.getDictionaries();
-        mText.setText("Dictionary num:" + dics.size());
-        mInput.setEnabled(dics.size() > 0);
-    }
-
-    private void onRowClicked(String text) {
-        Intent intent = WordActivity.createIntent(this, text);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (TextUtils.isEmpty(mInput.getText())) {
-            super.onBackPressed();
-        } else {
-            clearInput();
-        }
-    }
-
-    private void clearInput() {
-        mInput.setText("");
-    }
-
-    private void onUpdateList() {
-        String input = mInput.getText().toString();
-        Log.d(TAG, "Input: " + input);
-        mAdapter.clear();
-        if (TextUtils.isEmpty(input)) {
-            List<Dictionary> dics = mCtrl.getDictionaries();
-            for (Dictionary d : dics) {
-                mAdapter.addItem(d.bookName, SelectorAdapter.Type.A);
-            }
-        } else {
-            List<Entry> entries = mCtrl.getEntries(input);
-            for (Entry entry : entries) {
-                mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B);
-            }
-        }
-
-        mAdapter.notifyDataSetChanged();
     }
 }

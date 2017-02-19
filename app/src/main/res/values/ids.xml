@@ -6,4 +6,5 @@
     <item name="text_1" type="id"/>
     <item name="list" type="id"/>
     <item name="input_1" type="id"/>
+    <item name="fragment_container" type="id"/>
 </resources>
