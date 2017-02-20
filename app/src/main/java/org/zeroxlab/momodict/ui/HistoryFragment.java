@@ -1,5 +1,6 @@
 package org.zeroxlab.momodict.ui;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.R;
@@ -54,6 +56,18 @@ public class HistoryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         onUpdateList();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        if (visible) {
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getActivity()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
     }
 
     private void initViews(View fv) {
