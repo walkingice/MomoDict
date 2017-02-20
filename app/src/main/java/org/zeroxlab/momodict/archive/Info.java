@@ -30,7 +30,7 @@ public class Info {
         sb.append("email:" + this.email + "\n");
         sb.append("webSite:" + this.webSite + "\n");
         sb.append("description:" + this.description + "\n");
-        sb.append("date:" + this.date + "\n");
+        sb.append("time:" + this.date + "\n");
         sb.append("sameTypeSequence:" + this.sameTypeSequence + "\n");
         return sb.toString();
     }

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
+import org.zeroxlab.momodict.model.Record;
 
 import java.util.List;
 
@@ -26,6 +27,9 @@ public interface Store {
 
     List<Entry> queryEntries(@Nullable String keyWord, @NonNull String dictionaryName);
 
-
     List<Entry> getEntries(@Nullable String keyWord);
+
+    boolean setRecord(@NonNull Record record);
+
+    List<Record> getRecords();
 }

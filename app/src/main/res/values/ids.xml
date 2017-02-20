@@ -4,6 +4,7 @@
     <item name="menu_import" type="id"/>
     <item name="btn_1" type="id"/>
     <item name="text_1" type="id"/>
+    <item name="text_2" type="id"/>
     <item name="list" type="id"/>
     <item name="input_1" type="id"/>
     <item name="fragment_container" type="id"/>

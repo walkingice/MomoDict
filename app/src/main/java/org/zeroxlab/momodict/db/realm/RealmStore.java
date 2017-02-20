@@ -1,11 +1,13 @@
 package org.zeroxlab.momodict.db.realm;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.zeroxlab.momodict.db.Store;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
+import org.zeroxlab.momodict.model.Record;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,6 +107,42 @@ public class RealmStore implements Store {
         List<Entry> mapped = map(managedEntries);
         realm.close();
         return mapped;
+    }
+
+    @Override
+    public boolean setRecord(@NonNull Record record) {
+        final Realm realm = Realm.getDefaultInstance();
+        RealmRecord previous = realm.where(RealmRecord.class)
+                .equalTo("wordStr", record.wordStr)
+                .findFirst();
+        realm.beginTransaction();
+        RealmRecord managedRecord = (previous == null)
+                ? realm.createObject(RealmRecord.class, record.wordStr)
+                : previous;
+        managedRecord.count = record.count;
+        managedRecord.time = record.time;
+        realm.commitTransaction();
+        realm.close();
+        return true;
+    }
+
+    @Override
+    public List<Record> getRecords() {
+        final Realm realm = Realm.getDefaultInstance();
+        final RealmResults<RealmRecord> managedRecords = realm
+                .where(RealmRecord.class)
+                .findAll();
+
+        final List<Record> records = new ArrayList<>();
+        for (int i = 0; i < managedRecords.size(); i++) {
+            RealmRecord managedRecord = managedRecords.get(i);
+            Record record = new Record();
+            record.count = managedRecord.count;
+            record.wordStr = managedRecord.wordStr;
+            record.time = managedRecord.time;
+            records.add(record);
+        }
+        return records;
     }
 
     @Override

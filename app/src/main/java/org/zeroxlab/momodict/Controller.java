@@ -7,6 +7,7 @@ import org.zeroxlab.momodict.db.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
+import org.zeroxlab.momodict.model.Record;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,5 +32,18 @@ public class Controller {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
         });
         return list;
+    }
+
+    public List<Record> getRecords() {
+        List<Record> records = mStore.getRecords();
+        Collections.sort(records, (left, right) -> {
+            // sorting by time. Move latest one to head
+            return left.time.before(right.time) ? 1 : -1;
+        });
+        return records;
+    }
+
+    public boolean setRecord(@NonNull Record record) {
+        return mStore.setRecord(record);
     }
 }
