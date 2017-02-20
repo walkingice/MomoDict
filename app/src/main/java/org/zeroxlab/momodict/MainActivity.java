@@ -4,14 +4,22 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.zeroxlab.momodict.ui.HistoryFragment;
 import org.zeroxlab.momodict.ui.InputSearchFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,10 +27,13 @@ public class MainActivity extends AppCompatActivity {
 
     static final int REQ_CODE_IMPORT = 0x1002;
 
+    private TabLayout mTabs;
+    private ViewPager mPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_with_one_fragment);
+        setContentView(R.layout.activity_with_one_viewpager);
         initView();
         setFragments();
     }
@@ -53,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setFragments() {
-        final InputSearchFragment inputFrg = new InputSearchFragment();
         final FragmentManager mgr = getSupportFragmentManager();
-        mgr.beginTransaction()
-                .add(R.id.fragment_container, inputFrg)
-                .commit();
+        mPager.setAdapter(new MyPagerAdapter(mgr));
     }
 
     private void initView() {
+        mTabs = (TabLayout) findViewById(R.id.tabs);
+        mPager = (ViewPager) findViewById(R.id.fragment_container);
+        mTabs.setupWithViewPager(mPager);
         initActionBar();
     }
 
@@ -79,6 +90,35 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             Log.d(TAG, "Imported from file " + uri.getPath());
+        }
+    }
+
+    private class MyPagerAdapter extends FragmentStatePagerAdapter {
+
+        final List<Fragment> iFragments = new ArrayList<>();
+        final List<String> iTitles = new ArrayList<>();
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+            iFragments.add(new InputSearchFragment());
+            iTitles.add("Main");
+            iFragments.add(new HistoryFragment());
+            iTitles.add("History");
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return iFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return iFragments.size();
+        }
+
+        @Override
+        public String getPageTitle(int pos) {
+            return iTitles.get(pos);
         }
     }
 }
