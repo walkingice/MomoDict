@@ -69,9 +69,7 @@ public class FileImportFragment extends Fragment {
                 Manifest.permission.READ_EXTERNAL_STORAGE);
         if (!(readPermission == PackageManager.PERMISSION_GRANTED)) {
             mButton.setEnabled(false);
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQ_CODE_READ_EXTERNAL);
         }
     }
