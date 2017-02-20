@@ -31,5 +31,7 @@ public interface Store {
 
     boolean setRecord(@NonNull Record record);
 
+    boolean removeRecords(@NonNull String keyWord);
+
     List<Record> getRecords();
 }

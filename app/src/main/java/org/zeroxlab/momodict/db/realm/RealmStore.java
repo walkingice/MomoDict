@@ -142,7 +142,21 @@ public class RealmStore implements Store {
             record.time = managedRecord.time;
             records.add(record);
         }
+        realm.close();
         return records;
+    }
+
+    @Override
+    public boolean removeRecords(String keyWord) {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<RealmRecord> rows = realm.where(RealmRecord.class)
+                .equalTo("wordStr", keyWord)
+                .findAll();
+        rows.deleteAllFromRealm();
+        realm.commitTransaction();
+        realm.close();
+        return true;
     }
 
     @Override

@@ -12,9 +12,12 @@ import org.zeroxlab.momodict.model.Record;
 public class HistoryRowPresenter implements SelectorAdapter.Presenter<Record> {
 
     View.OnClickListener mListener;
+    View.OnLongClickListener mLongListener;
 
-    public HistoryRowPresenter(View.OnClickListener listener) {
+    public HistoryRowPresenter(View.OnClickListener listener,
+                               View.OnLongClickListener longListener) {
         mListener = listener;
+        mLongListener = longListener;
     }
 
     @Override
@@ -33,6 +36,11 @@ public class HistoryRowPresenter implements SelectorAdapter.Presenter<Record> {
         holder.itemView.setOnClickListener(view -> {
             view.setTag(item.wordStr);
             mListener.onClick(view);
+        });
+        holder.itemView.setOnLongClickListener(view -> {
+            view.setTag(item.wordStr);
+            mLongListener.onLongClick(view);
+            return true;
         });
     }
 

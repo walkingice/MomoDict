@@ -46,4 +46,8 @@ public class Controller {
     public boolean setRecord(@NonNull Record record) {
         return mStore.setRecord(record);
     }
+
+    public boolean removeRecord(@NonNull String keyWord) {
+        return mStore.removeRecords(keyWord);
+    }
 }

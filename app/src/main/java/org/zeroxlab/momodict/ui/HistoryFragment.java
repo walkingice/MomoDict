@@ -1,9 +1,11 @@
 package org.zeroxlab.momodict.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,9 @@ public class HistoryFragment extends Fragment {
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new HistoryRowPresenter((view) -> {
             onRowClicked((String) view.getTag());
+        }, (view) -> {
+            onRowLongClicked((String) view.getTag());
+            return true;
         }));
 
         mCtrl = new Controller(getActivity());
@@ -61,6 +66,26 @@ public class HistoryFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void onRowLongClicked(@NonNull final String keyWord) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle(keyWord)
+                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mCtrl.removeRecord(keyWord);
+                        onUpdateList();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // do nothing on canceling
+                    }
+                })
+                .create()
+                .show();
+    }
+
     private void onUpdateList() {
         mAdapter.clear();
         List<Record> records = mCtrl.getRecords();
@@ -70,5 +95,4 @@ public class HistoryFragment extends Fragment {
 
         mAdapter.notifyDataSetChanged();
     }
-
 }
