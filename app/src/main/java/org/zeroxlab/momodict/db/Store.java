@@ -3,6 +3,7 @@ package org.zeroxlab.momodict.db;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
@@ -34,4 +35,10 @@ public interface Store {
     boolean removeRecords(@NonNull String keyWord);
 
     List<Record> getRecords();
+
+    boolean setCard(@NonNull Card card);
+
+    boolean removeCards(@NonNull String keyWord);
+
+    List<Card> getCards();
 }

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import org.zeroxlab.momodict.db.Store;
+import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
@@ -144,6 +145,56 @@ public class RealmStore implements Store {
         }
         realm.close();
         return records;
+    }
+
+    @Override
+    public boolean setCard(@NonNull Card card) {
+        final Realm realm = Realm.getDefaultInstance();
+        RealmCard previous = realm.where(RealmCard.class)
+                .equalTo("wordStr", card.wordStr)
+                .findFirst();
+        realm.beginTransaction();
+        RealmCard managedCard = (previous == null)
+                ? realm.createObject(RealmCard.class, card.wordStr)
+                : previous;
+        managedCard.time = card.time;
+        managedCard.data = card.data;
+        realm.commitTransaction();
+        realm.close();
+        return true;
+    }
+
+    @Override
+    public boolean removeCards(@NonNull String keyWord) {
+        final Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<RealmCard> rows = realm.where(RealmCard.class)
+                .equalTo("wordStr", keyWord)
+                .findAll();
+        rows.deleteAllFromRealm();
+        realm.commitTransaction();
+        realm.close();
+        return true;
+    }
+
+    @Override
+    public List<Card> getCards() {
+        final Realm realm = Realm.getDefaultInstance();
+        final RealmResults<RealmCard> managedCards = realm
+                .where(RealmCard.class)
+                .findAll();
+
+        final List<Card> cards = new ArrayList<>();
+        for (int i = 0; i < managedCards.size(); i++) {
+            RealmCard managedCard = managedCards.get(i);
+            Card card = new Card();
+            card.wordStr = managedCard.wordStr;
+            card.data = managedCard.data;
+            card.time = managedCard.time;
+            cards.add(card);
+        }
+        realm.close();
+        return cards;
     }
 
     @Override

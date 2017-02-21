@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.zeroxlab.momodict.R;
-import org.zeroxlab.momodict.model.Record;
+import org.zeroxlab.momodict.model.Card;
 
-public class HistoryRowPresenter implements SelectorAdapter.Presenter<Record> {
+public class CardRowPresenter implements SelectorAdapter.Presenter<Card> {
 
     View.OnClickListener mListener;
     View.OnLongClickListener mLongListener;
 
-    public HistoryRowPresenter(View.OnClickListener listener,
-                               View.OnLongClickListener longListener) {
+    public CardRowPresenter(View.OnClickListener listener,
+                            View.OnLongClickListener longListener) {
         mListener = listener;
         mLongListener = longListener;
     }
@@ -24,15 +24,14 @@ public class HistoryRowPresenter implements SelectorAdapter.Presenter<Record> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(
-                R.layout.history_row, parent, false);
+                R.layout.list_item_card_row, parent, false);
         return new InnerViewHolder(viewGroup);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Record item) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Card item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
         holder.iText1.setText(item.wordStr);
-        holder.iText2.setText(item.count + "");
         holder.itemView.setOnClickListener(view -> {
             view.setTag(item.wordStr);
             mListener.onClick(view);

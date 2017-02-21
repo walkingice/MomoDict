@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import org.zeroxlab.momodict.ui.HistoryFragment;
 import org.zeroxlab.momodict.ui.InputSearchFragment;
+import org.zeroxlab.momodict.ui.MemoFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout mTabs;
     private ViewPager mPager;
+    private MyPagerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +67,35 @@ public class MainActivity extends AppCompatActivity {
 
     private void setFragments() {
         final FragmentManager mgr = getSupportFragmentManager();
-        mPager.setAdapter(new MyPagerAdapter(mgr));
+        mAdapter = new MyPagerAdapter(mgr);
+        mPager.setAdapter(mAdapter);
     }
 
     private void initView() {
         mTabs = (TabLayout) findViewById(R.id.tabs);
         mPager = (ViewPager) findViewById(R.id.fragment_container);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                notifyListener(position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                notifyListener(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            private void notifyListener(int pos) {
+                Object item = mAdapter.getItem(pos);
+                if (item instanceof ViewPagerFocusable) {
+                    ((ViewPagerFocusable) item).onViewPagerFocused();
+                }
+            }
+        });
         mTabs.setupWithViewPager(mPager);
         initActionBar();
     }
@@ -105,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
             iTitles.add("Main");
             iFragments.add(new HistoryFragment());
             iTitles.add("History");
+            iFragments.add(new MemoFragment());
+            iTitles.add("Memo");
         }
 
         @Override
@@ -121,5 +148,9 @@ public class MainActivity extends AppCompatActivity {
         public String getPageTitle(int pos) {
             return iTitles.get(pos);
         }
+    }
+
+    public interface ViewPagerFocusable {
+        void onViewPagerFocused();
     }
 }

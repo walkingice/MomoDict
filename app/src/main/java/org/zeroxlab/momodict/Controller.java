@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import org.zeroxlab.momodict.db.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
+import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
@@ -49,5 +50,22 @@ public class Controller {
 
     public boolean removeRecord(@NonNull String keyWord) {
         return mStore.removeRecords(keyWord);
+    }
+
+    public List<Card> getCards() {
+        List<Card> cards = mStore.getCards();
+        Collections.sort(cards, (left, right) -> {
+            // sorting by time. Move latest one to head
+            return left.time.before(right.time) ? 1 : -1;
+        });
+        return cards;
+    }
+
+    public boolean setCard(@NonNull Card card) {
+        return mStore.setCard(card);
+    }
+
+    public boolean removeCards(@NonNull String keyWord) {
+        return mStore.removeCards(keyWord);
     }
 }
