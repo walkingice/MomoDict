@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -78,6 +80,10 @@ public class InputSearchFragment extends Fragment {
     private void initViews(View fv) {
         mText = (TextView) fv.findViewById(R.id.text_1);
         mList = (RecyclerView) fv.findViewById(R.id.list);
+        LinearLayoutManager mgr = (LinearLayoutManager) mList.getLayoutManager();
+        DividerItemDecoration decoration = new DividerItemDecoration(mList.getContext(),
+                                                                mgr.getOrientation());
+        mList.addItemDecoration(decoration);
         mInput = (EditText) fv.findViewById(R.id.input_1);
         mInput.addTextChangedListener(new TextWatcher() {
             @Override

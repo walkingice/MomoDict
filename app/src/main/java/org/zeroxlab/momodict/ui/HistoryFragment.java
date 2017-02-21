@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,6 +75,10 @@ public class HistoryFragment extends Fragment {
 
     private void initViews(View fv) {
         mList = (RecyclerView) fv.findViewById(R.id.list);
+        LinearLayoutManager mgr = (LinearLayoutManager) mList.getLayoutManager();
+        DividerItemDecoration decoration = new DividerItemDecoration(mList.getContext(),
+                mgr.getOrientation());
+        mList.addItemDecoration(decoration);
         mList.setAdapter(mAdapter);
     }
 
