@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +23,32 @@ import java.io.File;
 
 public class FileImportFragment extends Fragment {
 
-    private static final int REQ_CODE_READ_EXTERNAL = 0x42;
-    private static final String sEXT = Environment.getExternalStorageDirectory().getPath();
-    private static final String sPATH = sEXT + "/test-dict.tar.bz2";
+    public static final String ARG_PATH = "argument_path";
+    public static final String PICK_A_FILE = "to_pick_a_file_to_import";
 
-    private Button mButton;
+    private static final int REQ_CODE_READ_EXTERNAL = 0x42;
+
+    private Button mBtnImport;
+    private Button mBtnChoose;
     private TextView mText;
 
     private boolean mExists = false;
 
+    public static FileImportFragment newInstance(String path) {
+        FileImportFragment fragment = new FileImportFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PATH, path);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@NonNull Bundle savedState) {
         super.onCreate(savedState);
+        String path = getArguments().getString(ARG_PATH);
+        if (TextUtils.isEmpty(path)) {
+            throw new RuntimeException("No file path to import");
+        }
     }
 
     @Override
@@ -48,6 +61,12 @@ public class FileImportFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        File dict = new File(getArguments().getString(ARG_PATH));
+        mExists = dict.exists() && dict.isFile();
+        mText.setText(mExists
+                ? String.format("Using file: %s", dict.getPath())
+                : String.format("File %s not exists", dict.getPath()));
+        mBtnImport.setEnabled(mExists);
     }
 
     @Override
@@ -60,7 +79,7 @@ public class FileImportFragment extends Fragment {
     public void onRequestPermissionsResult(int reqCode, String[] permissions, int[] response) {
         if (reqCode == REQ_CODE_READ_EXTERNAL
                 && response[0] == PackageManager.PERMISSION_GRANTED) {
-            mButton.setEnabled(mExists);
+            mBtnImport.setEnabled(mExists);
         }
     }
 
@@ -68,24 +87,25 @@ public class FileImportFragment extends Fragment {
         int readPermission = ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE);
         if (!(readPermission == PackageManager.PERMISSION_GRANTED)) {
-            mButton.setEnabled(false);
+            mBtnImport.setEnabled(false);
             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQ_CODE_READ_EXTERNAL);
         }
     }
 
     private void initViews(View fv) {
-        mButton = (Button) fv.findViewById(R.id.btn_1);
+        mBtnChoose = (Button) fv.findViewById(R.id.btn_1);
+        mBtnImport = (Button) fv.findViewById(R.id.btn_2);
         mText = (TextView) fv.findViewById(R.id.text_1);
 
-        File dict = new File(sPATH);
-        mExists = dict.exists();
-        mText.setText(mExists
-                ? String.format("Using file: %s", sPATH)
-                : String.format("File %s not exists", sPATH));
-        mButton.setEnabled(mExists);
+        mBtnChoose.setOnClickListener((v) -> {
+            if (getActivity() instanceof FragmentListener) {
+                FragmentListener parent = (FragmentListener) getActivity();
+                parent.onNotified(this, FragmentListener.TYPE.VIEW_ACTION, PICK_A_FILE);
+            }
+        });
 
-        mButton.setOnClickListener((v) -> {
+        mBtnImport.setOnClickListener((v) -> {
             onImportButtonClicked();
         });
     }
@@ -97,13 +117,14 @@ public class FileImportFragment extends Fragment {
         //            return Observable.just(i);
         //        })
         //        .observeOn(MainThread.this)
-        mButton.setEnabled(false);
+        mBtnImport.setEnabled(false);
         mText.setText("Importing.....");
         Runnable runnable = () -> {
-            Reader reader = new Reader(getActivity().getCacheDir().getPath(), sPATH);
+            Reader reader = new Reader(getActivity().getCacheDir().getPath(),
+                    getArguments().getString(ARG_PATH));
             reader.parse(getActivity());
             Intent intent = new Intent();
-            intent.setData(Uri.parse(sPATH));
+            intent.setData(Uri.parse(getArguments().getString(ARG_PATH)));
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().runOnUiThread(() -> mText.setText("Imported"));
             getActivity().finish();

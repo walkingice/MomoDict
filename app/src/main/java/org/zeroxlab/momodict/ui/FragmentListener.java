@@ -9,7 +9,9 @@ import android.support.v4.app.Fragment;
  */
 public interface FragmentListener {
     enum TYPE {
-        START_ACTIVITY
+        START_ACTIVITY,
+        POP_FRAGMENT,
+        VIEW_ACTION
     }
 
     void onNotified(@Nullable Fragment from,

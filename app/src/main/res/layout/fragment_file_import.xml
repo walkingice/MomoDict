@@ -4,14 +4,22 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <Button
+        android:id="@id/btn_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="Change"/>
+
     <TextView
         android:id="@id/text_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:text="To select a file to import"/>
 
     <Button
-        android:id="@id/btn_1"
+        android:id="@id/btn_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Import"/>

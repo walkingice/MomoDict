@@ -60,6 +60,7 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
         if (visible) {
             View view = getActivity().getCurrentFocus();
             if (view != null) {
