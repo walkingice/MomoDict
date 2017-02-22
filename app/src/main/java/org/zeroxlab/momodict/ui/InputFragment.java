@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InputSearchFragment extends Fragment {
+public class InputFragment extends Fragment {
 
     public static final String TAG = Momodict.TAG;
 
@@ -56,7 +56,7 @@ public class InputSearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_input_search, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_input, container, false);
         initViews(fragmentView);
         return fragmentView;
     }

@@ -16,7 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import org.zeroxlab.momodict.ui.HistoryFragment;
-import org.zeroxlab.momodict.ui.InputSearchFragment;
+import org.zeroxlab.momodict.ui.InputFragment;
 import org.zeroxlab.momodict.ui.MemoFragment;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             mPager.setCurrentItem(0);
         } else {
             // FIXME: ugly
-            InputSearchFragment first = (InputSearchFragment) mAdapter.getItem(0);
+            InputFragment first = (InputFragment) mAdapter.getItem(0);
             if (!first.handledBackKey()) {
                 super.onBackPressed();
             }
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
-            iFragments.add(new InputSearchFragment());
+            iFragments.add(new InputFragment());
             iTitles.add("Main");
             iFragments.add(new HistoryFragment());
             iTitles.add("History");
