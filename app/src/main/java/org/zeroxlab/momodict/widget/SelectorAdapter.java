@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * A RecyclerView Adapter, to use PresenterSelector to decide corresponding presenter for specific
- * data item. When adding any item into this adapter, we should specify a type at the same time.
+ * note item. When adding any item into this adapter, we should specify a type at the same time.
  * <p>
  * This Adapter is similar with ArrayObjectAdapter, but simpler. Instead of using 'instanceof'
  * operator, this Adapter use enum Type to get better performance.
@@ -32,7 +32,7 @@ public class SelectorAdapter extends RecyclerView.Adapter {
     }
 
     /**
-     * Add data item into this adapter. Caller should also specify type for that item.
+     * Add note item into this adapter. Caller should also specify type for that item.
      *
      * @param obj  Data item to be added
      * @param type Which type of this item.

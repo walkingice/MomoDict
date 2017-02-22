@@ -3,10 +3,10 @@ package org.zeroxlab.momodict;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.zeroxlab.momodict.db.Store;
+import org.zeroxlab.momodict.model.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Card;
-import org.zeroxlab.momodict.model.Dictionary;
+import org.zeroxlab.momodict.model.Book;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
 
@@ -23,8 +23,8 @@ public class Controller {
         mStore = new RealmStore(mCtx);
     }
 
-    public List<Dictionary> getDictionaries() {
-        return mStore.getDictionaries();
+    public List<Book> getDictionaries() {
+        return mStore.getBooks();
     }
 
     public List<Entry> getEntries(String keyWord) {
@@ -45,7 +45,7 @@ public class Controller {
     }
 
     public boolean setRecord(@NonNull Record record) {
-        return mStore.setRecord(record);
+        return mStore.upsertRecord(record);
     }
 
     public boolean removeRecord(@NonNull String keyWord) {
@@ -62,7 +62,7 @@ public class Controller {
     }
 
     public boolean setCard(@NonNull Card card) {
-        return mStore.setCard(card);
+        return mStore.upsertCard(card);
     }
 
     public boolean removeCards(@NonNull String keyWord) {

@@ -1,6 +1,6 @@
 package org.zeroxlab.momodict.model;
 
-public class Dictionary {
+public class Book {
     public String version;
     public String bookName;
     public int wordCount;
@@ -12,7 +12,7 @@ public class Dictionary {
     public String date;
     public String sameTypeSequence;
 
-    public Dictionary() {
+    public Book() {
     }
 
     public String toString() {

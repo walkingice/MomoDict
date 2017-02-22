@@ -15,13 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.Momodict;
 import org.zeroxlab.momodict.R;
 import org.zeroxlab.momodict.WordActivity;
-import org.zeroxlab.momodict.model.Dictionary;
+import org.zeroxlab.momodict.model.Book;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.widget.DictionaryRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
@@ -79,7 +78,7 @@ public class InputSearchFragment extends Fragment {
     }
 
     private void prepareDictionary() {
-        List<Dictionary> dics = mCtrl.getDictionaries();
+        List<Book> dics = mCtrl.getDictionaries();
         mInput.setEnabled(dics.size() > 0);
     }
 
@@ -120,8 +119,8 @@ public class InputSearchFragment extends Fragment {
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
         if (TextUtils.isEmpty(input)) {
-            List<Dictionary> dics = mCtrl.getDictionaries();
-            for (Dictionary d : dics) {
+            List<Book> dics = mCtrl.getDictionaries();
+            for (Book d : dics) {
                 mAdapter.addItem(d.bookName, SelectorAdapter.Type.A);
             }
         } else {

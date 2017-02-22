@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import org.zeroxlab.momodict.db.Store;
+import org.zeroxlab.momodict.model.Book;
 import org.zeroxlab.momodict.model.Card;
-import org.zeroxlab.momodict.model.Dictionary;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
+import org.zeroxlab.momodict.model.Store;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,32 +26,32 @@ public class RealmStore implements Store {
     }
 
     @Override
-    public boolean addDictionary(Dictionary dictionary) {
+    public boolean addBook(Book book) {
         final Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
-        final RealmDictionary managedDic =
-                realm.createObject(RealmDictionary.class, dictionary.bookName);
-        managedDic.author = dictionary.author;
-        managedDic.wordCount = dictionary.wordCount;
-        managedDic.date = dictionary.date;
+        final RealmBook managedDic =
+                realm.createObject(RealmBook.class, book.bookName);
+        managedDic.author = book.author;
+        managedDic.wordCount = book.wordCount;
+        managedDic.date = book.date;
         realm.commitTransaction();
         realm.close();
         return true;
     }
 
     @Override
-    public Dictionary getDictionary(String name) {
+    public Book getBook(String name) {
         throw new RuntimeException("Not implemented yet");
     }
 
     @Override
-    public List<Dictionary> getDictionaries() {
+    public List<Book> getBooks() {
         final Realm realm = Realm.getDefaultInstance();
-        final RealmResults<RealmDictionary> results =
-                realm.where(RealmDictionary.class).findAll();
-        final List<Dictionary> dics = new ArrayList<>();
-        for (RealmDictionary managedDic : results) {
-            Dictionary dic = new Dictionary();
+        final RealmResults<RealmBook> results =
+                realm.where(RealmBook.class).findAll();
+        final List<Book> dics = new ArrayList<>();
+        for (RealmBook managedDic : results) {
+            Book dic = new Book();
             dic.bookName = managedDic.bookName;
             dic.author = managedDic.author;
             dic.wordCount = managedDic.wordCount;
@@ -63,7 +63,7 @@ public class RealmStore implements Store {
     }
 
     @Override
-    public boolean delDictionary(String name) {
+    public boolean removeBook(String name) {
         throw new RuntimeException("Not implemented yet");
     }
 
@@ -74,7 +74,7 @@ public class RealmStore implements Store {
         for (Entry entry : entries) {
             RealmEntry managedEntry = realm.createObject(RealmEntry.class);
             managedEntry.wordStr = entry.wordStr;
-            managedEntry.source = entry.source;
+            managedEntry.sourceBook = entry.source;
             managedEntry.data = entry.data;
         }
         realm.commitTransaction();
@@ -111,7 +111,7 @@ public class RealmStore implements Store {
     }
 
     @Override
-    public boolean setRecord(@NonNull Record record) {
+    public boolean upsertRecord(@NonNull Record record) {
         final Realm realm = Realm.getDefaultInstance();
         RealmRecord previous = realm.where(RealmRecord.class)
                 .equalTo("wordStr", record.wordStr)
@@ -148,7 +148,7 @@ public class RealmStore implements Store {
     }
 
     @Override
-    public boolean setCard(@NonNull Card card) {
+    public boolean upsertCard(@NonNull Card card) {
         final Realm realm = Realm.getDefaultInstance();
         RealmCard previous = realm.where(RealmCard.class)
                 .equalTo("wordStr", card.wordStr)
@@ -158,7 +158,7 @@ public class RealmStore implements Store {
                 ? realm.createObject(RealmCard.class, card.wordStr)
                 : previous;
         managedCard.time = card.time;
-        managedCard.data = card.data;
+        managedCard.note = card.note;
         realm.commitTransaction();
         realm.close();
         return true;
@@ -189,7 +189,7 @@ public class RealmStore implements Store {
             RealmCard managedCard = managedCards.get(i);
             Card card = new Card();
             card.wordStr = managedCard.wordStr;
-            card.data = managedCard.data;
+            card.note = managedCard.note;
             card.time = managedCard.time;
             cards.add(card);
         }
@@ -211,7 +211,7 @@ public class RealmStore implements Store {
     }
 
     @Override
-    public List<Entry> queryEntries(String keyWord, String dictionaryName) {
+    public List<Entry> queryEntries(String keyWord, String bookName) {
         throw new RuntimeException("Not implemented yet");
     }
 
@@ -220,7 +220,7 @@ public class RealmStore implements Store {
         for (int i = 0; entries.size() < MAX_LENGTH && i < managedEntries.size(); i++) {
             RealmEntry managedEntry = managedEntries.get(i);
             Entry entry = new Entry();
-            entry.source = managedEntry.source;
+            entry.source = managedEntry.sourceBook;
             entry.wordStr = managedEntry.wordStr;
             entry.data = managedEntry.data;
             entries.add(entry);

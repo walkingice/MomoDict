@@ -3,7 +3,8 @@ package org.zeroxlab.momodict.db.realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class RealmDictionary extends RealmObject {
+public class RealmBook extends RealmObject {
+
     @PrimaryKey
     public String bookName;
 

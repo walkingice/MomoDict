@@ -5,10 +5,10 @@ import android.content.Context;
 import org.zeroxlab.momodict.archive.DictionaryArchive;
 import org.zeroxlab.momodict.archive.Info;
 import org.zeroxlab.momodict.archive.Word;
-import org.zeroxlab.momodict.db.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
-import org.zeroxlab.momodict.model.Dictionary;
+import org.zeroxlab.momodict.model.Book;
 import org.zeroxlab.momodict.model.Entry;
+import org.zeroxlab.momodict.model.Store;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,12 +41,12 @@ public class Reader {
             }
 
             Store store = new RealmStore(ctx);
-            Dictionary dict = new Dictionary();
+            Book dict = new Book();
             dict.bookName = info.bookName;
             dict.author = info.author;
             dict.wordCount = info.wordCount;
             dict.date = info.date;
-            store.addDictionary(dict);
+            store.addBook(dict);
 
             if (idxReader.size() != 0) {
                 List<Word> words = DictReader.parse(idxReader.getEntries(),

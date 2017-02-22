@@ -9,5 +9,5 @@ public class RealmCard extends RealmObject {
     @PrimaryKey
     public String wordStr;
     public Date time;
-    public String data;
+    public String note;
 }
