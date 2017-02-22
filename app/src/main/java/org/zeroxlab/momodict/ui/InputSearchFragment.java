@@ -35,7 +35,6 @@ public class InputSearchFragment extends Fragment {
 
     public static final String TAG = Momodict.TAG;
 
-    private TextView mText;
     private RecyclerView mList;
     private SelectorAdapter mAdapter;
     private EditText mInput;
@@ -72,13 +71,11 @@ public class InputSearchFragment extends Fragment {
 
     private void prepareDictionary() {
         List<Dictionary> dics = mCtrl.getDictionaries();
-        mText.setText("Dictionary num:" + dics.size());
         mInput.setEnabled(dics.size() > 0);
     }
 
 
     private void initViews(View fv) {
-        mText = (TextView) fv.findViewById(R.id.text_1);
         mList = (RecyclerView) fv.findViewById(R.id.list);
         LinearLayoutManager mgr = (LinearLayoutManager) mList.getLayoutManager();
         DividerItemDecoration decoration = new DividerItemDecoration(mList.getContext(),
