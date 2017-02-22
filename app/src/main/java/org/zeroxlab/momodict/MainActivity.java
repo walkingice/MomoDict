@@ -65,6 +65,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mPager.getCurrentItem() != 0) {
+            // not in first page
+            mPager.setCurrentItem(0);
+        } else {
+            // FIXME: ugly
+            InputSearchFragment first = (InputSearchFragment) mAdapter.getItem(0);
+            if (!first.handledBackKey()) {
+                super.onBackPressed();
+            }
+        }
+    }
+
     private void setFragments() {
         final FragmentManager mgr = getSupportFragmentManager();
         mAdapter = new MyPagerAdapter(mgr);

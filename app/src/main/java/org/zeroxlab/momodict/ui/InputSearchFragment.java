@@ -69,6 +69,15 @@ public class InputSearchFragment extends Fragment {
         onUpdateList();
     }
 
+    public boolean handledBackKey() {
+        if (TextUtils.isEmpty(mInput.getText())) {
+            return false;
+        } else {
+            mInput.setText("");
+            return true;
+        }
+    }
+
     private void prepareDictionary() {
         List<Dictionary> dics = mCtrl.getDictionaries();
         mInput.setEnabled(dics.size() > 0);
