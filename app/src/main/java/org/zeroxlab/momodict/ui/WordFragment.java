@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.Momodict;
 import org.zeroxlab.momodict.R;
-import org.zeroxlab.momodict.model.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
+import org.zeroxlab.momodict.model.Store;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordCardPresenter;
 
@@ -26,9 +26,18 @@ import java.util.Map;
 
 public class WordFragment extends Fragment {
 
-    private RecyclerView mList;
+    private static final String ARG_KEYWORD = "key_word";
     private Controller mCtrl;
     private SelectorAdapter mAdapter;
+    private String mKeyWord;
+
+    public static WordFragment newInstance(@NonNull String keyWord) {
+        WordFragment fragment = new WordFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_KEYWORD, keyWord);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@NonNull Bundle savedState) {
@@ -37,6 +46,8 @@ public class WordFragment extends Fragment {
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new WordCardPresenter());
         mAdapter = new SelectorAdapter(map);
+
+        mKeyWord = savedState.getString(ARG_KEYWORD);
     }
 
     @Override
@@ -49,13 +60,12 @@ public class WordFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        String text = getActivity().getIntent().getStringExtra(Momodict.EXTRA_DATA_1);
-        onDisplayDetail(text);
+        onDisplayDetail(mKeyWord);
     }
 
     private void initViews(View fv) {
-        mList = (RecyclerView) fv.findViewById(R.id.list);
-        mList.setAdapter(mAdapter);
+        final RecyclerView list = (RecyclerView) fv.findViewById(R.id.list);
+        list.setAdapter(mAdapter);
     }
 
     private void onDisplayDetail(@NonNull String target) {

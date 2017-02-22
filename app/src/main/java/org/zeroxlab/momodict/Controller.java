@@ -23,7 +23,7 @@ public class Controller {
         mStore = new RealmStore(mCtx);
     }
 
-    public List<Book> getDictionaries() {
+    public List<Book> getBooks() {
         return mStore.getBooks();
     }
 

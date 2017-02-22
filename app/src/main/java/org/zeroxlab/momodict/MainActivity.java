@@ -18,17 +18,17 @@ import android.view.MenuItem;
 import org.zeroxlab.momodict.ui.HistoryFragment;
 import org.zeroxlab.momodict.ui.InputFragment;
 import org.zeroxlab.momodict.ui.MemoFragment;
+import org.zeroxlab.momodict.widget.BackKeyHandler;
+import org.zeroxlab.momodict.widget.PagerFocusBroadcaster;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = Momodict.TAG;
+    private static final String TAG = Momodict.TAG;
+    private static final int REQ_CODE_IMPORT = 0x1002;
 
-    static final int REQ_CODE_IMPORT = 0x1002;
-
-    private TabLayout mTabs;
     private ViewPager mPager;
     private MyPagerAdapter mAdapter;
 
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_one_viewpager);
         initView();
-        setFragments();
     }
 
     @Override
@@ -68,53 +67,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() != 0) {
-            // not in first page
+            // not in first page, just move to first page
             mPager.setCurrentItem(0);
         } else {
-            // FIXME: ugly
-            InputFragment first = (InputFragment) mAdapter.getItem(0);
-            if (!first.handledBackKey()) {
-                super.onBackPressed();
+            Object first = mAdapter.getItem(0);
+            if (first instanceof BackKeyHandler) {
+                BackKeyHandler handler = (BackKeyHandler) first;
+                if (handler.backKeyHandled()) {
+                    return;
+                }
             }
+            super.onBackPressed();
         }
     }
 
-    private void setFragments() {
+    private void initView() {
+        // To create fragments, and manage them by MyPagerAdapter.
+        final TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         final FragmentManager mgr = getSupportFragmentManager();
         mAdapter = new MyPagerAdapter(mgr);
-        mPager.setAdapter(mAdapter);
-    }
+        mAdapter.addFragment(new InputFragment(), "Input");
+        mAdapter.addFragment(new HistoryFragment(), "History");
+        mAdapter.addFragment(new MemoFragment(), "Memo");
 
-    private void initView() {
-        mTabs = (TabLayout) findViewById(R.id.tabs);
         mPager = (ViewPager) findViewById(R.id.fragment_container);
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                notifyListener(position);
-            }
+        mPager.setAdapter(mAdapter);
+        // To notify fragment, when page-change happens
+        mPager.addOnPageChangeListener(new PagerFocusBroadcaster(mAdapter));
+        tabs.setupWithViewPager(mPager);
 
-            @Override
-            public void onPageSelected(int position) {
-                notifyListener(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-
-            private void notifyListener(int pos) {
-                Object item = mAdapter.getItem(pos);
-                if (item instanceof ViewPagerFocusable) {
-                    ((ViewPagerFocusable) item).onViewPagerFocused();
-                }
-            }
-        });
-        mTabs.setupWithViewPager(mPager);
-        initActionBar();
-    }
-
-    private void initActionBar() {
+        //init action bar
         Toolbar toolbar = (Toolbar) findViewById(R.id.actionbar);
         toolbar.setNavigationIcon(R.mipmap.ic_logo);
         setSupportActionBar(toolbar);
@@ -133,19 +115,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adapter for ViewPager. To use addFragment() to add items.
+     */
     private class MyPagerAdapter extends FragmentStatePagerAdapter {
-
         final List<Fragment> iFragments = new ArrayList<>();
-        final List<String> iTitles = new ArrayList<>();
+        final List<CharSequence> iTitles = new ArrayList<>();
 
-        public MyPagerAdapter(FragmentManager fm) {
+        MyPagerAdapter(FragmentManager fm) {
             super(fm);
-            iFragments.add(new InputFragment());
-            iTitles.add("Main");
-            iFragments.add(new HistoryFragment());
-            iTitles.add("History");
-            iFragments.add(new MemoFragment());
-            iTitles.add("Memo");
+        }
+
+        void addFragment(Fragment f, CharSequence title) {
+            iFragments.add(f);
+            iTitles.add(title);
         }
 
         @Override
@@ -160,11 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public String getPageTitle(int pos) {
-            return iTitles.get(pos);
+            return iTitles.get(pos).toString();
         }
-    }
-
-    public interface ViewPagerFocusable {
-        void onViewPagerFocused();
     }
 }
