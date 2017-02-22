@@ -2,6 +2,7 @@
 <resources>
     <item name="actionbar" type="id"/>
     <item name="menu_import" type="id"/>
+    <item name="menu_clear_history" type="id"/>
     <item name="btn_1" type="id"/>
     <item name="btn_2" type="id"/>
     <item name="text_1" type="id"/>

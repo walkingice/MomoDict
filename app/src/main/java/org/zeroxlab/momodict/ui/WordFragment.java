@@ -46,8 +46,6 @@ public class WordFragment extends Fragment {
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new WordCardPresenter());
         mAdapter = new SelectorAdapter(map);
-
-        mKeyWord = savedState.getString(ARG_KEYWORD);
     }
 
     @Override
@@ -60,6 +58,7 @@ public class WordFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        mKeyWord = getArguments().getString(ARG_KEYWORD);
         onDisplayDetail(mKeyWord);
     }
 

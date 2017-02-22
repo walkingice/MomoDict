@@ -74,6 +74,11 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
         onUpdateList();
     }
 
+    public void clearHistory() {
+        mCtrl.clearRecords();
+        onUpdateList();
+    }
+
     private void initViews(@NonNull View fv) {
         final RecyclerView list = (RecyclerView) fv.findViewById(R.id.list);
         final LinearLayoutManager mgr = (LinearLayoutManager) list.getLayoutManager();

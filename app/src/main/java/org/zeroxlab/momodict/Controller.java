@@ -3,12 +3,12 @@ package org.zeroxlab.momodict;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import org.zeroxlab.momodict.model.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
-import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.model.Book;
+import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
+import org.zeroxlab.momodict.model.Store;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +42,13 @@ public class Controller {
             return left.time.before(right.time) ? 1 : -1;
         });
         return records;
+    }
+
+    public void clearRecords() {
+        List<Record> records = getRecords();
+        for(Record r: records) {
+            mStore.removeRecords(r.wordStr);
+        }
     }
 
     public boolean setRecord(@NonNull Record record) {

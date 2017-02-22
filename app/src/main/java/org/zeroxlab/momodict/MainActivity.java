@@ -19,6 +19,7 @@ import org.zeroxlab.momodict.ui.HistoryFragment;
 import org.zeroxlab.momodict.ui.InputFragment;
 import org.zeroxlab.momodict.ui.MemoFragment;
 import org.zeroxlab.momodict.widget.BackKeyHandler;
+import org.zeroxlab.momodict.widget.HistoryRowPresenter;
 import org.zeroxlab.momodict.widget.PagerFocusBroadcaster;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, R.id.menu_import, Menu.NONE, "Import dictionary");
+        menu.add(Menu.NONE, R.id.menu_clear_history, Menu.NONE, "Clear History");
         return true;
     }
 
@@ -50,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_import:
                 onImportClicked();
+                return true;
+            case R.id.menu_clear_history:
+                onClearHistory();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -106,6 +111,17 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent();
         i.setClass(this, FileImportActivity.class);
         startActivityForResult(i, REQ_CODE_IMPORT);
+    }
+
+    private void onClearHistory() {
+        int size = mAdapter.getCount();
+        for (int i = 0; i < size; i++) {
+            Object o = mAdapter.getItem(i);
+            if (o instanceof HistoryFragment) {
+                HistoryFragment f = (HistoryFragment) o;
+                f.clearHistory();
+            }
+        }
     }
 
     private void onResultImport(int resultCode, Intent data) {
