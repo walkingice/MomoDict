@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 public interface FragmentListener {
     enum TYPE {
         START_ACTIVITY,
+        UPDATE_TITLE,
         POP_FRAGMENT,
         VIEW_ACTION
     }

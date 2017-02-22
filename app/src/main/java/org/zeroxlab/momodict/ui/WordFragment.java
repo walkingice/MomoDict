@@ -3,6 +3,8 @@ package org.zeroxlab.momodict.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,19 +18,27 @@ import org.zeroxlab.momodict.db.Store;
 import org.zeroxlab.momodict.db.realm.RealmStore;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
+import org.zeroxlab.momodict.widget.SelectorAdapter;
+import org.zeroxlab.momodict.widget.WordCardPresenter;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WordFragment extends Fragment {
 
-    private TextView mText;
+    private RecyclerView mList;
     private Controller mCtrl;
+    private SelectorAdapter mAdapter;
 
     @Override
     public void onCreate(@NonNull Bundle savedState) {
         super.onCreate(savedState);
         mCtrl = new Controller(getContext());
+        Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
+        map.put(SelectorAdapter.Type.A, new WordCardPresenter());
+        mAdapter = new SelectorAdapter(map);
     }
 
     @Override
@@ -46,25 +56,33 @@ public class WordFragment extends Fragment {
     }
 
     private void initViews(View fv) {
-        mText = (TextView) fv.findViewById(R.id.text_1);
+        mList = (RecyclerView) fv.findViewById(R.id.list);
+        mList.setAdapter(mAdapter);
     }
 
     private void onDisplayDetail(@NonNull String target) {
-        mText.setText("Loading details....");
+        if (getActivity() instanceof FragmentListener) {
+            ((FragmentListener) getActivity()).onNotified(this,
+                    FragmentListener.TYPE.UPDATE_TITLE,
+                    target);
+        }
+
         Runnable runnable = () -> {
-            final StringBuilder sb = new StringBuilder();
             final Store store = new RealmStore(getContext());
             final List<Entry> entries = store.getEntries(target);
-            for (Entry entry : entries) {
-                sb.append("=======" + entries.indexOf(entry) + "=======\n");
-                sb.append(entry.data);
+
+            if (entries.size() <= 0) {
+                return;
             }
 
-            if (entries.size() > 0) {
-                updateRecord(target);
-            }
-
-            getActivity().runOnUiThread(() -> mText.setText(sb.toString()));
+            updateRecord(target);
+            getActivity().runOnUiThread(() -> {
+                mAdapter.clear();
+                for (Entry entry : entries) {
+                    mAdapter.addItem(entry, SelectorAdapter.Type.A);
+                }
+                mAdapter.notifyDataSetChanged();
+            });
         };
         Thread io = new Thread(runnable);
         io.start();
