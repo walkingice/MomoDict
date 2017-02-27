@@ -1,8 +1,7 @@
 package org.zeroxlab.momodict.reader;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.apache.commons.compress.compressors.bzip2.BZip2Utils;
-import org.zeroxlab.momodict.archive.DictionaryArchive;
+import org.zeroxlab.momodict.archive.FileSet;
 import org.zeroxlab.momodict.archive.Extractor;
 import org.zeroxlab.momodict.archive.TarExtractor;
 
@@ -12,40 +11,45 @@ import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * A class to deal with compressed file.
+ */
 public class CompressedFileReader {
+
+    // Prefix for directory which contains extracted files
     private static final String DIR_PREFIX = "DICT.";
+
+    // to generate random string for directory which contains extracted files
     private static final int RANDOM_BITS = 32;
 
-    public static DictionaryArchive readBzip2File(String cachePath, String path) {
-        System.out.println(BZip2Utils.isCompressedFilename(path));
-        System.out.println(BZip2Utils.getUncompressedFilename(path));
-
-        // TODO: support .dz file
-        if (path.endsWith(".dz")) {
-            StringBuilder msg = new StringBuilder();
-            msg.append("Haven't support .dz (dictzip) file so far.\n");
-            msg.append("please provide '.dict' to instead of '.dict.dz'");
-            throw new RuntimeException(msg.toString());
-        }
+    /**
+     * To extract tar.bz2 file to cache directory.
+     * @param outputDir a parent directory. Any cache directory will be under this.
+     * @param inputFile the compressed file to be extracted.
+     * @return
+     */
+    public static FileSet readBzip2File(String outputDir, String inputFile) {
 
         // to make a random path such as /tmp/DICT.ru9527
         SecureRandom random = new SecureRandom();
         BigInteger integer = new BigInteger(RANDOM_BITS, random);
         String randomText = integer.toString(RANDOM_BITS);
-        String dirPath = cachePath + "/" + DIR_PREFIX + randomText;
+        String dirPath = outputDir + "/" + DIR_PREFIX + randomText;
         File tmpDir = new File(dirPath);
         boolean made = tmpDir.mkdirs();
         if (!made) {
-            return null;
+            throw new RuntimeException("Cannot create directory: " + tmpDir);
         }
 
         try {
-            FileInputStream fis = new FileInputStream(new File(path));
+            // extract bz2 file
+            FileInputStream fis = new FileInputStream(new File(inputFile));
             BufferedInputStream bis = new BufferedInputStream(fis);
             BZip2CompressorInputStream b2is = new BZip2CompressorInputStream(bis);
 
+            // extract tar file
             Extractor extractor = new TarExtractor();
-            DictionaryArchive archive = extractor.extract(tmpDir, b2is);
+            FileSet archive = extractor.extract(tmpDir, b2is);
             if (!archive.isSane()) {
                 throw new Exception("Necessary files missing: " + archive.toString());
             }

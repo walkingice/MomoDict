@@ -1,5 +1,8 @@
 package org.zeroxlab.momodict.archive;
 
+/**
+ * Data structure to present a .ifo file
+ */
 public class Info {
 
     public String version;

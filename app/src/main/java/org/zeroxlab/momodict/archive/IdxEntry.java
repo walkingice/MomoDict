@@ -1,5 +1,8 @@
 package org.zeroxlab.momodict.archive;
 
+/**
+ * A data structure to present .idx file
+ */
 public class IdxEntry {
     public String wordStr;
     public int wordDataOffset;

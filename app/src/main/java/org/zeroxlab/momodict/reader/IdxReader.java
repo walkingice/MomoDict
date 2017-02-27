@@ -11,6 +11,9 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  A reader to parse .idx file
+ */
 public class IdxReader {
     private static final int NULL_TERMINATED_LENGTH = 1; // length of '\0'
     private static final int OFFSET_LENGTH = 4;

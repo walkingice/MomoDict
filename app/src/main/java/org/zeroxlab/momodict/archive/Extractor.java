@@ -5,6 +5,6 @@ import java.io.InputStream;
 
 public interface Extractor {
     // TODO: proper exception helps user understands what happened
-    DictionaryArchive extract(File outputDir,
-                              InputStream inputStream) throws Exception;
+    FileSet extract(File outputDir,
+                    InputStream inputStream) throws Exception;
 }

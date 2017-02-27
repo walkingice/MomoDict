@@ -13,8 +13,8 @@ import java.io.InputStream;
 public class TarExtractor implements Extractor {
 
     @Override
-    public DictionaryArchive extract(File outputDir, InputStream inputStream) throws Exception {
-        DictionaryArchive archive = new DictionaryArchive();
+    public FileSet extract(File outputDir, InputStream inputStream) throws Exception {
+        FileSet archive = new FileSet();
         archive.setCleanCallback(() -> {
             try {
                 if (outputDir.isDirectory()) {
@@ -39,7 +39,7 @@ public class TarExtractor implements Extractor {
     private void onEntryFound(File parent,
                               InputStream is,
                               TarArchiveEntry entry,
-                              DictionaryArchive archive)
+                              FileSet archive)
             throws Exception {
 
         final String fileName = entry.getName();
@@ -49,8 +49,16 @@ public class TarExtractor implements Extractor {
                 throw new Exception("Create dir fail");
             }
         } else {
+            // TODO: support .dz file. issue #2
+            if (fileName.endsWith(".dz")) {
+                StringBuilder msg = new StringBuilder();
+                msg.append("Haven't support .dz (dictzip) file so far.\n");
+                msg.append("please provide '.dict' to instead of '.dict.dz'");
+                throw new RuntimeException(msg.toString());
+            }
             // write file
             File out = new File(parent, fileName);
+
             byte[] buf = new byte[65535];
             FileOutputStream fos = new FileOutputStream(out);
             BufferedOutputStream bos = new BufferedOutputStream(fos);
@@ -62,11 +70,11 @@ public class TarExtractor implements Extractor {
 
             // cache file path
             if (fileName.endsWith(".idx")) {
-                archive.set(DictionaryArchive.Type.IDX, out.getAbsolutePath());
+                archive.set(FileSet.Type.IDX, out.getAbsolutePath());
             } else if (fileName.endsWith(".ifo")) {
-                archive.set(DictionaryArchive.Type.IFO, out.getAbsolutePath());
+                archive.set(FileSet.Type.IFO, out.getAbsolutePath());
             } else if (fileName.endsWith(".dict.dz") || fileName.endsWith(".dict")) {
-                archive.set(DictionaryArchive.Type.DICT, out.getAbsolutePath());
+                archive.set(FileSet.Type.DICT, out.getAbsolutePath());
             }
         }
         System.out.println(entry.getName());

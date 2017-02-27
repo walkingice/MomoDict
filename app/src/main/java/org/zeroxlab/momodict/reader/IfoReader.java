@@ -15,6 +15,9 @@ import java.util.regex.Pattern;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
+/**
+ * A reader to parse .ifo file
+ */
 public class IfoReader {
 
     private final Info mInfo;

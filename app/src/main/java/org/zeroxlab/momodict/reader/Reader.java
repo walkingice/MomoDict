@@ -1,8 +1,9 @@
 package org.zeroxlab.momodict.reader;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import org.zeroxlab.momodict.archive.DictionaryArchive;
+import org.zeroxlab.momodict.archive.FileSet;
 import org.zeroxlab.momodict.archive.Info;
 import org.zeroxlab.momodict.archive.Word;
 import org.zeroxlab.momodict.db.realm.RealmStore;
@@ -14,33 +15,50 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class to extract compressed file, to parse and to save into Database.
+ */
 public class Reader {
 
-    private DictionaryArchive mArchive;
+    private final String mCacheDir;
+    private final String mFilePath;
 
-    public Reader(String cachePath, String path) {
-        mArchive = CompressedFileReader.readBzip2File(cachePath, path);
+    /**
+     * Constructor
+     *
+     * @param cacheDirPath       A string as path of cache directory. Extracted files will be placed here.
+     * @param compressedFilePath A string as path of a compressed file which will be parsed.
+     */
+    public Reader(@NonNull String cacheDirPath, @NonNull String compressedFilePath) {
+        mCacheDir = cacheDirPath;
+        mFilePath = compressedFilePath;
     }
 
-    public void parse(Context ctx) {
+    /**
+     * To parse file and save into database.
+     *
+     * @param ctx Context instance
+     */
+    public void parse(@NonNull Context ctx) {
+        // extract file
+        final FileSet archive = CompressedFileReader.readBzip2File(mCacheDir, mFilePath);
         try {
-            File ifoFile = new File(mArchive.get(DictionaryArchive.Type.IFO));
-            File idxFile = new File(mArchive.get(DictionaryArchive.Type.IDX));
-            IfoReader ifoReader = new IfoReader(ifoFile);
-            Info info = ifoReader.parse();
+            final Store store = new RealmStore(ctx);
+            final File ifoFile = new File(archive.get(FileSet.Type.IFO));
+            final File idxFile = new File(archive.get(FileSet.Type.IDX));
+
+            // To parse ifo file
+            final IfoReader ifoReader = new IfoReader(ifoFile);
+            final Info info = ifoReader.parse();
             if (!IfoReader.isSanity(info)) {
                 throw new RuntimeException("Insanity .ifo file");
             }
 
+            // To parse idx file
             IdxReader idxReader = new IdxReader(idxFile);
             idxReader.parse();
-            System.out.println("");
-            if (idxReader.size() > 0) {
-                System.out.println("First:" + idxReader.get(0));
-                System.out.println("Last:" + idxReader.get(idxReader.size() - 1));
-            }
 
-            Store store = new RealmStore(ctx);
+            // To save ifo to database
             Book dict = new Book();
             dict.bookName = info.bookName;
             dict.author = info.author;
@@ -48,9 +66,10 @@ public class Reader {
             dict.date = info.date;
             store.addBook(dict);
 
+            // To save each words to database
             if (idxReader.size() != 0) {
                 List<Word> words = DictReader.parse(idxReader.getEntries(),
-                        mArchive.get(DictionaryArchive.Type.DICT));
+                        archive.get(FileSet.Type.DICT));
                 List<Entry> entries = new ArrayList<>();
                 for (Word word : words) {
                     Entry entry = new Entry();
@@ -64,8 +83,7 @@ public class Reader {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            mArchive.clean();
+            archive.clean();
         }
-
     }
 }
