@@ -20,14 +20,12 @@ import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.R;
 import org.zeroxlab.momodict.WordActivity;
 import org.zeroxlab.momodict.model.Card;
-import org.zeroxlab.momodict.model.Record;
 import org.zeroxlab.momodict.widget.HistoryRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.ViewPagerFocusable;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HistoryFragment extends Fragment implements ViewPagerFocusable {
@@ -101,19 +99,15 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
                     onUpdateList();
                 })
                 .setNeutralButton("Memo", (dialogInterface, i) -> {
-                    final List<Card> cards = mCtrl.getCards();
-                    Card card = null;
-                    for (Card c : cards) {
-                        if (TextUtils.equals(keyWord, c.wordStr)) {
-                            card = c;
-                            break;
-                        }
-                    }
-                    card = (card == null) ? new Card() : card;
-
-                    card.wordStr = (TextUtils.isEmpty(card.wordStr)) ? keyWord : card.wordStr;
-                    card.time = new Date();
-                    mCtrl.setCard(card);
+                    mCtrl.getCards()
+                            .filter((card) -> TextUtils.equals(keyWord, card.wordStr))
+                            .toList()
+                            .subscribe((list) -> {
+                                Card card = (list.size() == 0) ? new Card() : list.get(0);
+                                card.wordStr = (TextUtils.isEmpty(card.wordStr)) ? keyWord : card.wordStr;
+                                card.time = new Date();
+                                mCtrl.setCard(card);
+                            });
                 })
                 .setNegativeButton(android.R.string.cancel, (dialogInterface, i) -> {
                     // do nothing on canceling
@@ -124,10 +118,10 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
 
     private void onUpdateList() {
         mAdapter.clear();
-        final List<Record> records = mCtrl.getRecords();
-        for (Record r : records) {
-            mAdapter.addItem(r, SelectorAdapter.Type.A);
-        }
-        mAdapter.notifyDataSetChanged();
+        mCtrl.getRecords().subscribe(
+                (record) -> mAdapter.addItem(record, SelectorAdapter.Type.A),
+                (e) -> e.printStackTrace(),
+                () -> mAdapter.notifyDataSetChanged()
+        );
     }
 }

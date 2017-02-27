@@ -18,13 +18,11 @@ import android.view.inputmethod.InputMethodManager;
 import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.R;
 import org.zeroxlab.momodict.WordActivity;
-import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.widget.CardRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.ViewPagerFocusable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MemoFragment extends Fragment implements ViewPagerFocusable {
@@ -102,11 +100,10 @@ public class MemoFragment extends Fragment implements ViewPagerFocusable {
 
     private void onUpdateList() {
         mAdapter.clear();
-        List<Card> cards = mCtrl.getCards();
-        for (Card c : cards) {
-            mAdapter.addItem(c, SelectorAdapter.Type.A);
-        }
-
-        mAdapter.notifyDataSetChanged();
+        mCtrl.getCards().subscribe(
+                (card) -> mAdapter.addItem(card, SelectorAdapter.Type.A),
+                (e) -> e.printStackTrace(),
+                () -> mAdapter.notifyDataSetChanged()
+        );
     }
 }

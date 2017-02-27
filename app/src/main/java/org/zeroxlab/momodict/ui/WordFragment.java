@@ -10,19 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.zeroxlab.momodict.Controller;
-import org.zeroxlab.momodict.Momodict;
 import org.zeroxlab.momodict.R;
-import org.zeroxlab.momodict.db.realm.RealmStore;
-import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Record;
-import org.zeroxlab.momodict.model.Store;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordCardPresenter;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class WordFragment extends Fragment {
 
@@ -74,41 +73,28 @@ public class WordFragment extends Fragment {
                     target);
         }
 
-        Runnable runnable = () -> {
-            final Store store = new RealmStore(getContext());
-            final List<Entry> entries = store.getEntries(target);
-
-            if (entries.size() <= 0) {
-                return;
-            }
-
-            updateRecord(target);
-            getActivity().runOnUiThread(() -> {
-                mAdapter.clear();
-                for (Entry entry : entries) {
-                    mAdapter.addItem(entry, SelectorAdapter.Type.A);
-                }
-                mAdapter.notifyDataSetChanged();
-            });
-        };
-        Thread io = new Thread(runnable);
-        io.start();
+        mAdapter.clear();
+        updateRecord(target);
+        Observable.just(target)
+                .subscribeOn(Schedulers.io())
+                .flatMap((keyWord) -> mCtrl.getEntries(keyWord))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        (entry) -> mAdapter.addItem(entry, SelectorAdapter.Type.A),
+                        (e) -> e.printStackTrace(),
+                        () -> mAdapter.notifyDataSetChanged());
     }
 
     private void updateRecord(@NonNull String target) {
-        final List<Record> records = mCtrl.getRecords();
-        Record record = null;
-        for (Record r : records) {
-            if (TextUtils.equals(target, r.wordStr)) {
-                record = r;
-                break;
-            }
-        }
-
-        record = (record == null) ? new Record() : record;
-        record.wordStr = (TextUtils.isEmpty(record.wordStr)) ? target : record.wordStr;
-        record.count += 1;
-        record.time = new Date();
-        mCtrl.setRecord(record);
+        mCtrl.getRecords()
+                .filter((record -> TextUtils.equals(target, record.wordStr)))
+                .toList()
+                .subscribe((list) -> {
+                    Record record = (list.size() == 0) ? new Record() : list.get(0);
+                    record.wordStr = (TextUtils.isEmpty(record.wordStr)) ? target : record.wordStr;
+                    record.count += 1;
+                    record.time = new Date();
+                    mCtrl.setRecord(record);
+                });
     }
 }

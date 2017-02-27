@@ -13,6 +13,8 @@ import org.zeroxlab.momodict.model.Store;
 import java.util.Collections;
 import java.util.List;
 
+import rx.Observable;
+
 public class Controller {
 
     private Context mCtx;
@@ -23,32 +25,38 @@ public class Controller {
         mStore = new RealmStore(mCtx);
     }
 
-    public List<Book> getBooks() {
-        return mStore.getBooks();
+    public Observable<Book> getBooks() {
+        return Observable.from(mStore.getBooks());
     }
 
-    public List<Entry> getEntries(String keyWord) {
+    public Observable<Entry> queryEntries(String keyWord) {
         List<Entry> list = mStore.queryEntries(keyWord);
         Collections.sort(list, (left, right) -> {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
         });
-        return list;
+        return Observable.from(list);
     }
 
-    public List<Record> getRecords() {
+    public Observable<Entry> getEntries(String keyWord) {
+        List<Entry> list = mStore.getEntries(keyWord);
+        Collections.sort(list, (left, right) -> {
+            return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
+        });
+        return Observable.from(list);
+    }
+
+    public Observable<Record> getRecords() {
         List<Record> records = mStore.getRecords();
         Collections.sort(records, (left, right) -> {
             // sorting by time. Move latest one to head
             return left.time.before(right.time) ? 1 : -1;
         });
-        return records;
+        return Observable.from(records);
     }
 
     public void clearRecords() {
-        List<Record> records = getRecords();
-        for(Record r: records) {
-            mStore.removeRecords(r.wordStr);
-        }
+        getRecords().subscribe(
+                (record -> mStore.removeRecords(record.wordStr)));
     }
 
     public boolean setRecord(@NonNull Record record) {
@@ -59,13 +67,13 @@ public class Controller {
         return mStore.removeRecords(keyWord);
     }
 
-    public List<Card> getCards() {
+    public Observable<Card> getCards() {
         List<Card> cards = mStore.getCards();
         Collections.sort(cards, (left, right) -> {
             // sorting by time. Move latest one to head
             return left.time.before(right.time) ? 1 : -1;
         });
-        return cards;
+        return Observable.from(cards);
     }
 
     public boolean setCard(@NonNull Card card) {

@@ -21,16 +21,15 @@ import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.Momodict;
 import org.zeroxlab.momodict.R;
 import org.zeroxlab.momodict.WordActivity;
-import org.zeroxlab.momodict.model.Book;
-import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.widget.BackKeyHandler;
 import org.zeroxlab.momodict.widget.DictionaryRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordRowPresenter;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import rx.android.schedulers.AndroidSchedulers;
 
 public class InputFragment extends Fragment implements BackKeyHandler {
 
@@ -107,11 +106,14 @@ public class InputFragment extends Fragment implements BackKeyHandler {
     }
 
     private void onUpdateInput() {
-        final List<Book> books = mCtrl.getBooks();
-        mInput.setEnabled(books.size() > 0);
-        if (books.size() > 0 && !TextUtils.isEmpty(mInput.getText())) {
-            mInput.selectAll();
-        }
+        mCtrl.getBooks()
+                .count()
+                .subscribe((count) -> {
+                    mInput.setEnabled(count > 0);
+                    if (count > 0 && !TextUtils.isEmpty(mInput.getText())) {
+                        mInput.selectAll();
+                    }
+                });
     }
 
     private void onUpdateList() {
@@ -119,18 +121,20 @@ public class InputFragment extends Fragment implements BackKeyHandler {
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
         if (TextUtils.isEmpty(input)) {
-            List<Book> books = mCtrl.getBooks();
-            for (Book d : books) {
-                mAdapter.addItem(d.bookName, SelectorAdapter.Type.A);
-            }
-        } else {
-            List<Entry> entries = mCtrl.getEntries(input);
-            for (Entry entry : entries) {
-                mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B);
-            }
-        }
+            mCtrl.getBooks()
+                    .subscribe(
+                            (book) -> mAdapter.addItem(book.bookName, SelectorAdapter.Type.A),
+                            (e) -> e.printStackTrace(),
+                            () -> mAdapter.notifyDataSetChanged());
 
-        mAdapter.notifyDataSetChanged();
+        } else {
+            mCtrl.queryEntries(input)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            (entry) -> mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B),
+                            (e) -> e.printStackTrace(),
+                            () -> mAdapter.notifyDataSetChanged());
+        }
     }
 
     private void onRowClicked(String text) {
