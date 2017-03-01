@@ -21,6 +21,7 @@ import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.Momodict;
 import org.zeroxlab.momodict.R;
 import org.zeroxlab.momodict.WordActivity;
+import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.widget.BackKeyHandler;
 import org.zeroxlab.momodict.widget.DictionaryRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
@@ -28,16 +29,22 @@ import org.zeroxlab.momodict.widget.WordRowPresenter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
 public class InputFragment extends Fragment implements BackKeyHandler {
 
     private static final String TAG = Momodict.TAG;
+    private static final int INPUT_DELAY = 500;
 
     private SelectorAdapter mAdapter;
     private EditText mInput;
     private Controller mCtrl;
+
+    private Subject<String, String> mQuery = PublishSubject.create();
 
     @Override
     public void onCreate(@Nullable Bundle savedState) {
@@ -49,6 +56,23 @@ public class InputFragment extends Fragment implements BackKeyHandler {
         map.put(SelectorAdapter.Type.B,
                 new WordRowPresenter((view) -> onRowClicked((String) view.getTag())));
         mAdapter = new SelectorAdapter(map);
+
+        // If user type quickly, do not query until user stop inputting.
+        mQuery.debounce(INPUT_DELAY, TimeUnit.MILLISECONDS)
+                .concatMap((input) -> mCtrl.queryEntries(input).toList())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((list) -> {
+                    for (Entry entry : list) {
+                        mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B);
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }, (e) -> e.printStackTrace());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mQuery.onCompleted();
     }
 
     @Override
@@ -128,12 +152,7 @@ public class InputFragment extends Fragment implements BackKeyHandler {
                             () -> mAdapter.notifyDataSetChanged());
 
         } else {
-            mCtrl.queryEntries(input)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            (entry) -> mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B),
-                            (e) -> e.printStackTrace(),
-                            () -> mAdapter.notifyDataSetChanged());
+            mQuery.onNext(input);
         }
     }
 
