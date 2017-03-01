@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface Store {
 
-    int MAX_LENGTH = 1000;
+    int MAX_LENGTH = 300;
 
     boolean addBook(@NonNull Book book);
 
