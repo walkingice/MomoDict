@@ -141,7 +141,7 @@ public class InputFragment extends Fragment implements BackKeyHandler {
     }
 
     private void onUpdateList() {
-        final String input = mInput.getText().toString();
+        final String input = mInput.getText().toString().trim();
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
         if (TextUtils.isEmpty(input)) {
