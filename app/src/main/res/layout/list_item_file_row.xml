@@ -16,10 +16,21 @@
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:textAppearance="?android:attr/textAppearanceListItemSmall">
 
+        <ImageView
+            android:id="@id/img_1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="3dp"
+            android:src="@mipmap/ic_directory"
+            android:tint="@color/colorPrimary"
+            />
+
         <TextView
             android:id="@id/text_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/basic_gutter"
+            android:layout_marginStart="@dimen/basic_gutter"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="20sp"

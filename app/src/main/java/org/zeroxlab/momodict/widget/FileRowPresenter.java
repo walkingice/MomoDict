@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.zeroxlab.momodict.R;
@@ -32,8 +33,10 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
         if (file.isDirectory()) {
             holder.iTextView.setText(file.getName());
+            holder.iImg.setVisibility(View.VISIBLE);
         } else if (file.isFile()) {
-            holder.iTextView.setText("---" + file.getName());
+            holder.iTextView.setText(file.getName());
+            holder.iImg.setVisibility(View.INVISIBLE);
         } else {
             holder.iTextView.setText("//Unknown//");
         }
@@ -49,11 +52,13 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
     }
 
     class InnerViewHolder extends RecyclerView.ViewHolder {
+        ImageView iImg;
         TextView iTextView;
 
         public InnerViewHolder(View view) {
             super(view);
             iTextView = (TextView) view.findViewById(R.id.text_1);
+            iImg = (ImageView) view.findViewById(R.id.img_1);
         }
     }
 }
