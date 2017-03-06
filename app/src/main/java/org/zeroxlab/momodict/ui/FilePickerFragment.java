@@ -3,6 +3,8 @@ package org.zeroxlab.momodict.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +80,8 @@ public class FilePickerFragment extends Fragment {
 
     private void initViews(View container) {
         mList = (RecyclerView) container.findViewById(R.id.list);
+        LinearLayoutManager mgr = (LinearLayoutManager) mList.getLayoutManager();
+        mList.addItemDecoration(new DividerItemDecoration(getContext(), mgr.getOrientation()));
         mBtnCancel = (Button) container.findViewById(R.id.picker_btn_cancel);
         mBtnChoose = (Button) container.findViewById(R.id.picker_btn_choose);
         mBtnChoose.setEnabled(false);

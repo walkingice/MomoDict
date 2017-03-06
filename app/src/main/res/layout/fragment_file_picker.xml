@@ -12,8 +12,6 @@
         android:name="org.zeroxlab.momodict.ui.FilePickFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_weight="1"
         app:layoutManager="LinearLayoutManager"
         tools:context="org.zeroxlab.momodict.ui.FilePickerFragment"
