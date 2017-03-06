@@ -1,5 +1,7 @@
 package org.zeroxlab.momodict.widget;
 
+import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,9 +17,11 @@ import java.io.File;
 public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
 
     private View.OnClickListener mListener;
+    private Handler mHandler;
 
-    public FileRowPresenter(@NonNull View.OnClickListener listener) {
+    public FileRowPresenter(@NonNull Context ctx, @NonNull View.OnClickListener listener) {
         mListener = listener;
+        mHandler = new Handler(ctx.getMainLooper());
     }
 
     @Override
@@ -43,7 +47,11 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
 
         holder.itemView.setOnClickListener(view -> {
             view.setTag(file);
-            mListener.onClick(view);
+
+            // Delay to show ripple effect
+            mHandler.postDelayed(() -> {
+                mListener.onClick(view);
+            }, 250);
         });
     }
 

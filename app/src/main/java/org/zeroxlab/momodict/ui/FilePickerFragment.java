@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +22,12 @@ import java.util.Map;
 
 public class FilePickerFragment extends Fragment {
 
+    public final static String ARG_PATH = "path_to_open";
+    public final static String ARG_EXTENSION = "filename_extension";
     private RecyclerView mList;
     private SelectorAdapter mAdapter;
     private Button mBtnChoose;
     private Button mBtnCancel;
-
-    public final static String ARG_PATH = "path_to_open";
-    public final static String ARG_EXTENSION = "filename_extension";
     private String mChosen;
     private String mCurrent;
     private String mExtension;
@@ -66,7 +66,7 @@ public class FilePickerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_file_picker, container, false);
         initViews(view);
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
-        map.put(SelectorAdapter.Type.A, new FileRowPresenter((v) -> onFileClicked(v)));
+        map.put(SelectorAdapter.Type.A, new FileRowPresenter(getContext(), (v) -> onFileClicked(v)));
         mAdapter = new SelectorAdapter(map);
         mList.setAdapter(mAdapter);
         return view;
@@ -123,6 +123,9 @@ public class FilePickerFragment extends Fragment {
 
     private void onFileClicked(View v) {
         File file = (File) v.getTag();
+        if (TextUtils.equals(mChosen, file.getPath())) {
+            return;
+        }
         mCurrent = file.getPath();
         if (file.isFile() && mCurrent.endsWith(mExtension)) {
             mChosen = mCurrent;
