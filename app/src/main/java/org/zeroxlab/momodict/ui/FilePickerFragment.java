@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.zeroxlab.momodict.R;
 import org.zeroxlab.momodict.widget.FileRowPresenter;
@@ -28,8 +29,9 @@ public class FilePickerFragment extends Fragment {
     private SelectorAdapter mAdapter;
     private Button mBtnChoose;
     private Button mBtnCancel;
+    private TextView mCurrentPathView;
     private String mChosen;
-    private String mCurrent;
+    private String mCurrentPath;
     private String mExtension;
 
     @SuppressWarnings("unused")
@@ -47,16 +49,16 @@ public class FilePickerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        mCurrent = args.getString(ARG_PATH);
+        mCurrentPath = args.getString(ARG_PATH);
         mExtension = args.getString(ARG_EXTENSION, "");
 
         // check
-        File check = new File(mCurrent);
+        File check = new File(mCurrentPath);
         if (!check.exists() && !check.canRead()) {
-            throw new RuntimeException("Cannot open path:" + mCurrent);
+            throw new RuntimeException("Cannot open path:" + mCurrentPath);
         }
         if (check.isFile()) {
-            mCurrent = check.getParentFile().getPath();
+            mCurrentPath = check.getParentFile().getPath();
         }
     }
 
@@ -75,13 +77,14 @@ public class FilePickerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateList(mCurrent);
+        updateList(mCurrentPath);
     }
 
     private void initViews(View container) {
         mList = (RecyclerView) container.findViewById(R.id.list);
         LinearLayoutManager mgr = (LinearLayoutManager) mList.getLayoutManager();
         mList.addItemDecoration(new DividerItemDecoration(getContext(), mgr.getOrientation()));
+        mCurrentPathView = (TextView) container.findViewById(R.id.picker_current_path);
         mBtnCancel = (Button) container.findViewById(R.id.picker_btn_cancel);
         mBtnChoose = (Button) container.findViewById(R.id.picker_btn_choose);
         mBtnChoose.setEnabled(false);
@@ -105,6 +108,7 @@ public class FilePickerFragment extends Fragment {
     }
 
     private void updateList(String path) {
+        mCurrentPathView.setText(mCurrentPath);
         mAdapter.clear();
         File f = new File(path);
         if (f.getParentFile() != null) {
@@ -127,25 +131,27 @@ public class FilePickerFragment extends Fragment {
     }
 
     private void onFileClicked(View v) {
-        File file = (File) v.getTag();
+        final File file = (File) v.getTag();
+        final String selectedPath = file.getPath();
         if (TextUtils.equals(mChosen, file.getPath())) {
             return;
         }
-        mCurrent = file.getPath();
-        if (file.isFile() && mCurrent.endsWith(mExtension)) {
-            mChosen = mCurrent;
+        if (file.isFile() && selectedPath.endsWith(mExtension)) {
+            mChosen = selectedPath;
+        } else {
+            mCurrentPath = selectedPath;
         }
-        updateList(mCurrent);
+        updateList(mCurrentPath);
     }
 
     public boolean goParentDirectory() {
-        File current = new File(mCurrent);
+        File current = new File(mCurrentPath);
         File parent = current.getParentFile();
         if (parent == null) {
             return false;
         } else {
-            mCurrent = parent.getPath();
-            updateList(mCurrent);
+            mCurrentPath = parent.getPath();
+            updateList(mCurrentPath);
             return true;
         }
     }

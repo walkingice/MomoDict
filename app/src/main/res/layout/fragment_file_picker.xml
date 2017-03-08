@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/picker_current_path"
+        style="@android:style/TextAppearance.Small.Inverse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:ellipsize="start"
+        android:maxLines="1"
+        android:padding="@dimen/content_space"
+        tools:text="/a/very/very/ver/very/long/absolute/path/from/root/to/current/directory/"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@id/list"
         android:name="org.zeroxlab.momodict.ui.FilePickFragment"
@@ -15,6 +26,7 @@
         android:layout_weight="1"
         app:layoutManager="LinearLayoutManager"
         tools:context="org.zeroxlab.momodict.ui.FilePickerFragment"
+        tools:listitem="@layout/list_item_file_row"
         />
 
     <LinearLayout
