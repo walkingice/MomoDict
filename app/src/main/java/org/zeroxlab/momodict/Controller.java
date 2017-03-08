@@ -31,18 +31,20 @@ public class Controller {
 
     public Observable<Entry> queryEntries(String keyWord) {
         List<Entry> list = mStore.queryEntries(keyWord);
+
         Collections.sort(list, (left, right) -> {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
         });
-        return Observable.from(list);
+        return Observable.from(list).distinct((item) -> item.wordStr);
     }
 
     public Observable<Entry> getEntries(String keyWord) {
         List<Entry> list = mStore.getEntries(keyWord);
+
         Collections.sort(list, (left, right) -> {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
         });
-        return Observable.from(list);
+        return Observable.from(list).distinct((item) -> item.wordStr);
     }
 
     public Observable<Record> getRecords() {
