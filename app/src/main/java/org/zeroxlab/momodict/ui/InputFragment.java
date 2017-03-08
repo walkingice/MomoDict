@@ -1,5 +1,6 @@
 package org.zeroxlab.momodict.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import org.zeroxlab.momodict.Controller;
@@ -25,6 +27,7 @@ import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.widget.BackKeyHandler;
 import org.zeroxlab.momodict.widget.DictionaryRowPresenter;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
+import org.zeroxlab.momodict.widget.ViewPagerFocusable;
 import org.zeroxlab.momodict.widget.WordRowPresenter;
 
 import java.util.HashMap;
@@ -35,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
-public class InputFragment extends Fragment implements BackKeyHandler {
+public class InputFragment extends Fragment implements BackKeyHandler, ViewPagerFocusable {
 
     private static final String TAG = Momodict.TAG;
     private static final int INPUT_DELAY = 500;
@@ -159,5 +162,11 @@ public class InputFragment extends Fragment implements BackKeyHandler {
     private void onRowClicked(String text) {
         final Intent intent = WordActivity.createIntent(getActivity(), text);
         startActivity(intent);
+    }
+
+    @Override
+    public void onViewPagerFocused() {
+        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 }
