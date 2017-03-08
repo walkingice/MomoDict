@@ -14,7 +14,7 @@ import org.zeroxlab.momodict.R;
 
 import java.io.File;
 
-public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
+public class FileRowPresenter implements SelectorAdapter.Presenter<FileRowPresenter.Item> {
 
     private View.OnClickListener mListener;
     private Handler mHandler;
@@ -33,20 +33,21 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, File file) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Item item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
-        if (file.isDirectory()) {
-            holder.iTextView.setText(file.getName());
+        if (item.file.isDirectory()) {
+            holder.iTextView.setText(item.display);
             holder.iImg.setVisibility(View.VISIBLE);
-        } else if (file.isFile()) {
-            holder.iTextView.setText(file.getName());
+        } else if (item.file.isFile()) {
+            holder.iTextView.setText(item.display);
             holder.iImg.setVisibility(View.INVISIBLE);
         } else {
             holder.iTextView.setText("//Unknown//");
         }
 
+        holder.itemView.setEnabled(item.file.canRead());
         holder.itemView.setOnClickListener(view -> {
-            view.setTag(file);
+            view.setTag(item.file);
 
             // Delay to show ripple effect
             mHandler.postDelayed(() -> {
@@ -57,6 +58,16 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<File> {
 
     @Override
     public void onUnbindViewHolder(RecyclerView.ViewHolder viewHolder) {
+    }
+
+    public static class Item {
+        public String display;
+        public File file;
+
+        public Item(String display, File file) {
+            this.display = display;
+            this.file = file;
+        }
     }
 
     class InnerViewHolder extends RecyclerView.ViewHolder {

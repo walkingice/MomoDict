@@ -107,11 +107,16 @@ public class FilePickerFragment extends Fragment {
     private void updateList(String path) {
         mAdapter.clear();
         File f = new File(path);
+        if (f.getParentFile() != null) {
+            FileRowPresenter.Item parent = new FileRowPresenter.Item("..", f.getParentFile());
+            mAdapter.addItem(parent, SelectorAdapter.Type.A);
+        }
         File dir = f.isDirectory() ? f : f.getParentFile();
         File[] files = dir.listFiles();
         if (files != null) {
             for (File file : dir.listFiles()) {
-                mAdapter.addItem(file, SelectorAdapter.Type.A);
+                FileRowPresenter.Item item = new FileRowPresenter.Item(file.getName(), file);
+                mAdapter.addItem(item, SelectorAdapter.Type.A);
             }
         }
 
