@@ -15,11 +15,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mikepenz.aboutlibraries.LibsBuilder;
+
 import org.zeroxlab.momodict.ui.HistoryFragment;
 import org.zeroxlab.momodict.ui.InputFragment;
 import org.zeroxlab.momodict.ui.MemoFragment;
 import org.zeroxlab.momodict.widget.BackKeyHandler;
-import org.zeroxlab.momodict.widget.HistoryRowPresenter;
 import org.zeroxlab.momodict.widget.PagerFocusBroadcaster;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, R.id.menu_import, Menu.NONE, "Import dictionary");
         menu.add(Menu.NONE, R.id.menu_clear_history, Menu.NONE, "Clear History");
+        menu.add(Menu.NONE, R.id.menu_license, Menu.NONE, "License");
         return true;
     }
 
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_clear_history:
                 onClearHistory();
+                return true;
+            case R.id.menu_license:
+                onShowLicenses();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -129,6 +134,13 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = data.getData();
             Log.d(TAG, "Imported from file " + uri.getPath());
         }
+    }
+
+    private void onShowLicenses() {
+        LibsBuilder builder = new LibsBuilder();
+        builder.withAboutIconShown(true)
+                .withAboutVersionShown(true)
+                .start(this);
     }
 
     /**

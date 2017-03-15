@@ -33,6 +33,12 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
 
+    // For license detection
+    // https://github.com/mikepenz/AboutLibraries
+    compile('com.mikepenz:aboutlibraries:5.9.4@aar') {
+        transitive = true
+    }
+
     // to install apache library
     compile 'org.apache.commons:commons-compress:1.13'
     compile group: 'commons-io', name: 'commons-io', version: '2.4'
