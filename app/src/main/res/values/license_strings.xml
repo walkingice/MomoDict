@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android support library card view -->
+    <string name="define_card_view_v7"/>
+    <string name="library_card_view_v7_libraryName">Support CardView v7</string>
+    <string name="library_card_view_v7_author">@string/library_SupportLibrary_author</string>
+    <string name="library_card_view_v7_authorWebsite">@string/library_SupportLibrary_authorWebsite</string>
+    <string name="library_card_view_v7_libraryWebsite">https://developer.android.com/topic/libraries/support-library/packages.html</string>
+    <string name="library_card_view_v7_licenseId">@string/library_SupportLibrary_licenseId</string>
+    <string name="library_card_view_v7_isOpenSource">@string/library_SupportLibrary_isOpenSource</string>
+    <string name="library_card_view_v7_repositoryLink">@string/library_SupportLibrary_repositoryLink</string>
+    <string name="library_card_view_v7_libraryDescription">This library adds support for the CardView widget, which lets you show information inside cards that have a consistent look on any app. These cards are useful for material design implementations, and are used extensively in layouts for TV apps.</string>
+
+    <!-- Apache commons compress -->
+    <string name="define_apache_commons_compress"/>
+    <string name="library_apache_commons_compress_libraryName">Apache Commons Compress</string>
+    <string name="library_apache_commons_compress_author">Apache Software Foundation</string>
+    <string name="library_apache_commons_compress_authorWebsite">http://www.apache.org/</string>
+    <string name="library_apache_commons_compress_libraryWebsite">https://commons.apache.org/proper/commons-compress/</string>
+    <string name="library_apache_commons_compress_licenseId">@string/define_license_Apache_2_0</string>
+    <string name="library_apache_commons_compress_isOpenSource">true</string>
+    <string name="library_apache_commons_compress_libraryDescription">The Apache Commons Compress library defines an API for working with ar, cpio, Unix dump, tar, zip, gzip, XZ, Pack200, bzip2, 7z, arj, lzma, snappy, DEFLATE, lz4 and Z files. </string>
+</resources>
