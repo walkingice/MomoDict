@@ -13,6 +13,8 @@ Clone this project and use gradle or Android Studio
 ./gradlew build
 ```
 
+However, before resolving [#2](../../issues/2), the dictionary file should be customized(use *.dict* instead of *.dict.dz*). Otherwise it cannot import dictionary correctly.
+
 # License
 
 Except the logo and brand name, other things are under the MIT License
