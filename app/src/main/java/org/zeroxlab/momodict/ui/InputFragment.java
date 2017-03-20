@@ -169,7 +169,8 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
 
     @Override
     public void onViewPagerFocused() {
+        mInput.requestFocus();
         ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
