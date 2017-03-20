@@ -44,7 +44,7 @@ public class Controller {
         Collections.sort(list, (left, right) -> {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
         });
-        return Observable.from(list).distinct((item) -> item.wordStr);
+        return Observable.from(list);
     }
 
     public Observable<Record> getRecords() {
