@@ -41,7 +41,7 @@ import rx.subjects.Subject;
 public class InputFragment extends Fragment implements BackKeyHandler, ViewPagerFocusable {
 
     private static final String TAG = Momodict.TAG;
-    private static final int INPUT_DELAY = 500;
+    private static final int INPUT_DELAY = 300;
 
     private SelectorAdapter mAdapter;
     private EditText mInput;
@@ -68,6 +68,7 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
                 .concatMap((input) -> mCtrl.queryEntries(input).toList())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe((list) -> {
+                    mAdapter.clear();
                     for (Entry entry : list) {
                         mAdapter.addItem(entry.wordStr, SelectorAdapter.Type.B);
                     }
