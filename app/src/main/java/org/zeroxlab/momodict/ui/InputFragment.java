@@ -47,7 +47,7 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
     private EditText mInput;
     private Controller mCtrl;
 
-    private Subject<String, String> mQuery = PublishSubject.create();
+    private Subject<String, String> mQuery;
 
     @Override
     public void onCreate(@Nullable Bundle savedState) {
@@ -60,6 +60,9 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
                 new WordRowPresenter((view) -> onRowClicked((String) view.getTag())));
         mAdapter = new SelectorAdapter(map);
 
+        // This fragment might be destroy if user scroll to third Tab, so we have to re-create it
+        // in onCreate callback.
+        mQuery = PublishSubject.create();
         // If user type quickly, do not query until user stop inputting.
         mQuery.debounce(INPUT_DELAY, TimeUnit.MILLISECONDS)
                 .concatMap((input) -> mCtrl.queryEntries(input).toList())
