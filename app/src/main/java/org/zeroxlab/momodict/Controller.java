@@ -30,7 +30,10 @@ public class Controller {
     }
 
     public Observable<Entry> queryEntries(String keyWord) {
+        // to make sure exact matched words are returned
+        List<Entry> exact = mStore.getEntries(keyWord);
         List<Entry> list = mStore.queryEntries(keyWord);
+        list.addAll(exact);
 
         Collections.sort(list, (left, right) -> {
             return left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord);
