@@ -2,26 +2,63 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/colorPrimary"
               android:orientation="vertical">
 
-    <Button
-        android:id="@id/btn_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="Change"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@id/text_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:text="To select a file to import"/>
+        <TextView
+            style="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/basic_gutter"
+            android:text="To choose a file to import"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/basic_gutter"
+            android:layout_marginLeft="@dimen/basic_gutter"
+            android:layout_marginRight="@dimen/basic_gutter"
+            android:layout_marginStart="@dimen/basic_gutter"
+            android:background="#FFFFFF"
+            android:minWidth="300dp"
+            >
+
+            <TextView
+                android:id="@id/text_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="start"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:padding="@dimen/basic_gutter"
+                android:text="file path"/>
+
+            <Button
+                android:id="@id/btn_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <Button
         android:id="@id/btn_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/basic_gutter"
+        android:enabled="false"
+        android:minWidth="200dp"
         android:text="Import"/>
 
 </LinearLayout>
