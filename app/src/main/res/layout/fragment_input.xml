@@ -1,34 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:card_view="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary">
 
-        <EditText
-            android:id="@id/input_1"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:imeOptions="actionNone"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"/>
+            android:layout_margin="@dimen/basic_gutter"
+            card_view:cardCornerRadius="@dimen/grid_size">
 
-        <ImageButton
-            android:id="@id/btn_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_delete"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/grid_size"
+                android:paddingLeft="@dimen/basic_gutter"
+                android:paddingStart="@dimen/basic_gutter">
 
-    </LinearLayout>
+                <EditText
+                    android:id="@id/input_1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="Input single word here"
+                    android:textColorHint="#CCCCCC"
+                    android:imeOptions="actionNone"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"/>
+
+                <ImageView
+                    android:id="@id/btn_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:tint="@color/colorPrimaryDark"
+                    android:src="@android:drawable/ic_delete"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+    </FrameLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@id/list"
+        tools:listitem="@android:layout/simple_list_item_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
