@@ -26,6 +26,9 @@ import org.zeroxlab.momodict.widget.PagerFocusBroadcaster;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main Activity, it consists several tabs which present by ViewPager.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = Momodict.TAG;
@@ -76,8 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        // 1. if user not in first tab, move to first tab
+        // 2. if the first tab can handle back key, do nothing here
+        // 3. otherwise, call super.onBackPressed(usually close this activity)
         if (mPager.getCurrentItem() != 0) {
-            // not in first page, just move to first page
             mPager.setCurrentItem(0);
         } else {
             Object first = mAdapter.getItem(0);
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        // To create fragments, and manage them by MyPagerAdapter.
+        // To create fragments for Tabs, and manage them by MyPagerAdapter
         final TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         final FragmentManager mgr = getSupportFragmentManager();
         mAdapter = new MyPagerAdapter(mgr);
@@ -112,12 +117,18 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * Callback when user click "Import" in Menu options
+     */
     private void onImportClicked() {
         Intent i = new Intent();
         i.setClass(this, FileImportActivity.class);
         startActivityForResult(i, REQ_CODE_IMPORT);
     }
 
+    /**
+     * Callback when user click "Clear history" in Menu options
+     */
     private void onClearHistory() {
         int size = mAdapter.getCount();
         for (int i = 0; i < size; i++) {
@@ -136,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Callback when user click "License" in Menu options
+     */
     private void onShowLicenses() {
         LibsBuilder builder = new LibsBuilder();
         builder.withAboutIconShown(true)

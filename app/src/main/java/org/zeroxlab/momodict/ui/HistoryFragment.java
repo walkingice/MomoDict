@@ -28,6 +28,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A fragment to display a list which contains user queried texts.
+ */
 public class HistoryFragment extends Fragment implements ViewPagerFocusable {
 
     private Controller mCtrl;
@@ -36,6 +39,8 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
     @Override
     public void onCreate(@Nullable Bundle savedState) {
         super.onCreate(savedState);
+        mCtrl = new Controller(getActivity());
+
         final Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new HistoryRowPresenter(
                 (view) -> onRowClicked((String) view.getTag()),
@@ -43,8 +48,6 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
                     onRowLongClicked((String) view.getTag());
                     return true;
                 }));
-
-        mCtrl = new Controller(getActivity());
         mAdapter = new SelectorAdapter(map);
     }
 
@@ -61,10 +64,14 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
         onUpdateList();
     }
 
+    /**
+     * Callback for {@link ViewPagerFocusable}. Called when ViewPager focused this fragment
+     */
     @Override
     public void onViewPagerFocused() {
         final View view = getActivity().getCurrentFocus();
         if (view != null) {
+            // hide soft-keyboard since there is no input field in this fragment
             InputMethodManager imm = (InputMethodManager) getActivity()
                     .getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

@@ -38,6 +38,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 import rx.subjects.Subject;
 
+/**
+ * Fragment to provide UI which user can input a text to query, and display a list for queried text.
+ */
 public class InputFragment extends Fragment implements BackKeyHandler, ViewPagerFocusable {
 
     private static final String TAG = Momodict.TAG;
@@ -47,6 +50,10 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
     private EditText mInput;
     private Controller mCtrl;
 
+    /**
+     * User input won't be send to mCtrl directly. Instead, send to here so we have more flexibility
+     * to use mCtrl.
+     */
     private Subject<String, String> mQuery;
 
     @Override
@@ -54,6 +61,9 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
         super.onCreate(savedState);
 
         mCtrl = new Controller(getActivity());
+
+        // create adapter for RecyclerView. Adapter handles two kinds of row, one for "dictionary"
+        // and another for "word".
         final Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new DictionaryRowPresenter());
         map.put(SelectorAdapter.Type.B,
@@ -96,6 +106,13 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
         onUpdateList();
     }
 
+    /**
+     * Callback for {@link BackKeyHandler}. Called when user clicked back key.
+     * If the input field is not empty, back-key-event will clear the field.
+     * We regards this as "handled"
+     *
+     * @return true if this fragment handled back-key-event
+     */
     @Override
     public boolean backKeyHandled() {
         if (TextUtils.isEmpty(mInput.getText())) {
@@ -106,12 +123,24 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
         }
     }
 
+    /**
+     * Callback for {@link ViewPagerFocusable}. Called when ViewPager focused this fragment
+     */
+    @Override
+    public void onViewPagerFocused() {
+        // if this page becomes visible, show soft-keyboard
+        mInput.requestFocus();
+        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
     private void initViews(@NonNull View fv) {
         final RecyclerView list = (RecyclerView) fv.findViewById(R.id.list);
         final LinearLayoutManager mgr = (LinearLayoutManager) list.getLayoutManager();
         final DividerItemDecoration decoration = new DividerItemDecoration(list.getContext(),
                 mgr.getOrientation());
         list.addItemDecoration(decoration);
+
         mInput = (EditText) fv.findViewById(R.id.input_1);
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -136,7 +165,11 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
         mInput.setText("");
     }
 
+    /**
+     * To update status of Input view - disable or enable it.
+     */
     private void onUpdateInput() {
+        // If there is no any available dictionary, disable Input view.
         mCtrl.getBooks()
                 .count()
                 .subscribe((count) -> {
@@ -147,11 +180,15 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
                 });
     }
 
+    /**
+     * Update list according to user's input.
+     */
     private void onUpdateList() {
         final String input = mInput.getText().toString().trim();
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
         if (TextUtils.isEmpty(input)) {
+            // User haven't input anything, display dictionaries names to make it looks better.
             mCtrl.getBooks()
                     .subscribe(
                             (book) -> mAdapter.addItem(book.bookName, SelectorAdapter.Type.A),
@@ -163,15 +200,13 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
         }
     }
 
+    /**
+     * Callback for user clicked any queried word.
+     *
+     * @param text the text of the row which user clicked
+     */
     private void onRowClicked(String text) {
         final Intent intent = WordActivity.createIntent(getActivity(), text);
         startActivity(intent);
-    }
-
-    @Override
-    public void onViewPagerFocused() {
-        mInput.requestFocus();
-        ((InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }

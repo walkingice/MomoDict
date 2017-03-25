@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:card_view="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical">
 
     <FrameLayout
@@ -33,19 +33,19 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="Input single word here"
-                    android:textColorHint="#CCCCCC"
                     android:imeOptions="actionNone"
                     android:inputType="text"
                     android:lines="1"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textColorHint="#CCCCCC"/>
 
                 <ImageView
                     android:id="@id/btn_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:tint="@color/colorPrimaryDark"
-                    android:src="@android:drawable/ic_delete"/>
+                    android:src="@android:drawable/ic_delete"
+                    android:tint="@color/colorPrimaryDark"/>
 
             </LinearLayout>
 
@@ -56,10 +56,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@id/list"
-        tools:listitem="@android:layout/simple_list_item_1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        app:layoutManager="LinearLayoutManager"/>
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@android:layout/simple_list_item_1"/>
 
 </LinearLayout>
