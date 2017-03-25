@@ -188,12 +188,8 @@ public class InputFragment extends Fragment implements BackKeyHandler, ViewPager
         Log.d(TAG, "Input: " + input);
         mAdapter.clear();
         if (TextUtils.isEmpty(input)) {
-            // User haven't input anything, display dictionaries names to make it looks better.
-            mCtrl.getBooks()
-                    .subscribe(
-                            (book) -> mAdapter.addItem(book.bookName, SelectorAdapter.Type.A),
-                            (e) -> e.printStackTrace(),
-                            () -> mAdapter.notifyDataSetChanged());
+            // User haven't input anything, just clear the list
+            mAdapter.notifyDataSetChanged();
 
         } else {
             mQuery.onNext(input);
