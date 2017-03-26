@@ -8,9 +8,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import org.zeroxlab.momodict.Controller;
 import org.zeroxlab.momodict.R;
+import org.zeroxlab.momodict.model.Card;
 import org.zeroxlab.momodict.model.Record;
 import org.zeroxlab.momodict.widget.SelectorAdapter;
 import org.zeroxlab.momodict.widget.WordCardPresenter;
@@ -18,17 +21,21 @@ import org.zeroxlab.momodict.widget.WordCardPresenter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class WordFragment extends Fragment {
+public class WordFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
     private static final String ARG_KEYWORD = "key_word";
+    private Switch mSwitch;
     private Controller mCtrl;
     private SelectorAdapter mAdapter;
     private String mKeyWord;
+
+    private Card mCard;
 
     public static WordFragment newInstance(@NonNull String keyWord) {
         WordFragment fragment = new WordFragment();
@@ -59,11 +66,44 @@ public class WordFragment extends Fragment {
         super.onResume();
         mKeyWord = getArguments().getString(ARG_KEYWORD);
         onDisplayDetail(mKeyWord);
+
+        mSwitch.setOnCheckedChangeListener(null);
+        mCtrl.getCards()
+                .filter(card -> mKeyWord.equals(card.wordStr))
+                .first()
+                .subscribe(
+                        card -> {
+                            mCard = card;
+                            mSwitch.setChecked(true);
+                            mSwitch.setOnCheckedChangeListener(this);
+                        },
+                        (e) -> {
+                            if (e instanceof NoSuchElementException) {
+                                mCard = new Card();
+                                mCard.wordStr = mKeyWord;
+                                mSwitch.setChecked(false);
+                            }
+                            mSwitch.setOnCheckedChangeListener(this);
+                        });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+        if (checked) {
+            mCard.time = new Date();
+            mCtrl.setCard(mCard);
+        } else {
+            mCtrl.removeCards(mKeyWord);
+        }
     }
 
     private void initViews(View fv) {
         final RecyclerView list = (RecyclerView) fv.findViewById(R.id.list);
         list.setAdapter(mAdapter);
+
+        mSwitch = (Switch) fv.findViewById(R.id.control_1);
+        mSwitch.setOnCheckedChangeListener((v, checked) -> {
+        });
     }
 
     private void onDisplayDetail(@NonNull String target) {
