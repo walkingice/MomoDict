@@ -21,8 +21,12 @@ public class Controller {
     private Store mStore;
 
     public Controller(@NonNull Context ctx) {
+        this(ctx, new RealmStore(ctx));
+    }
+
+    public Controller(@NonNull Context ctx, @NonNull Store store) {
         mCtx = ctx;
-        mStore = new RealmStore(mCtx);
+        mStore = store;
     }
 
     public Observable<Book> getBooks() {
