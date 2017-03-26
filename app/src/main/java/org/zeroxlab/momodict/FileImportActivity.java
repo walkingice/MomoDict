@@ -17,8 +17,8 @@ import org.zeroxlab.momodict.ui.FragmentListener;
 
 public class FileImportActivity extends AppCompatActivity implements FragmentListener {
 
-    private static final String sEXTDIR = Environment.getExternalStorageDirectory().getPath();
-    private static final String sEXT = ".tar.bz2";
+    private static final String sEXT_DIR = Environment.getExternalStorageDirectory().getPath();
+    private static final String sEXT = ".tar.bz2"; // supported file extension
 
     private final static String TAG_IMPORT_FILE = "fragment_to_import_file";
     private final static String TAG_PICK_FILE = "fragment_to_pick_file";
@@ -33,7 +33,7 @@ public class FileImportActivity extends AppCompatActivity implements FragmentLis
     }
 
     private void setFragments() {
-        final FileImportFragment importFrg = FileImportFragment.newInstance(sEXTDIR);
+        final FileImportFragment importFrg = FileImportFragment.newInstance(sEXT_DIR);
         final FragmentManager mgr = getSupportFragmentManager();
         mgr.beginTransaction()
                 .add(R.id.fragment_container, importFrg, TAG_IMPORT_FILE)
@@ -55,7 +55,7 @@ public class FileImportActivity extends AppCompatActivity implements FragmentLis
         final FragmentManager mgr = getSupportFragmentManager();
         mgr.beginTransaction()
                 .replace(R.id.fragment_container,
-                        FilePickerFragment.newInstance(sEXTDIR, sEXT),
+                        FilePickerFragment.newInstance(sEXT_DIR, sEXT),
                         TAG_PICK_FILE)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)

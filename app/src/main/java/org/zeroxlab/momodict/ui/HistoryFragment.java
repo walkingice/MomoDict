@@ -102,10 +102,12 @@ public class HistoryFragment extends Fragment implements ViewPagerFocusable {
         new AlertDialog.Builder(getActivity())
                 .setTitle(keyWord)
                 .setPositiveButton("Remove", (dialogInterface, i) -> {
+                    // remove this word from history
                     mCtrl.removeRecord(keyWord);
                     onUpdateList();
                 })
                 .setNeutralButton("Memo", (dialogInterface, i) -> {
+                    // add this word to memo
                     mCtrl.getCards()
                             .filter((card) -> TextUtils.equals(keyWord, card.wordStr))
                             .toList()

@@ -27,6 +27,9 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+/**
+ * A fragment to display detail of a word. Usually is translation from dictionaries.
+ */
 public class WordFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
     private static final String ARG_KEYWORD = "key_word";
@@ -68,16 +71,21 @@ public class WordFragment extends Fragment implements CompoundButton.OnCheckedCh
         onDisplayDetail(mKeyWord);
 
         mSwitch.setOnCheckedChangeListener(null);
+
+        // if the keyword is already stored as memo, retrieve it.
+        // otherwise create a new Card
         mCtrl.getCards()
                 .filter(card -> mKeyWord.equals(card.wordStr))
                 .first()
                 .subscribe(
                         card -> {
+                            // keyword stored
                             mCard = card;
                             mSwitch.setChecked(true);
                             mSwitch.setOnCheckedChangeListener(this);
                         },
                         (e) -> {
+                            // keyword not stored
                             if (e instanceof NoSuchElementException) {
                                 mCard = new Card();
                                 mCard.wordStr = mKeyWord;
@@ -115,6 +123,8 @@ public class WordFragment extends Fragment implements CompoundButton.OnCheckedCh
 
         mAdapter.clear();
         updateRecord(target);
+
+        // get translation of keyword from each dictionaries
         Observable.just(target)
                 .subscribeOn(Schedulers.io())
                 .flatMap((keyWord) -> mCtrl.getEntries(keyWord))

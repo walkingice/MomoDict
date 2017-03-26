@@ -25,6 +25,9 @@ import org.zeroxlab.momodict.widget.ViewPagerFocusable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * A fragment to display a list of texts as user's memo.
+ */
 public class MemoFragment extends Fragment implements ViewPagerFocusable {
 
     private Controller mCtrl;
@@ -33,6 +36,8 @@ public class MemoFragment extends Fragment implements ViewPagerFocusable {
     @Override
     public void onCreate(@Nullable Bundle savedState) {
         super.onCreate(savedState);
+        mCtrl = new Controller(getActivity());
+
         Map<SelectorAdapter.Type, SelectorAdapter.Presenter> map = new HashMap<>();
         map.put(SelectorAdapter.Type.A, new CardRowPresenter(
                 (view) -> onRowClicked((String) view.getTag()),
@@ -40,8 +45,6 @@ public class MemoFragment extends Fragment implements ViewPagerFocusable {
                     onRowLongClicked((String) view.getTag());
                     return true;
                 }));
-
-        mCtrl = new Controller(getActivity());
         mAdapter = new SelectorAdapter(map);
     }
 
@@ -79,15 +82,22 @@ public class MemoFragment extends Fragment implements ViewPagerFocusable {
         list.setAdapter(mAdapter);
     }
 
+    /**
+     * Callback when user click a long
+     */
     private void onRowClicked(String keyWord) {
         final Intent intent = WordActivity.createIntent(getActivity(), keyWord);
         startActivity(intent);
     }
 
+    /**
+     * Callback when user long-click a long
+     */
     private void onRowLongClicked(@NonNull final String keyWord) {
         new AlertDialog.Builder(getActivity())
                 .setTitle(keyWord)
                 .setPositiveButton("Remove", (dialogInterface, i) -> {
+                    // remove this word from memo
                     mCtrl.removeCards(keyWord);
                     onUpdateList();
                 })
