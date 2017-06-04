@@ -10,18 +10,23 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import rx.functions.Action0;
+
 public class TarExtractor implements Extractor {
 
     @Override
-    public FileSet extract(File outputDir, InputStream inputStream) throws Exception {
+    public FileSet extract(final File outputDir, InputStream inputStream) throws Exception {
         FileSet archive = new FileSet();
-        archive.setCleanCallback(() -> {
-            try {
-                if (outputDir.isDirectory()) {
-                    FileUtils.deleteDirectory(outputDir);
+        archive.setCleanCallback(new Action0() {
+            @Override
+            public void call() {
+                try {
+                    if (outputDir.isDirectory()) {
+                        FileUtils.deleteDirectory(outputDir);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
 

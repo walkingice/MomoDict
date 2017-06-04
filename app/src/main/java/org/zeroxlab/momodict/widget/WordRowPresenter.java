@@ -25,12 +25,15 @@ public class WordRowPresenter implements SelectorAdapter.Presenter<String> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, String item) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final String item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
         holder.iTextView.setText(item);
-        holder.itemView.setOnClickListener(view -> {
-            view.setTag(item);
-            mListener.onClick(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setTag(item);
+                mListener.onClick(view);
+            }
         });
     }
 

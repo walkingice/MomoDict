@@ -33,7 +33,7 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<FileRowPresen
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Item item) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final Item item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
         if (item.file.isDirectory()) {
             holder.iTextView.setText(item.display);
@@ -46,13 +46,19 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<FileRowPresen
         }
 
         holder.itemView.setEnabled(item.file.canRead());
-        holder.itemView.setOnClickListener(view -> {
-            view.setTag(item.file);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View view) {
+                view.setTag(item.file);
 
-            // Delay to show ripple effect
-            mHandler.postDelayed(() -> {
-                mListener.onClick(view);
-            }, 250);
+                // Delay to show ripple effect
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mListener.onClick(view);
+                    }
+                }, 250);
+            }
         });
     }
 

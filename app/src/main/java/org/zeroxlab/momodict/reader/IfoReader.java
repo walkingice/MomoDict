@@ -96,102 +96,135 @@ public class IfoReader {
 
     private Func2<Info, String, Info> bookNameMatcher() {
         final Func1<String, String> matchFunc = createMatcher("bookname");
-        return (info, str) -> {
-            info.bookName = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.bookName = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
     private Func2<Info, String, Info> versionMatcher() {
         final Func1<String, String> matchFunc = createMatcher("version");
-        return (info, str) -> {
-            info.version = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.version = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
     private Func2<Info, String, Info> authorMatcher() {
         final Func1<String, String> matchFunc = createMatcher("author");
-        return (info, str) -> {
-            info.author = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.author = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
     private Func2<Info, String, Info> webSiteMatcher() {
         final Func1<String, String> matchFunc = createMatcher("website");
-        return (info, str) -> {
-            info.webSite = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.webSite = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
     private Func2<Info, String, Info> emailMatcher() {
         final Func1<String, String> matchFunc = createMatcher("email");
-        return (info, str) -> {
-            info.email = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.email = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
 
     private Func2<Info, String, Info> descriptionMatcher() {
         final Func1<String, String> matchFunc = createMatcher("description");
-        return (info, str) -> {
-            info.description = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.description = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
     private Func2<Info, String, Info> sameTypeSequenceMatcher() {
         final Func1<String, String> matchFunc = createMatcher("sametypesequence");
-        return (info, str) -> {
-            info.sameTypeSequence = matchFunc.call(str);
-            return info;
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                info.sameTypeSequence = matchFunc.call(str);
+                return info;
+            }
         };
     }
 
     private Func2<Info, String, Info> wordCountMatcher() {
         final Func1<String, String> matchFunc = createMatcher("wordcount");
-        return (info, str) -> {
-            String cnt = matchFunc.call(str);
-            if (cnt != null) {
-                info.wordCount = Integer.parseInt(cnt);
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                String cnt = matchFunc.call(str);
+                if (cnt != null) {
+                    info.wordCount = Integer.parseInt(cnt);
+                }
+                return info;
             }
-            return info;
         };
     }
 
     private Func2<Info, String, Info> syncWordCountMatcher() {
         final Func1<String, String> matchFunc = createMatcher("syncwordcount");
-        return (info, str) -> {
-            String cnt = matchFunc.call(str);
-            if (cnt != null) {
-                info.syncWordCount = Integer.parseInt(cnt);
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                String cnt = matchFunc.call(str);
+                if (cnt != null) {
+                    info.syncWordCount = Integer.parseInt(cnt);
+                }
+                return info;
             }
-            return info;
         };
     }
 
     private Func2<Info, String, Info> idxFileSizeMatcher() {
         final Func1<String, String> matchFunc = createMatcher("idxfilesize");
-        return (info, str) -> {
-            String cnt = matchFunc.call(str);
-            if (cnt != null) {
-                info.idxFileSize = Integer.parseInt(cnt);
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                String cnt = matchFunc.call(str);
+                if (cnt != null) {
+                    info.idxFileSize = Integer.parseInt(cnt);
+                }
+                return info;
             }
-            return info;
         };
     }
 
     private Func2<Info, String, Info> idxOffsetBitsMatcher() {
         final Func1<String, String> matchFunc = createMatcher("idxoffsetbits");
-        return (info, str) -> {
-            String cnt = matchFunc.call(str);
-            if (cnt != null) {
-                info.idxOffsetBits = Integer.parseInt(cnt);
+        return new Func2<Info, String, Info>() {
+            @Override
+            public Info call(Info info, String str) {
+                String cnt = matchFunc.call(str);
+                if (cnt != null) {
+                    info.idxOffsetBits = Integer.parseInt(cnt);
+                }
+                return info;
             }
-            return info;
         };
     }
 }
