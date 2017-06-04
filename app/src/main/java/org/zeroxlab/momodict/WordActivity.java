@@ -44,7 +44,7 @@ public class WordActivity extends AppCompatActivity implements FragmentListener 
     }
 
     private void setFragments() {
-        final WordFragment wordFrg = WordFragment.newInstance(
+        final WordFragment wordFrg = WordFragment.Companion.newInstance(
                 getIntent().getStringExtra(Momodict.EXTRA_DATA_1));
         final FragmentManager mgr = getSupportFragmentManager();
         mgr.beginTransaction()

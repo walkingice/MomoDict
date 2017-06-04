@@ -33,7 +33,7 @@ public class FileImportActivity extends AppCompatActivity implements FragmentLis
     }
 
     private void setFragments() {
-        final FileImportFragment importFrg = FileImportFragment.newInstance(sEXT_DIR);
+        final FileImportFragment importFrg = FileImportFragment.Companion.newInstance(sEXT_DIR);
         final FragmentManager mgr = getSupportFragmentManager();
         mgr.beginTransaction()
                 .add(R.id.fragment_container, importFrg, TAG_IMPORT_FILE)
@@ -45,7 +45,7 @@ public class FileImportActivity extends AppCompatActivity implements FragmentLis
         if (type == TYPE.POP_FRAGMENT) {
             popFragment();
         } else if (from instanceof FileImportFragment) {
-            if (type == TYPE.VIEW_ACTION && payload.equals(FileImportFragment.PICK_A_FILE)) {
+            if (type == TYPE.VIEW_ACTION && payload.equals(FileImportFragment.Companion.getPICK_A_FILE())) {
                 openFilePicker();
             }
         }
@@ -55,7 +55,7 @@ public class FileImportActivity extends AppCompatActivity implements FragmentLis
         final FragmentManager mgr = getSupportFragmentManager();
         mgr.beginTransaction()
                 .replace(R.id.fragment_container,
-                        FilePickerFragment.newInstance(sEXT_DIR, sEXT),
+                        FilePickerFragment.Companion.newInstance(sEXT_DIR, sEXT),
                         TAG_PICK_FILE)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
@@ -80,9 +80,9 @@ public class FileImportActivity extends AppCompatActivity implements FragmentLis
         Fragment fragPick = getSupportFragmentManager().findFragmentByTag(TAG_PICK_FILE);
         Fragment fragImport = getSupportFragmentManager().findFragmentByTag(TAG_IMPORT_FILE);
         if (fragPick != null && fragImport != null) {
-            String chosen = fragPick.getArguments().getString(FilePickerFragment.ARG_PATH);
+            String chosen = fragPick.getArguments().getString(FilePickerFragment.Companion.getARG_PATH());
             if (!TextUtils.isEmpty(chosen)) {
-                fragImport.getArguments().putString(FileImportFragment.ARG_PATH, chosen);
+                fragImport.getArguments().putString(FileImportFragment.Companion.getARG_PATH(), chosen);
             }
         }
 
