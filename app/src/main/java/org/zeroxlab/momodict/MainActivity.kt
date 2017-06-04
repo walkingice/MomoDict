@@ -27,7 +27,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private var mPager: ViewPager? = null
-    private var mAdapter: MyPagerAdapter? = null
+    private lateinit var mAdapter: MyPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         if (mPager!!.currentItem != 0) {
             mPager!!.currentItem = 0
         } else {
-            val first = mAdapter!!.getItem(0)
+            val first = mAdapter.getItem(0)
             if (first is BackKeyHandler) {
                 if (first.backKeyHandled()) {
                     return
@@ -88,14 +88,14 @@ class MainActivity : AppCompatActivity() {
         val tabs = findViewById(R.id.tabs) as TabLayout
         val mgr = supportFragmentManager
         mAdapter = MyPagerAdapter(mgr)
-        mAdapter!!.addFragment(InputFragment(), "Input")
-        mAdapter!!.addFragment(HistoryFragment(), "History")
-        mAdapter!!.addFragment(MemoFragment(), "Memo")
+        mAdapter.addFragment(InputFragment(), "Input")
+        mAdapter.addFragment(HistoryFragment(), "History")
+        mAdapter.addFragment(MemoFragment(), "Memo")
 
         mPager = findViewById(R.id.fragment_container) as ViewPager
         mPager!!.adapter = mAdapter
         // To notify fragment, when page-change happens
-        mPager!!.addOnPageChangeListener(PagerFocusBroadcaster(mAdapter!!))
+        mPager!!.addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
         tabs.setupWithViewPager(mPager)
 
         //init action bar
@@ -117,9 +117,9 @@ class MainActivity : AppCompatActivity() {
      * Callback when user click "Clear history" in Menu options
      */
     private fun onClearHistory() {
-        val size = mAdapter!!.count
+        val size = mAdapter.count
         for (i in 0..size - 1) {
-            val o = mAdapter!!.getItem(i)
+            val o = mAdapter.getItem(i)
             if (o is HistoryFragment) {
                 o.clearHistory()
             }
