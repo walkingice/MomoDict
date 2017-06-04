@@ -117,13 +117,10 @@ class MainActivity : AppCompatActivity() {
      * Callback when user click "Clear history" in Menu options
      */
     private fun onClearHistory() {
-        val size = mAdapter.count
-        for (i in 0..size - 1) {
-            val o = mAdapter.getItem(i)
-            if (o is HistoryFragment) {
-                o.clearHistory()
-            }
-        }
+        (0..(mAdapter.count - 1))
+                .map { mAdapter.getItem(it) }
+                .filterIsInstance<HistoryFragment>()
+                .forEach { it.clearHistory() }
     }
 
     private fun onResultImport(resultCode: Int, data: Intent) {
@@ -137,8 +134,8 @@ class MainActivity : AppCompatActivity() {
      * Callback when user click "License" in Menu options
      */
     private fun onShowLicenses() {
-        val builder = LibsBuilder()
-        builder.withAboutIconShown(true)
+        LibsBuilder()
+                .withAboutIconShown(true)
                 .withAboutVersionShown(true)
                 .start(this)
     }
