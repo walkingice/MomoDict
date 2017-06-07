@@ -26,7 +26,7 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
-    private var mPager: ViewPager? = null
+    private lateinit var mPager: ViewPager
     private lateinit var mAdapter: MyPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,8 +62,8 @@ class MainActivity : AppCompatActivity() {
         // 1. if user not in first tab, move to first tab
         // 2. if the first tab can handle back key, do nothing here
         // 3. otherwise, call super.onBackPressed(usually close this activity)
-        if (mPager!!.currentItem != 0) {
-            mPager!!.currentItem = 0
+        if (mPager.currentItem != 0) {
+            mPager.currentItem = 0
         } else {
             val first = mAdapter.getItem(0)
             if (first is BackKeyHandler) {
@@ -85,9 +85,9 @@ class MainActivity : AppCompatActivity() {
         mAdapter.addFragment(MemoFragment(), "Memo")
 
         mPager = findViewById(R.id.fragment_container) as ViewPager
-        mPager!!.adapter = mAdapter
+        mPager.adapter = mAdapter
         // To notify fragment, when page-change happens
-        mPager!!.addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
+        mPager.addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
         tabs.setupWithViewPager(mPager)
 
         //init action bar

@@ -30,10 +30,10 @@ import rx.schedulers.Schedulers
  * A fragment to display detail of a word. Usually is translation from dictionaries.
  */
 class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
-    private var mSwitch: Switch? = null
-    private var mCtrl: Controller? = null
-    private var mAdapter: SelectorAdapter? = null
-    private var mKeyWord: String? = null
+    private lateinit var mSwitch: Switch
+    private lateinit var mCtrl: Controller
+    private lateinit var mAdapter: SelectorAdapter
+    private lateinit var mKeyWord: String
 
     private var mCard: Card? = null
 
@@ -54,39 +54,39 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     override fun onResume() {
         super.onResume()
         mKeyWord = arguments.getString(ARG_KEYWORD)
-        onDisplayDetail(mKeyWord!!)
+        onDisplayDetail(mKeyWord)
 
-        mSwitch!!.setOnCheckedChangeListener(null)
+        mSwitch.setOnCheckedChangeListener(null)
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        mCtrl!!.cards
+        mCtrl.cards
                 .filter { card -> mKeyWord == card.wordStr }
                 .first()
                 .subscribe(
                         { card ->
                             // keyword stored
                             mCard = card
-                            mSwitch!!.isChecked = true
-                            mSwitch!!.setOnCheckedChangeListener(this)
+                            mSwitch.isChecked = true
+                            mSwitch.setOnCheckedChangeListener(this)
                         }
                 ) { e ->
                     // keyword not stored
                     if (e is NoSuchElementException) {
                         mCard = Card()
                         mCard!!.wordStr = mKeyWord
-                        mSwitch!!.isChecked = false
+                        mSwitch.isChecked = false
                     }
-                    mSwitch!!.setOnCheckedChangeListener(this)
+                    mSwitch.setOnCheckedChangeListener(this)
                 }
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
         if (checked) {
             mCard!!.time = Date()
-            mCtrl!!.setCard(mCard!!)
+            mCtrl.setCard(mCard!!)
         } else {
-            mCtrl!!.removeCards(mKeyWord!!)
+            mCtrl.removeCards(mKeyWord)
         }
     }
 
@@ -95,7 +95,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         list.adapter = mAdapter
 
         mSwitch = fv.findViewById(R.id.control_1) as Switch
-        mSwitch!!.setOnCheckedChangeListener { v, checked -> }
+        mSwitch.setOnCheckedChangeListener { v, checked -> }
     }
 
     private fun onDisplayDetail(target: String) {
@@ -105,22 +105,22 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                     target)
         }
 
-        mAdapter!!.clear()
+        mAdapter.clear()
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
         Observable.just(target)
                 .subscribeOn(Schedulers.io())
-                .flatMap<Entry> { keyWord -> mCtrl!!.getEntries(keyWord) }
+                .flatMap<Entry> { keyWord -> mCtrl.getEntries(keyWord) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        { entry -> mAdapter!!.addItem(entry, SelectorAdapter.Type.A) },
+                        { entry -> mAdapter.addItem(entry, SelectorAdapter.Type.A) },
                         { e -> e.printStackTrace() }
-                ) { mAdapter!!.notifyDataSetChanged() }
+                ) { mAdapter.notifyDataSetChanged() }
     }
 
     private fun updateRecord(target: String) {
-        mCtrl!!.records
+        mCtrl.records
                 .filter { record -> TextUtils.equals(target, record.wordStr) }
                 .toList()
                 .subscribe { list ->
@@ -128,7 +128,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                     record.wordStr = if (TextUtils.isEmpty(record.wordStr)) target else record.wordStr
                     record.count += 1
                     record.time = Date()
-                    mCtrl!!.setRecord(record)
+                    mCtrl.setRecord(record)
                 }
     }
 
