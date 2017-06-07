@@ -44,20 +44,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_import -> {
-                onImportClicked()
-                return true
-            }
-            R.id.menu_clear_history -> {
-                onClearHistory()
-                return true
-            }
-            R.id.menu_license -> {
-                onShowLicenses()
-                return true
-            }
+            R.id.menu_import -> onImportClicked()
+            R.id.menu_clear_history -> onClearHistory()
+            R.id.menu_license -> onShowLicenses()
+            else -> return super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     public override fun onActivityResult(reqCode: Int, resultCode: Int, data: Intent) {
@@ -124,9 +116,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onResultImport(resultCode: Int, data: Intent) {
-        if (resultCode == Activity.RESULT_OK) {
-            val uri = data.data
-            Log.d(TAG, "Imported from file " + uri.path)
+        when (resultCode) {
+            Activity.RESULT_OK -> Log.d(TAG, "Imported from file " + data.data.path)
         }
     }
 
@@ -152,21 +143,12 @@ class MainActivity : AppCompatActivity() {
             iTitles.add(title)
         }
 
-        override fun getItem(position: Int): Fragment {
-            return iFragments[position]
-        }
-
-        override fun getCount(): Int {
-            return iFragments.size
-        }
-
-        override fun getPageTitle(pos: Int): String {
-            return iTitles[pos].toString()
-        }
+        override fun getItem(position: Int): Fragment = iFragments[position]
+        override fun getCount(): Int = iFragments.size
+        override fun getPageTitle(pos: Int): String = iTitles[pos].toString()
     }
 
     companion object {
-
         private val TAG = Momodict.TAG
         private val REQ_CODE_IMPORT = 0x1002
     }
