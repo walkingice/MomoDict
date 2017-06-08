@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Switch
-
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Card
@@ -17,14 +16,10 @@ import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.WordCardPresenter
-
-import java.util.Date
-import java.util.HashMap
-import java.util.NoSuchElementException
-
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
+import java.util.*
 
 /**
  * A fragment to display detail of a word. Usually is translation from dictionaries.
@@ -46,9 +41,9 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedState: Bundle?): View? {
-        val fragmentView = inflater!!.inflate(R.layout.fragment_word, container, false)
-        initViews(fragmentView)
-        return fragmentView
+        return inflater!!.inflate(R.layout.fragment_word, container, false).also {
+            initViews(it)
+        }
     }
 
     override fun onResume() {
@@ -124,10 +119,11 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                 .filter { record -> TextUtils.equals(target, record.wordStr) }
                 .toList()
                 .subscribe { list ->
-                    val record = if (list.size == 0) Record() else list[0]
-                    record.wordStr = if (TextUtils.isEmpty(record.wordStr)) target else record.wordStr
-                    record.count += 1
-                    record.time = Date()
+                    val record = (if (list.size == 0) Record() else list[0]).also {
+                        it.wordStr = if (it.wordStr.isNullOrEmpty()) target else it.wordStr
+                        it.count += 1
+                        it.time = Date()
+                    }
                     mCtrl.setRecord(record)
                 }
     }
@@ -138,9 +134,9 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         fun newInstance(keyWord: String): WordFragment {
             val fragment = WordFragment()
-            val bundle = Bundle()
-            bundle.putString(ARG_KEYWORD, keyWord)
-            fragment.arguments = bundle
+            fragment.arguments = Bundle().apply {
+                putString(ARG_KEYWORD, keyWord)
+            }
             return fragment
         }
     }

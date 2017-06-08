@@ -65,44 +65,52 @@ class MainActivity : AppCompatActivity() {
         if (mPager.currentItem != 0) {
             mPager.currentItem = 0
         } else {
-            val first = mAdapter.getItem(0)
-            if (first is BackKeyHandler) {
-                if (first.backKeyHandled()) {
-                    return
+            val handled = mAdapter.getItem(0).let { firstItem ->
+                when (firstItem) {
+                    is BackKeyHandler -> firstItem.backKeyHandled()
+                    else -> false
                 }
             }
-            super.onBackPressed()
+
+            if (!handled) {
+                super.onBackPressed()
+            }
         }
     }
 
     private fun initView() {
         // To create fragments for Tabs, and manage them by MyPagerAdapter
-        val tabs = findViewById(R.id.tabs) as TabLayout
-        val mgr = supportFragmentManager
-        mAdapter = MyPagerAdapter(mgr)
-        mAdapter.addFragment(InputFragment(), "Input")
-        mAdapter.addFragment(HistoryFragment(), "History")
-        mAdapter.addFragment(MemoFragment(), "Memo")
+        mAdapter = MyPagerAdapter(supportFragmentManager).apply {
+            addFragment(InputFragment(), "Input")
+            addFragment(HistoryFragment(), "History")
+            addFragment(MemoFragment(), "Memo")
+        }
 
-        mPager = findViewById(R.id.fragment_container) as ViewPager
-        mPager.adapter = mAdapter
-        // To notify fragment, when page-change happens
-        mPager.addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
-        tabs.setupWithViewPager(mPager)
+        mPager = (findViewById(R.id.fragment_container) as ViewPager).apply {
+            adapter = mAdapter
+            // To notify fragment, when page-change happens
+            addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
+        }
+
+        with(findViewById(R.id.tabs) as TabLayout) {
+            setupWithViewPager(mPager)
+        }
 
         //init action bar
-        val toolbar = findViewById(R.id.actionbar) as Toolbar
-        toolbar.setNavigationIcon(R.mipmap.ic_logo)
-        setSupportActionBar(toolbar)
+        (findViewById(R.id.actionbar) as Toolbar).let {
+            it.setNavigationIcon(R.mipmap.ic_logo)
+            setSupportActionBar(it)
+        }
     }
 
     /**
      * Callback when user click "Import" in Menu options
      */
     private fun onImportClicked() {
-        val i = Intent()
-        i.setClass(this, FileImportActivity::class.java)
-        startActivityForResult(i, REQ_CODE_IMPORT)
+        Intent().let {
+            it.setClass(this, FileImportActivity::class.java)
+            startActivityForResult(it, REQ_CODE_IMPORT)
+        }
     }
 
     /**

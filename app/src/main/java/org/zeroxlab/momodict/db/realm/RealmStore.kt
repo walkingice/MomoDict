@@ -31,16 +31,17 @@ class RealmStore(private val mCtx: Context) : Store {
 
     override fun getBooks(): List<Book> {
         val realm = Realm.getDefaultInstance()
-        val results = realm.where(RealmBook::class.java).findAll()
-        val dics = ArrayList<Book>()
-        for (managedDic in results) {
-            val dic = Book()
-            dic.bookName = managedDic.bookName
-            dic.author = managedDic.author
-            dic.wordCount = managedDic.wordCount
-            dic.date = managedDic.date
-            dics.add(dic)
-        }
+        val dics = realm.where(RealmBook::class.java)
+                .findAll()
+                .map { managedDic ->
+                    Book().also {
+                        it.bookName = managedDic.bookName
+                        it.author = managedDic.author
+                        it.wordCount = managedDic.wordCount
+                        it.date = managedDic.date
+                    }
+                }
+
         realm.close()
         return dics
     }
@@ -51,12 +52,15 @@ class RealmStore(private val mCtx: Context) : Store {
 
     override fun addEntries(entries: List<Entry>): Boolean {
         val realm = Realm.getDefaultInstance()
+
         realm.beginTransaction()
-        for (entry in entries) {
-            val managedEntry = realm.createObject(RealmEntry::class.java)
-            managedEntry.wordStr = entry.wordStr
-            managedEntry.sourceBook = entry.source
-            managedEntry.data = entry.data
+        entries.forEach { entry ->
+            realm.createObject(RealmEntry::class.java).also { managedEntry ->
+                managedEntry.wordStr = entry.wordStr
+                managedEntry.sourceBook = entry.source
+                managedEntry.data = entry.data
+            }
+
         }
         realm.commitTransaction()
         realm.close()
@@ -106,19 +110,16 @@ class RealmStore(private val mCtx: Context) : Store {
 
     override fun getRecords(): List<Record> {
         val realm = Realm.getDefaultInstance()
-        val managedRecords = realm
+        val records = realm
                 .where(RealmRecord::class.java)
                 .findAll()
-
-        val records = ArrayList<Record>()
-        for (i in managedRecords.indices) {
-            val managedRecord = managedRecords[i]
-            val record = Record()
-            record.count = managedRecord.count
-            record.wordStr = managedRecord.wordStr
-            record.time = managedRecord.time
-            records.add(record)
-        }
+                .map { managedRecord ->
+                    Record().also {
+                        it.count = managedRecord.count
+                        it.wordStr = managedRecord.wordStr
+                        it.time = managedRecord.time
+                    }
+                }
         realm.close()
         return records
     }
