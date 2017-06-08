@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    public override fun onActivityResult(reqCode: Int, resultCode: Int, data: Intent) {
+    public override fun onActivityResult(reqCode: Int, resultCode: Int, data: Intent?) {
         when (reqCode) {
             REQ_CODE_IMPORT -> onResultImport(resultCode, data)
         }
@@ -123,9 +123,9 @@ class MainActivity : AppCompatActivity() {
                 .forEach { it.clearHistory() }
     }
 
-    private fun onResultImport(resultCode: Int, data: Intent) {
+    private fun onResultImport(resultCode: Int, data: Intent?) {
         when (resultCode) {
-            Activity.RESULT_OK -> Log.d(TAG, "Imported from file " + data.data.path)
+            Activity.RESULT_OK -> Log.d(TAG, "Imported from file " + data?.data?.path)
         }
     }
 
