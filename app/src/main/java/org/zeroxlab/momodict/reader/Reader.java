@@ -83,7 +83,9 @@ public class Reader {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            archive.clean();
+            if (archive != null) {
+                archive.clean();
+            }
         }
     }
 }
