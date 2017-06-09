@@ -2,10 +2,12 @@ package org.zeroxlab.momodict.archive;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,13 +56,6 @@ public class TarExtractor implements Extractor {
                 throw new Exception("Create dir fail");
             }
         } else {
-            // TODO: support .dz file. issue #2
-            if (fileName.endsWith(".dz")) {
-                StringBuilder msg = new StringBuilder();
-                msg.append("Haven't support .dz (dictzip) file so far.\n");
-                msg.append("please provide '.dict' to instead of '.dict.dz'");
-                throw new RuntimeException(msg.toString());
-            }
             // write file
             File out = new File(parent, fileName);
 
@@ -78,7 +73,21 @@ public class TarExtractor implements Extractor {
                 archive.set(FileSet.Type.IDX, out.getAbsolutePath());
             } else if (fileName.endsWith(".ifo")) {
                 archive.set(FileSet.Type.IFO, out.getAbsolutePath());
-            } else if (fileName.endsWith(".dict.dz") || fileName.endsWith(".dict")) {
+            } else if (fileName.endsWith(".dict.dz")) {
+                // found a dz file, use gzip to extract again
+                String extractFileName = out.getAbsolutePath().replace(".dict.dz", ".dict");
+                FileInputStream fis = new FileInputStream(out);
+                GzipCompressorInputStream gis = new GzipCompressorInputStream(fis);
+                FileOutputStream fos2 = new FileOutputStream(extractFileName);
+                byte[] buffer = new byte[2048];
+                int r = 0;
+                while ((r = gis.read(buffer))!= -1) {
+                    fos2.write(buffer, 0, r);
+                }
+                fis.close();
+                fos2.close();
+                archive.set(FileSet.Type.DICT, extractFileName);
+            } else if (fileName.endsWith(".dict")) {
                 archive.set(FileSet.Type.DICT, out.getAbsolutePath());
             }
         }
