@@ -1,0 +1,7 @@
+Sunday	日曜日\nにちようび\n星期日
+Monday	月曜日\nげつようび\n星期一
+Tuesday	火曜日\nかようび\n星期二
+Wednesday	水曜日\nすいようび\n星期三
+Thursday	木曜日\nもくようび\n星期四
+Friday	金曜日\nきんようび\n星期五
+Saturday	土曜日\nどようび\n星期六

@@ -1,0 +1,82 @@
+AAAA	AAAA
+AAA	AAA
+A	A
+AA	AA
+AAAAA	AAAAA
+Prefix AAAA	Prefix AAAA
+Prefix AAA	Prefix AAA
+Prefix A	Prefix A
+Prefix AA	Prefix AA
+Prefix AAAAA	Prefix AAAAA
+AAAA Postfix	Postfix AAAA
+AAA Postfix	Postfix AAA
+A Postfix	Postfix A
+AA Postfix	Postfix AA
+AAAAA Postfix	Postfix AAAAA
+aaaa	aaaa
+aaa	aaa
+a	a
+aa	aa
+aaaaa	aaaaa
+Prefix aaaa	Prefix aaaa
+Prefix aaa	Prefix aaa
+Prefix a	Prefix a
+Prefix aa	Prefix aa
+Prefix aaaaa	Prefix aaaaa
+aaaa Postfix	Postfix aaaa
+aaa Postfix	Postfix aaa
+a Postfix	Postfix a
+aa Postfix	Postfix aa
+aaaaa Postfix	Postfix aaaaa
+BBBB	BBBB
+BBB	BBB
+B	B
+BB	BB
+BBBBB	BBBBB
+Prefix BBBB	Prefix BBBB
+Prefix BBB	Prefix BBB
+Prefix B	Prefix B
+Prefix BB	Prefix BB
+Prefix BBBBB	Prefix BBBBB
+BBBB Postfix	Postfix BBBB
+BBB Postfix	Postfix BBB
+B Postfix	Postfix B
+BB Postfix	Postfix BB
+BBBBB Postfix	Postfix BBBBB
+bbbb	bbbb
+bbb	bbb
+b	b
+bb	bb
+bbbbb	bbbbb
+Prefix bbbb	Prefix bbbb
+Prefix bbb	Prefix bbb
+Prefix b	Prefix b
+Prefix bb	Prefix bb
+Prefix bbbbb	Prefix bbbbb
+bbbb Postfix	Postfix bbbb
+bbb Postfix	Postfix bbb
+b Postfix	Postfix b
+bb Postfix	Postfix bb
+bbbbb Postfix	Postfix bbbbb
+prefixAAApostfix	Prefix AAA Postfix
+prefixApostfix	Prefix A Postfix
+prefixAApostfix	Prefix AA Postfix
+prefixaaapostfix	Prefix aaa Postfix
+prefixapostfix	Prefix a Postfix
+prefixaapostfix	Prefix aa Postfix
+prefixBBBpostfix	Prefix BBB Postfix
+prefixBpostfix	Prefix B Postfix
+prefixBBpostfix	Prefix BB Postfix
+prefixbbbpostfix	Prefix bbb Postfix
+prefixbpostfix	Prefix b Postfix
+prefixbbpostfix	Prefix bb Postfix
+afuzzy	Fuzzy A
+abfuzzy	Fuzzy AB
+abbfuzzy	Fuzzy ABB, ABC might match
+abdfuzzy	Fuzzy ABD, ABC might match
+abdcfuzzy	Fuzzy ABCD, ABC might match
+fuzzyafuzzy	Fuzzy A
+fuzzyabfuzzy	Fuzzy AB
+fuzzyabbfuzzy	Fuzzy ABB, ABC might match
+fuzzyabdfuzzy	Fuzzy ABD, ABC might match
+fuzzyabcdfuzzy	Fuzzy ABCD, ABC might match

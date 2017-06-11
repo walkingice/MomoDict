@@ -1,0 +1,9 @@
+StarDict's dict ifo file
+version=2.4.2
+author=Julian Chu
+wordcount=249
+idxfilesize=2739
+bookname=Test Dict ISO3166 Country Code
+sametypesequence=m
+date=2017.06.04
+description=A simple dictionary for testing. Only contains ISO3166 Contry code.

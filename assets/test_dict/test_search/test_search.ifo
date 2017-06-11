@@ -1,0 +1,9 @@
+StarDict's dict ifo file
+version=2.4.2
+author=Julian Chu
+wordcount=82
+idxfilesize=1499
+bookname=Test Dict For Searching
+date=2017.06.04
+sametypesequence=m
+description=A simple dictionary for testing. Contains similar words for searching and sorting.

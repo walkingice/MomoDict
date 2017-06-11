@@ -1,0 +1,6 @@
+a	char a
+b	char b
+c	char c
+d	char d\nline 2
+e	char e\nline 2
+f	char f\nline 2

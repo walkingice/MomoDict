@@ -1,0 +1,9 @@
+StarDict's dict ifo file
+author=Julian Chu
+version=2.4.2
+wordcount=7
+idxfilesize=113
+bookname=Test Dict Week
+date=2017.06.04
+sametypesequence=m
+description=A simple dictionary for testing. Only contains day names from Monday to Sunday. Includes UTF-8 Japanese.
