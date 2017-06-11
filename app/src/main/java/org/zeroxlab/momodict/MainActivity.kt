@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import com.mikepenz.aboutlibraries.LibsBuilder
 import org.zeroxlab.momodict.ui.HistoryFragment
@@ -36,15 +37,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menu.add(Menu.NONE, R.id.menu_import, Menu.NONE, "Import dictionary")
-        menu.add(Menu.NONE, R.id.menu_clear_history, Menu.NONE, "Clear History")
-        menu.add(Menu.NONE, R.id.menu_license, Menu.NONE, "License")
+        menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_import -> onImportClicked()
+            R.id.menu_manage_dictionaries -> onManageClicked()
             R.id.menu_clear_history -> onClearHistory()
             R.id.menu_license -> onShowLicenses()
             else -> return super.onOptionsItemSelected(item)
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Callback when user click "Import" in Menu options
      */
-    private fun onImportClicked() {
+    private fun onManageClicked() {
         Intent().let {
             it.setClass(this, ManageDictActivity::class.java)
             startActivityForResult(it, REQ_CODE_IMPORT)
