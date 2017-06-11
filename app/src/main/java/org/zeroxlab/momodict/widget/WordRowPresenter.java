@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.zeroxlab.momodict.R;
-
 public class WordRowPresenter implements SelectorAdapter.Presenter<String> {
 
     View.OnClickListener mListener;
@@ -19,9 +17,8 @@ public class WordRowPresenter implements SelectorAdapter.Presenter<String> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ViewGroup viewGroup = (ViewGroup) inflater.inflate(
-                R.layout.list_item_with_arrow, parent, false);
-        return new InnerViewHolder(viewGroup);
+        View v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        return new InnerViewHolder(v);
     }
 
     @Override
@@ -46,7 +43,7 @@ public class WordRowPresenter implements SelectorAdapter.Presenter<String> {
 
         public InnerViewHolder(View view) {
             super(view);
-            iTextView = (TextView) view.findViewById(R.id.text_1);
+            iTextView = (TextView) view.findViewById(android.R.id.text1);
         }
     }
 }
