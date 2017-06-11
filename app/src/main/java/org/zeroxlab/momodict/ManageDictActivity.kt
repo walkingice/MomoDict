@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.text.TextUtils
+import org.zeroxlab.momodict.ui.DictListFragment
 import org.zeroxlab.momodict.ui.FileImportFragment
 import org.zeroxlab.momodict.ui.FilePickerFragment
 import org.zeroxlab.momodict.ui.FragmentListener
@@ -22,21 +23,40 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
     }
 
     private fun setFragments() {
-        val importFrg = FileImportFragment.newInstance(sEXT_DIR)
-        val mgr = supportFragmentManager
-        mgr.beginTransaction()
-                .add(R.id.fragment_container, importFrg, TAG_IMPORT_FILE)
+        val frg = DictListFragment.newInstance()
+        supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, frg, TAG_DICT_LIST)
                 .commit()
     }
 
     override fun onNotified(from: Fragment?, type: FragmentListener.TYPE, payload: Any?) {
-        if (type == FragmentListener.TYPE.POP_FRAGMENT) {
-            popFragment()
-        } else if (from is FileImportFragment) {
-            if (type == FragmentListener.TYPE.VIEW_ACTION && payload == FileImportFragment.PICK_A_FILE) {
-                openFilePicker()
+        when (type) {
+            FragmentListener.TYPE.POP_FRAGMENT -> popFragment()
+            FragmentListener.TYPE.VIEW_ACTION -> {
+                if (from != null && payload != null) {
+                    handleViewAction(from, payload)
+                }
             }
         }
+    }
+
+    private fun handleViewAction(from: Fragment, payload: Any) {
+        when (payload) {
+            DictListFragment.OPEN_IMPORT_FRAGMENT -> openImportFragment()
+            FileImportFragment.PICK_A_FILE -> openFilePicker()
+        }
+    }
+
+    private fun openImportFragment() {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container,
+                        FileImportFragment.newInstance(sEXT_DIR),
+                        TAG_IMPORT_FILE)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .addToBackStack(null)
+                .commit()
     }
 
     private fun openFilePicker() {
@@ -79,6 +99,7 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
     companion object {
         private val sEXT_DIR = Environment.getExternalStorageDirectory().path
         private val sEXT = ".tar.bz2" // supported file extension
+        private val TAG_DICT_LIST = "fragment_to_list_dictionaries"
         private val TAG_IMPORT_FILE = "fragment_to_import_file"
         private val TAG_PICK_FILE = "fragment_to_pick_file"
     }
