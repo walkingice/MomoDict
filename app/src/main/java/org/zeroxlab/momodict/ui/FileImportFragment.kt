@@ -47,7 +47,7 @@ class FileImportFragment : Fragment() {
         val dict = File(arguments.getString(ARG_PATH)!!)
         mExists = dict.exists() && dict.isFile
         mText!!.text = if (mExists)
-            String.format("Using file: %s", dict.path)
+            String.format("Using file: %s", dict.name)
         else
             String.format("File %s not exists", dict.path)
         mBtnImport!!.isEnabled = mExists
