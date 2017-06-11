@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.text.TextUtils
 import org.zeroxlab.momodict.ui.DictListFragment
 import org.zeroxlab.momodict.ui.FileImportFragment
 import org.zeroxlab.momodict.ui.FilePickerFragment
@@ -20,6 +19,40 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         val toolbar = findViewById(R.id.actionbar) as Toolbar
         setSupportActionBar(toolbar)
         setFragments()
+    }
+
+    override fun onBackPressed() {
+        val fragPick = supportFragmentManager.findFragmentByTag(TAG_PICK_FILE)
+        if (fragPick != null && fragPick.isVisible) {
+            // In FilePickerFragment, Back-key can go to parent directory
+            val handled = (fragPick as FilePickerFragment).goParentDirectory()
+            if (handled) {
+                return
+            }
+        }
+
+        updatePathData()
+
+        // really pop Fragment
+        super.onBackPressed()
+    }
+
+    private fun popFragment() {
+        updatePathData()
+        // simulate back key to pop fragment
+        super.onBackPressed()
+    }
+
+    private fun updatePathData() {
+        val fragPick = supportFragmentManager.findFragmentByTag(TAG_PICK_FILE)
+        val fragImport = supportFragmentManager.findFragmentByTag(TAG_IMPORT_FILE)
+        if (fragPick != null && fragImport != null) {
+            val chosen = fragPick.arguments.getString(FilePickerFragment.ARG_PATH)
+            if (chosen != null && chosen.isNotEmpty()) {
+                fragImport.arguments.putString(FileImportFragment.ARG_PATH, chosen)
+            }
+        }
+
     }
 
     private fun setFragments() {
@@ -43,57 +76,24 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
 
     private fun handleViewAction(from: Fragment, payload: Any) {
         when (payload) {
-            DictListFragment.OPEN_IMPORT_FRAGMENT -> openImportFragment()
-            FileImportFragment.PICK_A_FILE -> openFilePicker()
-        }
-    }
-
-    private fun openImportFragment() {
-        supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container,
+            DictListFragment.OPEN_IMPORT_FRAGMENT ->
+                replaceFragment(
                         FileImportFragment.newInstance(sEXT_DIR),
                         TAG_IMPORT_FILE)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
-    }
-
-    private fun openFilePicker() {
-        val mgr = supportFragmentManager
-        mgr.beginTransaction()
-                .replace(R.id.fragment_container,
+            FileImportFragment.PICK_A_FILE ->
+                replaceFragment(
                         FilePickerFragment.newInstance(sEXT_DIR, sEXT),
                         TAG_PICK_FILE)
+        }
+    }
+
+    private fun replaceFragment(frag: Fragment, tag: String) {
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, frag, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit()
-    }
-
-    override fun onBackPressed() {
-        val f = supportFragmentManager.findFragmentByTag(TAG_PICK_FILE)
-        if (f == null) {
-            popFragment()
-        } else {
-            val handled = (f as FilePickerFragment).goParentDirectory()
-            if (!handled) {
-                popFragment()
-            }
-        }
-    }
-
-    private fun popFragment() {
-        // FIXME: so stupid implementation
-        val fragPick = supportFragmentManager.findFragmentByTag(TAG_PICK_FILE)
-        val fragImport = supportFragmentManager.findFragmentByTag(TAG_IMPORT_FILE)
-        if (fragPick != null && fragImport != null) {
-            val chosen = fragPick.arguments.getString(FilePickerFragment.ARG_PATH)
-            if (!TextUtils.isEmpty(chosen)) {
-                fragImport.arguments.putString(FileImportFragment.ARG_PATH, chosen)
-            }
-        }
-
-        super.onBackPressed()
     }
 
     companion object {
