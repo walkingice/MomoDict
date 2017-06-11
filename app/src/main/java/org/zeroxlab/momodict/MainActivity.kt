@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun onImportClicked() {
         Intent().let {
-            it.setClass(this, FileImportActivity::class.java)
+            it.setClass(this, ManageDictActivity::class.java)
             startActivityForResult(it, REQ_CODE_IMPORT)
         }
     }

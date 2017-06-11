@@ -11,7 +11,7 @@ import org.zeroxlab.momodict.ui.FileImportFragment
 import org.zeroxlab.momodict.ui.FilePickerFragment
 import org.zeroxlab.momodict.ui.FragmentListener
 
-class FileImportActivity : AppCompatActivity(), FragmentListener {
+class ManageDictActivity : AppCompatActivity(), FragmentListener {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
