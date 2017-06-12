@@ -15,7 +15,7 @@ public interface Store {
 
     List<Book> getBooks();
 
-    boolean removeBook(@NonNull String name);
+    boolean removeBook(@NonNull String bookName);
 
     boolean addEntries(@NonNull List<Entry> entries);
 

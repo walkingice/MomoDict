@@ -46,8 +46,21 @@ class RealmStore(private val mCtx: Context) : Store {
         return dics
     }
 
-    override fun removeBook(name: String): Boolean {
-        throw RuntimeException("Not implemented yet")
+    override fun removeBook(bookName: String): Boolean {
+        val openedRealm = Realm.getDefaultInstance().also { realm ->
+            realm.beginTransaction()
+            realm.where(RealmEntry::class.java)
+                    .equalTo("sourceBook", bookName)
+                    .findAll()
+                    .deleteAllFromRealm()
+            realm.where(RealmBook::class.java)
+                    .equalTo("bookName", bookName)
+                    .findAll()
+                    .deleteAllFromRealm()
+            realm.commitTransaction()
+        }
+        openedRealm.close()
+        return true
     }
 
     override fun addEntries(entries: List<Entry>): Boolean {

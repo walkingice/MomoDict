@@ -49,8 +49,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         // create adapter for RecyclerView. Adapter handles two kinds of row, one for "dictionary"
         // and another for "word".
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A, DictionaryRowPresenter())
-        map.put(SelectorAdapter.Type.B,
+        map.put(SelectorAdapter.Type.A,
                 WordRowPresenter { view -> onRowClicked(view.tag as String) })
         mAdapter = SelectorAdapter(map)
 
@@ -64,7 +63,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
                 .subscribe({ list ->
                     mAdapter!!.clear()
                     for (entry in list) {
-                        mAdapter!!.addItem(entry.wordStr, SelectorAdapter.Type.B)
+                        mAdapter!!.addItem(entry.wordStr, SelectorAdapter.Type.A)
                     }
                     mAdapter!!.notifyDataSetChanged()
                 }) { e -> e.printStackTrace() }

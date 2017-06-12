@@ -12,6 +12,10 @@ class Controller @JvmOverloads constructor(private val mCtx: Context,
     val books: Observable<Book>
         get() = Observable.from(mStore.books)
 
+    fun removeBook(bookName: String): Boolean {
+        return mStore.removeBook(bookName)
+    }
+
     fun queryEntries(keyWord: String): Observable<Entry> {
         // to make sure exact matched words are returned
         val exact = mStore.getEntries(keyWord)
