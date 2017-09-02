@@ -11,24 +11,25 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.util.SparseArray
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.ViewGroup
 import com.mikepenz.aboutlibraries.LibsBuilder
 import org.zeroxlab.momodict.ui.HistoryFragment
 import org.zeroxlab.momodict.ui.InputFragment
 import org.zeroxlab.momodict.ui.MemoFragment
 import org.zeroxlab.momodict.widget.BackKeyHandler
 import org.zeroxlab.momodict.widget.PagerFocusBroadcaster
-import java.util.*
 
 /**
  * Main Activity, it consists several tabs which present by ViewPager.
  */
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var mPager: ViewPager
-    private lateinit var mAdapter: MyPagerAdapter
+    private lateinit var mAdapter: FragmentPagerAdapterImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         if (mPager.currentItem != 0) {
             mPager.currentItem = 0
         } else {
-            val handled = mAdapter.getItem(0).let { firstItem ->
+            val handled = mAdapter.getFragment(0).let { firstItem ->
                 when (firstItem) {
                     is BackKeyHandler -> firstItem.backKeyHandled()
                     else -> false
@@ -78,12 +79,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        // To create fragments for Tabs, and manage them by MyPagerAdapter
-        mAdapter = MyPagerAdapter(supportFragmentManager).apply {
-            addFragment(InputFragment(), "Input")
-            addFragment(HistoryFragment(), "History")
-            addFragment(MemoFragment(), "Memo")
-        }
+        // To create fragments for Tabs, and manage them by FragmentPagerAdapterImpl
+        mAdapter = FragmentPagerAdapterImpl(supportFragmentManager)
 
         mPager = (findViewById(R.id.fragment_container) as ViewPager).apply {
             adapter = mAdapter
@@ -117,7 +114,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun onClearHistory() {
         (0..(mAdapter.count - 1))
-                .map { mAdapter.getItem(it) }
+                .map { mAdapter.getFragment(it) }
                 .filterIsInstance<HistoryFragment>()
                 .forEach { it.clearHistory() }
     }
@@ -141,18 +138,42 @@ class MainActivity : AppCompatActivity() {
     /**
      * Adapter for ViewPager. To use addFragment() to add items.
      */
-    private inner class MyPagerAdapter internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-        internal val iFragments: MutableList<Fragment> = ArrayList()
-        internal val iTitles: MutableList<CharSequence> = ArrayList()
+    inner class FragmentPagerAdapterImpl internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
-        internal fun addFragment(f: Fragment, title: CharSequence) {
-            iFragments.add(f)
-            iTitles.add(title)
+        internal val TITLE_INPUT = "input"
+        internal val TITLE_HISTORY = "history"
+        internal val TITLE_MEMO = "memo"
+        internal val iTitles = listOf(TITLE_INPUT, TITLE_HISTORY, TITLE_MEMO)
+
+        internal val iFragments: SparseArray<Fragment> = SparseArray()
+
+        override fun getItem(position: Int): Fragment {
+            val title = iTitles.get(position)
+            return when (title) {
+                TITLE_INPUT -> InputFragment()
+                TITLE_HISTORY -> HistoryFragment()
+                TITLE_MEMO -> MemoFragment()
+                else -> throw RuntimeException("cannot create corresponding fragment")
+            }
         }
 
-        override fun getItem(position: Int): Fragment = iFragments[position]
-        override fun getCount(): Int = iFragments.size
+        override fun getCount(): Int = iTitles.size
         override fun getPageTitle(pos: Int): String = iTitles[pos].toString()
+
+        override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+            val frg = super.instantiateItem(container, position) as Fragment
+            iFragments.put(position, frg)
+            return frg
+        }
+
+        override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+            super.destroyItem(container, position, `object`)
+            iFragments.remove(position)
+        }
+
+        fun getFragment(position: Int): Fragment? {
+            return iFragments.get(position)
+        }
     }
 
     companion object {
