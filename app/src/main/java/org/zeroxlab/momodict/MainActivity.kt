@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_with_one_viewpager)
         initView()
+        StrictModeUtil.enableInDevMode()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
