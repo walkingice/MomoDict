@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: "kotlin-android"
+apply plugin: 'checkstyle'
+
+check.dependsOn 'checkstyle'
 
 android {
     compileSdkVersion 25
@@ -54,6 +57,15 @@ dependencies {
 
     testCompile "org.robolectric:robolectric:3.3.1"
     testCompile "org.mockito:mockito-core:2.7.19"
+}
+
+task checkstyle(type: Checkstyle) {
+    configFile file("${project.rootDir}/quality/square_picasso_checkstyle.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
 }
 
 repositories {
