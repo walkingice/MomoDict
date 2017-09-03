@@ -18,10 +18,10 @@ import java.util.Map;
  */
 public class SelectorAdapter extends RecyclerView.Adapter {
 
-    final private PresenterSelector mSelector;
-    final private List<Object> mData = new ArrayList<>();
-    final private List<Type> mTypes = new ArrayList<>();
-    final private Type[] mTypesArray = Type.values();
+    private final PresenterSelector mSelector;
+    private final List<Object> mData = new ArrayList<>();
+    private final List<Type> mTypes = new ArrayList<>();
+    private final Type[] mTypesArray = Type.values();
 
     public SelectorAdapter(@NonNull Map<Type, Presenter> map) {
         mSelector = new DefaultSelector(map);
@@ -97,7 +97,7 @@ public class SelectorAdapter extends RecyclerView.Adapter {
     /**
      * A presenter selector which be used by SelectorAdapter
      */
-    public static interface PresenterSelector {
+    public interface PresenterSelector {
 
         /**
          * To return a presenter for specific Type.
@@ -105,7 +105,7 @@ public class SelectorAdapter extends RecyclerView.Adapter {
          * @param type
          * @return A presenter for corresponding Type
          */
-        public abstract Presenter getPresenter(Type type);
+        Presenter getPresenter(Type type);
     }
 
     private class DefaultSelector implements PresenterSelector {

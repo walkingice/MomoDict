@@ -38,7 +38,7 @@ public class WordCardPresenter implements SelectorAdapter.Presenter<Entry> {
         TextView iText1;
         TextView iText2;
 
-        public InnerViewHolder(View view) {
+        InnerViewHolder(View view) {
             super(view);
             iText1 = (TextView) view.findViewById(R.id.text_1);
             iText2 = (TextView) view.findViewById(R.id.text_2);

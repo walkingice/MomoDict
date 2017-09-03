@@ -80,7 +80,7 @@ public class FileRowPresenter implements SelectorAdapter.Presenter<FileRowPresen
         ImageView iImg;
         TextView iTextView;
 
-        public InnerViewHolder(View view) {
+        InnerViewHolder(View view) {
             super(view);
             iTextView = (TextView) view.findViewById(R.id.text_1);
             iImg = (ImageView) view.findViewById(R.id.img_1);

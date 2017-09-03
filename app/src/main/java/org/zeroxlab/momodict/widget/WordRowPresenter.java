@@ -41,7 +41,7 @@ public class WordRowPresenter implements SelectorAdapter.Presenter<String> {
     class InnerViewHolder extends RecyclerView.ViewHolder {
         TextView iTextView;
 
-        public InnerViewHolder(View view) {
+        InnerViewHolder(View view) {
             super(view);
             iTextView = (TextView) view.findViewById(android.R.id.text1);
         }

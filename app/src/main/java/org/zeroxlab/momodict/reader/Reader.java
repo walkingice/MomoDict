@@ -26,7 +26,8 @@ public class Reader {
     /**
      * Constructor
      *
-     * @param cacheDirPath       A string as path of cache directory. Extracted files will be placed here.
+     * @param cacheDirPath       A string as path of cache directory. Extracted files will be placed
+     *                           here.
      * @param compressedFilePath A string as path of a compressed file which will be parsed.
      */
     public Reader(@NonNull String cacheDirPath, @NonNull String compressedFilePath) {

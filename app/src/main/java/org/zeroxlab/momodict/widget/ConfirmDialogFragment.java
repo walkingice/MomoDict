@@ -6,8 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
-import org.zeroxlab.momodict.R;
-
 public class ConfirmDialogFragment extends DialogFragment {
 
     private static String sTitle = "title";
@@ -34,12 +32,13 @@ public class ConfirmDialogFragment extends DialogFragment {
                 .create();
     }
 
-    private static DialogInterface.OnClickListener sEmptyClickCallback = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialogInterface, int i) {
-            // do nothing
-        }
-    };
+    private static DialogInterface.OnClickListener sEmptyClickCallback =
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // do nothing
+                }
+            };
 
     public void setPositiveCallback(DialogInterface.OnClickListener listener) {
         mPosListener = listener;

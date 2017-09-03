@@ -81,7 +81,7 @@ public class TarExtractor implements Extractor {
                 FileOutputStream fos2 = new FileOutputStream(extractFileName);
                 byte[] buffer = new byte[2048];
                 int r = 0;
-                while ((r = gis.read(buffer))!= -1) {
+                while ((r = gis.read(buffer)) != -1) {
                     fos2.write(buffer, 0, r);
                 }
                 fis.close();
