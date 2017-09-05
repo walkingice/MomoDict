@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PROJ_DIR=$(git rev-parse --show-toplevel)
+
+${PROJ_DIR}/gradlew checkstyle
+
+if [ $? -eq 0   ]; then
+	echo "checkstyle OK"
+else
+	echo "checkstyle fail\n"
+	echo "please ensure coding style is acceptable by running"
+	echo "\n\t./gradlew checkstyle\n"
+	exit 1
+fi
+

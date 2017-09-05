@@ -9,8 +9,9 @@ Still working in progress. A very simple dictionary app.
 
 Clone this project and use gradle or Android Studio
 
-```
-./gradlew build
+```bash
+$ cp githooks/pre-push .git/hooks/
+$ ./gradlew build
 ```
 
 However, before resolving [#2](../../issues/2), the dictionary file should be customized(use *.dict* instead of *.dict.dz*). Otherwise it cannot import dictionary correctly.
