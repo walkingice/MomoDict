@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: "kotlin-android"
 apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
 
 check.dependsOn 'checkstyle'
 
@@ -66,6 +67,26 @@ task checkstyle(type: Checkstyle) {
     exclude '**/gen/**'
 
     classpath = files()
+}
+
+task findbugs(type: FindBugs) {
+    source 'src'          // Specify the source code. The script should be applied to
+    include '**/*.java'   // the module build.gradle so the 'src' folder resides at the same level
+    exclude '**/gen/**'   // include / exclude folders and files.
+
+    //Higher levels increase precision and find more bugs at the expense of running time and memory consumption.
+    effort = 'max'
+    //The priority threshold for reporting bugs. If set to {@code low}, all bugs are reported.
+    reportLevel = 'low'
+
+    excludeFilter = new File("${project.rootDir}/quality/findbugs_exclude.xml")
+
+    classes = files("${project.rootDir}/app/build/intermediates/classes")
+    classpath = files()
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
 
 repositories {
