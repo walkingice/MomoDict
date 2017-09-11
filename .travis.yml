@@ -10,5 +10,5 @@ android:
   # The SDK version used to compile your project
   - android-$COMPILE_SDK_VERSION
 script:
-- "./gradlew test"
+- "./gradlew test --info"
 - "./gradlew checkstyle"
