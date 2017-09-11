@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/walkingice/MomoDict.svg?branch=master)](https://travis-ci.org/walkingice/MomoDict)
+
 # Introduction
 
 Still working in progress. A very simple dictionary app.
