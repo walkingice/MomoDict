@@ -13,3 +13,14 @@ else
 	exit 1
 fi
 
+${PROJ_DIR}/gradlew ktlint
+
+if [ $? -eq 0   ]; then
+	echo "ktlint OK"
+else
+	echo "ktlint fail\n"
+	echo "please ensure coding style is acceptable by running"
+	echo "\n\t./gradlew ktlint\n"
+	exit 1
+fi
+
