@@ -5,6 +5,11 @@ apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 
 check.dependsOn 'checkstyle'
+check.dependsOn 'ktlint'
+
+configurations {
+    ktlint
+}
 
 android {
     compileSdkVersion 25
@@ -58,6 +63,16 @@ dependencies {
 
     testCompile "org.robolectric:robolectric:3.3.1"
     testCompile "org.mockito:mockito-core:2.7.19"
+
+    ktlint 'com.github.shyiko:ktlint:0.9.2'
+}
+
+task ktlint(type: JavaExec) {
+    main = "com.github.shyiko.ktlint.Main"
+    classpath = configurations.ktlint
+    args "src/**/*.kt"
+    // prepend "--reporter=plain?group_by_file" arg to change the reporter
+    // see https://github.com/shyiko/ktlint
 }
 
 task checkstyle(type: Checkstyle) {
