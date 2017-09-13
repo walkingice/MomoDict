@@ -19,7 +19,7 @@ import org.zeroxlab.momodict.widget.WordCardPresenter
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.util.*
+import java.util.Date
 
 /**
  * A fragment to display detail of a word. Usually is translation from dictionaries.

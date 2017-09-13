@@ -19,11 +19,13 @@ import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.Momodict
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
-import org.zeroxlab.momodict.widget.*
+import org.zeroxlab.momodict.widget.BackKeyHandler
+import org.zeroxlab.momodict.widget.SelectorAdapter
+import org.zeroxlab.momodict.widget.ViewPagerFocusable
+import org.zeroxlab.momodict.widget.WordRowPresenter
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 /**

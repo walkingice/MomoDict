@@ -12,3 +12,4 @@ android:
 script:
 - "./gradlew test"
 - "./gradlew checkstyle"
+- "./gradlew ktlint"

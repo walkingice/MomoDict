@@ -17,7 +17,6 @@ import org.zeroxlab.momodict.WordActivity
 import org.zeroxlab.momodict.widget.CardRowPresenter
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.ViewPagerFocusable
-import java.util.*
 
 /**
  * A fragment to display a list of texts as user's memo.
@@ -61,7 +60,6 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
         }
         onUpdateList()
     }
-
 
     private fun initViews(fv: View) {
         val list = fv.findViewById(R.id.list) as RecyclerView
