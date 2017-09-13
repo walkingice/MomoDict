@@ -4,8 +4,11 @@ import android.content.Context
 import android.text.TextUtils
 import io.realm.Realm
 import io.realm.RealmResults
-import org.zeroxlab.momodict.model.*
-import java.util.*
+import org.zeroxlab.momodict.model.Book
+import org.zeroxlab.momodict.model.Card
+import org.zeroxlab.momodict.model.Entry
+import org.zeroxlab.momodict.model.Record
+import org.zeroxlab.momodict.model.Store
 
 class RealmStore(private val mCtx: Context) : Store {
 

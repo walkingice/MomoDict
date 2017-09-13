@@ -27,7 +27,6 @@ import org.zeroxlab.momodict.widget.PagerFocusBroadcaster
  */
 class MainActivity : AppCompatActivity() {
 
-
     private lateinit var mPager: ViewPager
     private lateinit var mAdapter: FragmentPagerAdapterImpl
 

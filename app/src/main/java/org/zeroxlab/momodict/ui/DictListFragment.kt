@@ -60,7 +60,7 @@ class DictListFragment : Fragment() {
             if (success) {
                 reloadBooks()
             } else {
-                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
             }
         }
         AlertDialog.Builder(activity)
