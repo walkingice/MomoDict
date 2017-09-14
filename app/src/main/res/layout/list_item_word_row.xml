@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,6 +9,7 @@
     android:layout_marginLeft="@dimen/basic_gutter"
     android:layout_marginRight="@dimen/basic_gutter"
     android:layout_marginTop="@dimen/content_space"
+    app:ignore="NamespaceTypo"
     card_view:cardCornerRadius="@dimen/grid_size">
 
     <LinearLayout
@@ -25,9 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical|end"
-            android:paddingRight="@dimen/basic_gutter"
+            android:paddingEnd="0dp"
+            android:paddingStart="@dimen/basic_gutter"
             android:paddingTop="8dp"
-            app:text="Subhead"/>
+            app:text="Subhead" />
 
         <TextView
             android:id="@id/text_2"
@@ -35,9 +36,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/basic_gutter"
-            android:paddingLeft="@dimen/basic_gutter"
-            android:paddingRight="@dimen/basic_gutter"
-            app:text="Body"/>
+            android:paddingEnd="@dimen/basic_gutter"
+            android:paddingStart="@dimen/basic_gutter"
+            app:text="Body" />
 
     </LinearLayout>
 
