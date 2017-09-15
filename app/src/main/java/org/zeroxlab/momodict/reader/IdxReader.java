@@ -27,8 +27,9 @@ public class IdxReader {
 
     public IdxReader(File idxFile) {
         mFile = idxFile;
-        assert mFile != null : "Should give a existing file";
-        assert mFile.exists() : "Idx file does not exists:" + idxFile.getAbsolutePath();
+        if (mFile == null || !mFile.exists()) {
+            throw new RuntimeException("Should give an existing idx file");
+        }
 
         mMaxSize = mFile.length();
     }

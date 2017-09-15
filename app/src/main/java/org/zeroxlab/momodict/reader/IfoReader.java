@@ -26,8 +26,10 @@ public class IfoReader {
 
     public IfoReader(File ifoFile) {
         mFile = ifoFile;
-        assert mFile != null : "Should give a existing file";
-        assert mFile.exists() : "IFO file does not exists:" + ifoFile.getAbsolutePath();
+
+        if (mFile == null || !mFile.exists()) {
+            throw new RuntimeException("Should give an existing info file");
+        }
 
         mInfo = new Info();
         mMap = makeMatchers();

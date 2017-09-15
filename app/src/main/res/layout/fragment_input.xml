@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:card_view="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/grid_size"
-                android:paddingLeft="@dimen/basic_gutter"
+                android:paddingEnd="0dp"
                 android:paddingStart="@dimen/basic_gutter">
 
                 <EditText
@@ -37,15 +37,16 @@
                     android:inputType="text"
                     android:lines="1"
                     android:maxLines="1"
-                    android:textColorHint="#CCCCCC"/>
+                    android:textColorHint="#CCCCCC" />
 
                 <ImageView
                     android:id="@id/btn_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="Button to clear input"
                     android:src="@android:drawable/ic_delete"
-                    android:tint="@color/colorPrimaryDark"/>
+                    android:tint="@color/colorPrimaryDark" />
 
             </LinearLayout>
 
@@ -57,9 +58,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@android:layout/simple_list_item_1"/>
+        tools:listitem="@android:layout/simple_list_item_1" />
 
 </LinearLayout>

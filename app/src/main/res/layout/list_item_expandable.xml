@@ -6,8 +6,8 @@
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="vertical"
-    android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-    android:paddingRight="?android:attr/listPreferredItemPaddingRight">
+    android:paddingStart="?android:attr/listPreferredItemPaddingLeft"
+    android:paddingEnd="?android:attr/listPreferredItemPaddingRight">
 
     <LinearLayout
         android:id="@+id/row_title"
@@ -33,6 +33,7 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:clickable="false"
+            android:contentDescription="Image in list item"
             android:drawableTint="@android:color/secondary_text_dark"
             android:src="@drawable/ic_arrow" />
     </LinearLayout>
