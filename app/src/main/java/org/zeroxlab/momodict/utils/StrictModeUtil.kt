@@ -11,6 +11,7 @@ object StrictModeUtil {
 
         val threadPolicy = StrictMode.ThreadPolicy.Builder()
                 .detectAll()
+                .penaltyLog()
                 .penaltyDialog()
                 .build()
         val vmPolicy = StrictMode.VmPolicy.Builder()
