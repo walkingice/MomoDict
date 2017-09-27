@@ -1,6 +1,7 @@
 package org.zeroxlab.momodict.db.realm
 
 import android.content.Context
+import android.os.StrictMode
 import android.text.TextUtils
 import io.realm.Realm
 import io.realm.RealmResults
@@ -13,7 +14,11 @@ import org.zeroxlab.momodict.model.Store
 class RealmStore(private val mCtx: Context) : Store {
 
     init {
+        // Realm need to load native .so files, turn off StrictMode for it
+        val policy = StrictMode.getThreadPolicy()
+        StrictMode.allowThreadDiskReads()
         Realm.init(mCtx)
+        StrictMode.setThreadPolicy(policy)
     }
 
     override fun addBook(book: Book): Boolean {
