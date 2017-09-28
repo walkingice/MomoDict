@@ -1,63 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/colorPrimary"
-              android:orientation="vertical">
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:id="@android:id/inputArea"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/basic_gutter"
+        android:background="@android:color/white"
+        android:minWidth="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            style="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
+            android:id="@id/text_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:padding="@dimen/basic_gutter"
+            android:text="file path" />
+
+        <Button
+            android:id="@id/btn_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/basic_gutter"
-            android:text="To choose a file to import"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/basic_gutter"
-            android:layout_marginLeft="@dimen/basic_gutter"
-            android:layout_marginRight="@dimen/basic_gutter"
-            android:layout_marginStart="@dimen/basic_gutter"
-            android:background="#FFFFFF"
-            android:minWidth="300dp"
-            >
-
-            <TextView
-                android:id="@id/text_1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:lines="1"
-                android:padding="@dimen/basic_gutter"
-                android:text="file path"/>
-
-            <Button
-                android:id="@id/btn_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Choose"/>
-
-        </LinearLayout>
+            android:text="Choose" />
 
     </LinearLayout>
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/basic_gutter"
+        android:text="To choose a file to import"
+        app:layout_constraintBottom_toTopOf="@android:id/inputArea"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <Button
         android:id="@id/btn_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/basic_gutter"
         android:enabled="false"
         android:minWidth="200dp"
-        android:text="Import"/>
+        android:text="Import"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
+
