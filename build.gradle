@@ -5,10 +5,12 @@ buildscript {
 
     repositories {
         jcenter()
+        // use Google's maven repo to download android gradle build tool
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
-        classpath "io.realm:realm-gradle-plugin:2.3.1"
+        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath "io.realm:realm-gradle-plugin:3.7.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong

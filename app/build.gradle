@@ -13,7 +13,7 @@ configurations {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "org.zeroxlab.momodict"
         minSdkVersion 21
@@ -62,7 +62,7 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 
-    testCompile "org.robolectric:robolectric:3.3.1"
+    testCompile "org.robolectric:robolectric:3.5.1"
     testCompile "org.mockito:mockito-core:2.7.19"
 
     ktlint 'com.github.shyiko:ktlint:0.9.2'
