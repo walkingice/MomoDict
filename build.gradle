@@ -5,6 +5,8 @@ buildscript {
 
     repositories {
         jcenter()
+        // use Google's maven repo to download android gradle build tool
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
