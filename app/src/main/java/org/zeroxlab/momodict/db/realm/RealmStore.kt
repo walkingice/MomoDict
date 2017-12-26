@@ -181,7 +181,8 @@ class RealmStore(private val mCtx: Context) : Store {
         for (i in managedCards.indices) {
             val managedCard = managedCards[i]
             val card = Card()
-            card.wordStr = managedCard.wordStr
+            // FIXME: should remove !!
+            card.wordStr = managedCard!!.wordStr
             card.note = managedCard.note
             card.time = managedCard.time
             cards.add(card)
@@ -212,7 +213,8 @@ class RealmStore(private val mCtx: Context) : Store {
         while (entries.size < Store.MAX_LENGTH && i < managedEntries.size) {
             val managedEntry = managedEntries[i]
             val entry = Entry()
-            entry.source = managedEntry.sourceBook
+            // FIXME: should remove !!
+            entry.source = managedEntry!!.sourceBook
             entry.wordStr = managedEntry.wordStr
             entry.data = managedEntry.data
             entries.add(entry)
