@@ -1,7 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.1.2-4'
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
+    ext.kotlin_version = '1.2.10'
 
     repositories {
         jcenter()
@@ -15,6 +17,22 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+    }
+}
+
+// https://bintray.com/arturbosch/code-analysis/detekt
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0.RC5-6"
+}
+
+detekt {
+    // duplicated version number, it should be the same as plugins block.
+    // refer: https://github.com/mozilla-mobile/focus-android/blob/f6558a6f056180e3cf198fc0476853e7b8189c4f/build.gradle#L26
+    version = "1.0.0.RC5-6"
+    profile("main") {
+        input = "$projectDir/app"
+        config = "$projectDir/quality/detekt.yml"
+        filters = ".*test.*,.*/resources/.*,.*/tmp/.*"
     }
 }
 
