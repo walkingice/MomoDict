@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.Momodict
 import org.zeroxlab.momodict.R
@@ -27,6 +26,7 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
 import java.util.concurrent.TimeUnit
+import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
 
 /**
  * Fragment to provide UI which user can input a text to query, and display a list for queried text.
@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit
 class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
 
     private var mAdapter: SelectorAdapter? = null
-    private var mInput: EditText? = null
     private var mCtrl: Controller? = null
 
     /**
@@ -76,10 +75,13 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         mQuery!!.onCompleted()
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedState: Bundle?): View? {
-        val fragmentView = inflater!!.inflate(R.layout.fragment_input, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_input, container, false)
+    }
+
+    override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(fragmentView, savedInstanceState)
         initViews(fragmentView)
-        return fragmentView
     }
 
     override fun onResume() {
@@ -96,7 +98,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
      * @return true if this fragment handled back-key-event
      */
     override fun backKeyHandled(): Boolean {
-        if (TextUtils.isEmpty(mInput!!.text)) {
+        if (TextUtils.isEmpty(mInput.text)) {
             return false
         } else {
             clearInput()
@@ -109,7 +111,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
      */
     override fun onViewPagerFocused() {
         // if this page becomes visible, show soft-keyboard
-        mInput!!.requestFocus()
+        mInput.requestFocus()
         (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
@@ -121,8 +123,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
                 mgr.orientation)
         list.addItemDecoration(decoration)
 
-        mInput = fv.findViewById(R.id.input_1) as EditText
-        mInput!!.addTextChangedListener(object : TextWatcher {
+        mInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
@@ -137,7 +138,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
     }
 
     private fun clearInput() {
-        mInput!!.setText("")
+        mInput.setText("")
     }
 
     /**
@@ -148,9 +149,9 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         mCtrl!!.books
                 .count()
                 .subscribe { count ->
-                    mInput!!.isEnabled = count > 0
-                    if (count > 0 && !TextUtils.isEmpty(mInput!!.text)) {
-                        mInput!!.selectAll()
+                    mInput.isEnabled = count > 0
+                    if (count > 0 && !TextUtils.isEmpty(mInput.text)) {
+                        mInput.selectAll()
                     }
                 }
     }
@@ -159,7 +160,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
      * Update list according to user's input.
      */
     private fun onUpdateList() {
-        val input = mInput!!.text.toString().trim { it <= ' ' }
+        val input = mInput.text.toString().trim { it <= ' ' }
         Log.d(TAG, "Input: " + input)
         mAdapter!!.clear()
         if (TextUtils.isEmpty(input)) {
