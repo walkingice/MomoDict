@@ -4,27 +4,22 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.widget.FileRowPresenter
 import org.zeroxlab.momodict.widget.SelectorAdapter
-
 import java.io.File
 import java.util.HashMap
+import kotlinx.android.synthetic.main.fragment_file_picker.list as mList
+import kotlinx.android.synthetic.main.fragment_file_picker.picker_btn_cancel as mBtnCancel
+import kotlinx.android.synthetic.main.fragment_file_picker.picker_btn_choose as mBtnChoose
+import kotlinx.android.synthetic.main.fragment_file_picker.picker_current_path as mCurrentPathView
 
 class FilePickerFragment : Fragment() {
-    private var mList: RecyclerView? = null
     private var mAdapter: SelectorAdapter? = null
-    private var mBtnChoose: Button? = null
-    private var mBtnCancel: Button? = null
-    private var mCurrentPathView: TextView? = null
     private var mChosen: String? = null
     private var mCurrentPath: String? = null
     private var mExtension: String? = null
@@ -45,15 +40,17 @@ class FilePickerFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_file_picker, container, false)
-        initViews(view)
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, FileRowPresenter(context) { v -> onFileClicked(v) })
         mAdapter = SelectorAdapter(map)
-        mList!!.adapter = mAdapter
-        return view
+        return inflater.inflate(R.layout.fragment_file_picker, container, false)
+    }
+
+    override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(fragmentView, savedInstanceState)
+        initViews()
     }
 
     override fun onResume() {
@@ -61,29 +58,27 @@ class FilePickerFragment : Fragment() {
         updateList(mCurrentPath!!)
     }
 
-    private fun initViews(container: View) {
-        mList = container.findViewById(R.id.list) as RecyclerView
-        val mgr = mList!!.layoutManager as LinearLayoutManager
-        mList!!.addItemDecoration(DividerItemDecoration(context, mgr.orientation))
-        mCurrentPathView = container.findViewById(R.id.picker_current_path) as TextView
-        mBtnCancel = container.findViewById(R.id.picker_btn_cancel) as Button
-        mBtnChoose = container.findViewById(R.id.picker_btn_choose) as Button
-        mBtnChoose!!.isEnabled = false
+    private fun initViews() {
+        val mgr = mList.layoutManager as LinearLayoutManager
+        mList.addItemDecoration(DividerItemDecoration(context, mgr.orientation))
 
-        mBtnChoose!!.setOnClickListener { view ->
+        mBtnChoose.isEnabled = false
+        mBtnChoose.setOnClickListener { view ->
             if (activity is FragmentListener) {
                 arguments.putString(ARG_PATH, mChosen)
                 (activity as FragmentListener).onNotified(this,
                         FragmentListener.TYPE.POP_FRAGMENT, null)
             }
         }
-        mBtnCancel!!.setOnClickListener { view ->
+
+        mBtnCancel.setOnClickListener { view ->
             if (activity is FragmentListener) {
                 arguments.remove(ARG_PATH)
                 (activity as FragmentListener).onNotified(this,
                         FragmentListener.TYPE.POP_FRAGMENT, null)
             }
         }
+        mList.adapter = mAdapter
     }
 
     private fun updateList(path: String) {
