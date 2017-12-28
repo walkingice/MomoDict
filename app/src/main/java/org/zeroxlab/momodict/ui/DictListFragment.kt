@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,12 @@ import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.widget.BookRowPresenter
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.SelectorAdapter.Type
+import kotlinx.android.synthetic.main.fragment_dictionaries_list.btn_1 as mBtnImport
+import kotlinx.android.synthetic.main.fragment_dictionaries_list.list as mList
 
 class DictListFragment : Fragment() {
 
     lateinit var mCtrl: Controller
-    lateinit var mBtnImport: View
-    lateinit var mList: RecyclerView
     lateinit var mAdapter: SelectorAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,15 +28,20 @@ class DictListFragment : Fragment() {
         mCtrl = Controller(activity!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
+    override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val frgView = inflater!!.inflate(R.layout.fragment_dictionaries_list, container, false)
-        mBtnImport = frgView.findViewById(R.id.btn_1).also {
+        return inflater.inflate(R.layout.fragment_dictionaries_list, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mBtnImport.let {
             it.setOnClickListener({ onImportClicked() })
         }
 
-        mList = (frgView.findViewById(R.id.list) as RecyclerView).also {
+        mList.let {
             val decoration = DividerItemDecoration(context,
                     (it.layoutManager as LinearLayoutManager).orientation)
             it.addItemDecoration(decoration)
@@ -51,7 +55,6 @@ class DictListFragment : Fragment() {
                 reloadBooks()
             }
         }
-        return frgView
     }
 
     private fun onRemoveBookClicked(v: View) {

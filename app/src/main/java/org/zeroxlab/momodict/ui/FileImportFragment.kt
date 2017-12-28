@@ -12,19 +12,14 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.reader.Reader
-
 import java.io.File
+import kotlinx.android.synthetic.main.fragment_file_import.btn_1 as mBtnChoose
+import kotlinx.android.synthetic.main.fragment_file_import.btn_2 as mBtnImport
+import kotlinx.android.synthetic.main.fragment_file_import.text_1 as mText
 
 class FileImportFragment : Fragment() {
-
-    private var mBtnImport: Button? = null
-    private var mBtnChoose: Button? = null
-    private var mText: TextView? = null
 
     private var mExists = false
 
@@ -36,10 +31,13 @@ class FileImportFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedState: Bundle?): View? {
-        val fragmentView = inflater!!.inflate(R.layout.fragment_file_import, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_file_import, container, false)
+    }
+
+    override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(fragmentView, savedInstanceState)
         initViews(fragmentView)
-        return fragmentView
     }
 
     override fun onResume() {
@@ -75,10 +73,6 @@ class FileImportFragment : Fragment() {
     }
 
     private fun initViews(fv: View) {
-        mBtnChoose = fv.findViewById(R.id.btn_1) as Button
-        mBtnImport = fv.findViewById(R.id.btn_2) as Button
-        mText = fv.findViewById(R.id.text_1) as TextView
-
         mBtnChoose!!.setOnClickListener { v ->
             if (activity is FragmentListener) {
                 val parent = activity as FragmentListener

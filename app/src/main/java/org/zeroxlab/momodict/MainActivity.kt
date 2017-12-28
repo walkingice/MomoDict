@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
@@ -21,13 +20,13 @@ import org.zeroxlab.momodict.ui.InputFragment
 import org.zeroxlab.momodict.ui.MemoFragment
 import org.zeroxlab.momodict.widget.BackKeyHandler
 import org.zeroxlab.momodict.widget.PagerFocusBroadcaster
+import kotlinx.android.synthetic.main.activity_with_one_viewpager.fragment_container as mPager
 
 /**
  * Main Activity, it consists several tabs which present by ViewPager.
  */
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mPager: ViewPager
     private lateinit var mAdapter: FragmentPagerAdapterImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         // To create fragments for Tabs, and manage them by FragmentPagerAdapterImpl
         mAdapter = FragmentPagerAdapterImpl(supportFragmentManager)
 
-        mPager = (findViewById(R.id.fragment_container) as ViewPager).apply {
+        mPager.apply {
             adapter = mAdapter
             // To notify fragment, when page-change happens
             addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
