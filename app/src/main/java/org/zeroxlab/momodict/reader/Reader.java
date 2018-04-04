@@ -61,10 +61,10 @@ public class Reader {
 
             // To save ifo to database
             Book dict = new Book();
-            dict.bookName = info.bookName;
-            dict.author = info.author;
-            dict.wordCount = info.wordCount;
-            dict.date = info.date;
+            dict.bookName = info.getBookName();
+            dict.author = info.getAuthor();
+            dict.wordCount = info.getWordCount();
+            dict.date = info.getDate();
             store.addBook(dict);
 
             // To save each words to database
@@ -74,7 +74,7 @@ public class Reader {
                 List<Entry> entries = new ArrayList<>();
                 for (Word word : words) {
                     Entry entry = new Entry();
-                    entry.source = info.bookName;
+                    entry.source = info.getBookName();
                     entry.wordStr = word.entry.wordStr;
                     entry.data = word.data;
                     entries.add(entry);

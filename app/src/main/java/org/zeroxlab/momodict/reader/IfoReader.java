@@ -101,7 +101,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.bookName = matchFunc.call(str);
+                info.setBookName(matchFunc.call(str));
                 return info;
             }
         };
@@ -112,7 +112,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.version = matchFunc.call(str);
+                info.setVersion(matchFunc.call(str));
                 return info;
             }
         };
@@ -123,7 +123,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.author = matchFunc.call(str);
+                info.setAuthor(matchFunc.call(str));
                 return info;
             }
         };
@@ -134,7 +134,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.webSite = matchFunc.call(str);
+                info.setWebSite(matchFunc.call(str));
                 return info;
             }
         };
@@ -145,7 +145,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.email = matchFunc.call(str);
+                info.setEmail(matchFunc.call(str));
                 return info;
             }
         };
@@ -157,7 +157,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.description = matchFunc.call(str);
+                info.setDescription(matchFunc.call(str));
                 return info;
             }
         };
@@ -168,7 +168,7 @@ public class IfoReader {
         return new Func2<Info, String, Info>() {
             @Override
             public Info call(Info info, String str) {
-                info.sameTypeSequence = matchFunc.call(str);
+                info.setSameTypeSequence(matchFunc.call(str));
                 return info;
             }
         };
@@ -181,7 +181,7 @@ public class IfoReader {
             public Info call(Info info, String str) {
                 String cnt = matchFunc.call(str);
                 if (cnt != null) {
-                    info.wordCount = Integer.parseInt(cnt);
+                    info.setWordCount(Integer.parseInt(cnt));
                 }
                 return info;
             }
@@ -195,7 +195,7 @@ public class IfoReader {
             public Info call(Info info, String str) {
                 String cnt = matchFunc.call(str);
                 if (cnt != null) {
-                    info.syncWordCount = Integer.parseInt(cnt);
+                    info.setSyncWordCount(Integer.parseInt(cnt));
                 }
                 return info;
             }
@@ -209,7 +209,7 @@ public class IfoReader {
             public Info call(Info info, String str) {
                 String cnt = matchFunc.call(str);
                 if (cnt != null) {
-                    info.idxFileSize = Integer.parseInt(cnt);
+                    info.setIdxFileSize(Integer.parseInt(cnt));
                 }
                 return info;
             }
@@ -223,7 +223,7 @@ public class IfoReader {
             public Info call(Info info, String str) {
                 String cnt = matchFunc.call(str);
                 if (cnt != null) {
-                    info.idxOffsetBits = Integer.parseInt(cnt);
+                    info.setIdxOffsetBits(Integer.parseInt(cnt));
                 }
                 return info;
             }
