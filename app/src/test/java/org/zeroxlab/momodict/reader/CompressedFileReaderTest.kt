@@ -35,7 +35,7 @@ class CompressedFileReaderTest {
 
     @Test
     fun testResourceExist() {
-        val inputStream = this.javaClass.classLoader.getResourceAsStream("test_alphabet.tar.bz2")
+        val inputStream = this.javaClass.classLoader.getResourceAsStream("test_dict/test_alphabet.tar.bz2")
         assertNotNull(inputStream)
         assertNotNull(tmpFolder)
         assertEquals(629, inputStream.available())
@@ -43,7 +43,7 @@ class CompressedFileReaderTest {
 
     @Test
     fun testExtractFile() {
-        val inputStream = this.javaClass.classLoader.getResourceAsStream("test_alphabet.tar.bz2")
+        val inputStream = this.javaClass.classLoader.getResourceAsStream("test_dict/test_alphabet.tar.bz2")
         val fileSet = CompressedFileReader.readBzip2File(tmpDir, inputStream)
         assertNotNull(fileSet)
         assertTrue(fileSet.isSane)
