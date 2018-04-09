@@ -12,6 +12,8 @@ import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Store;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,9 +51,11 @@ public class Reader {
             final File idxFile = new File(archive.get(FileSet.Type.IDX));
 
             // To parse ifo file
-            final IfoReader ifoReader = new IfoReader(ifoFile);
-            final Info info = ifoReader.parse();
-            if (!IfoReader.isSanity(info)) {
+            final IfoReader ifoReader = new IfoReader();
+            final InputStream is = new FileInputStream(ifoFile);
+            final Info info = ifoReader.parse(is);
+            is.close();
+            if (!IfoReader.Companion.isSanity(info)) {
                 throw new RuntimeException("Insanity .ifo file");
             }
 
