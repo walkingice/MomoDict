@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class to extract compressed file, to parse and to save into Database.
+ * A class to extract compressed file, to read and to save into Database.
  */
 public class Reader {
 
@@ -38,7 +38,7 @@ public class Reader {
     }
 
     /**
-     * To parse file and save into database.
+     * To read file and save into database.
      *
      * @param ctx Context instance
      */
@@ -50,16 +50,15 @@ public class Reader {
             final File ifoFile = new File(archive.get(FileSet.Type.IFO));
             final File idxFile = new File(archive.get(FileSet.Type.IDX));
 
-            // To parse ifo file
-            final IfoReader ifoReader = new IfoReader();
+            // To read ifo file
             final InputStream is = new FileInputStream(ifoFile);
-            final Info info = ifoReader.parse(is);
+            final Info info = IfoReader.Companion.read(is);
             is.close();
             if (!IfoReader.Companion.isSanity(info)) {
                 throw new RuntimeException("Insanity .ifo file");
             }
 
-            // To parse idx file
+            // To read idx file
             IdxReader idxReader = new IdxReader(idxFile);
             idxReader.parse();
 
