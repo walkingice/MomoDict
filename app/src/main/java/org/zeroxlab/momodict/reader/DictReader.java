@@ -23,7 +23,7 @@ public class DictReader {
                     : bis;
             for (IdxEntry entry : entries) {
                 Word word = new Word();
-                byte[] data = new byte[entry.wordDataSize];
+                byte[] data = new byte[entry.getWordDataSize()];
                 stream.read(data);
                 word.data = new String(data);
                 word.entry = entry;
@@ -38,9 +38,9 @@ public class DictReader {
     public static void read(IdxEntry entry, File dict) {
         try {
             RandomAccessFile rf = new RandomAccessFile(dict, "r");
-            byte[] data = new byte[entry.wordDataSize];
-            rf.seek(entry.wordDataOffset);
-            rf.read(data, 0, entry.wordDataSize);
+            byte[] data = new byte[entry.getWordDataSize()];
+            rf.seek(entry.getWordDataOffset());
+            rf.read(data, 0, entry.getWordDataSize());
             System.out.println(new String(data, "UTF-8"));
             rf.close();
         } catch (Exception e) {

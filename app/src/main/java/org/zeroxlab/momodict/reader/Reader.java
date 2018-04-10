@@ -78,7 +78,7 @@ public class Reader {
                 for (Word word : words) {
                     Entry entry = new Entry();
                     entry.source = info.getBookName();
-                    entry.wordStr = word.entry.wordStr;
+                    entry.wordStr = word.entry.getWordStr();
                     entry.data = word.data;
                     entries.add(entry);
                 }
