@@ -59,8 +59,12 @@ public class Reader {
             }
 
             // To read idx file
-            IdxReader idxReader = new IdxReader(idxFile);
-            idxReader.parse();
+            if (idxFile == null || !idxFile.exists()) {
+                throw new RuntimeException("Should give an existing idx file");
+            }
+            final InputStream idxIs = new FileInputStream(idxFile);
+            final IdxReader idxReader = new IdxReader();
+            idxReader.parse(idxIs);
 
             // To save ifo to database
             Book dict = new Book();

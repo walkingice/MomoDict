@@ -1,18 +1,18 @@
 package org.zeroxlab.momodict.reader;
 
+import android.support.annotation.NonNull;
+
 import org.zeroxlab.momodict.archive.IdxEntry;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  A reader to parse .idx file
+ * A reader to parse .idx file
  */
 public class IdxReader {
     private static final int NULL_TERMINATED_LENGTH = 1; // length of '\0'
@@ -20,19 +20,7 @@ public class IdxReader {
     private static final int SIZE_LENGTH = 4;
     private static final int BUFFER_SIZE = 1024;
 
-    private File mFile;
-    private long mMaxSize;
-
     private List<IdxEntry> mEntries = new ArrayList<>();
-
-    public IdxReader(File idxFile) {
-        mFile = idxFile;
-        if (mFile == null || !mFile.exists()) {
-            throw new RuntimeException("Should give an existing idx file");
-        }
-
-        mMaxSize = mFile.length();
-    }
 
     public IdxEntry get(int idx) {
         return mEntries.get(idx);
@@ -46,11 +34,11 @@ public class IdxReader {
         return mEntries.size();
     }
 
-    public void parse() {
+    public void parse(@NonNull InputStream inputStream) {
         byte[] buffer = new byte[BUFFER_SIZE];
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            InputStream is = new BufferedInputStream(new FileInputStream(mFile));
+            InputStream is = new BufferedInputStream(inputStream);
             int readCnt = 0;
             while ((readCnt = is.read(buffer)) != -1) {
                 baos.write(buffer, 0, readCnt);
