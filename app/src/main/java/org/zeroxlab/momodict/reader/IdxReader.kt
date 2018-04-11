@@ -12,6 +12,7 @@ import java.nio.ByteBuffer
 class IdxReader {
 
     companion object {
+        private const val NULL_TERMINATED = '\u0000'.toByte() // '\0'
         private const val NULL_TERMINATED_LENGTH = 1 // length of '\0'
         private const val OFFSET_LENGTH = 4
         private const val SIZE_LENGTH = 4
@@ -19,24 +20,8 @@ class IdxReader {
 
         fun parse(inputStream: InputStream): Idx {
             val idx = Idx()
-            val buffer = ByteArray(BUFFER_SIZE)
             try {
-                val baos = ByteArrayOutputStream()
-                var readCnt: Int
-//            val data = inputStream.readBytes(BUFFER_SIZE)
-//            inputStream.readBytes{ lines -> lines.forEach { parseLine(it, info) } }
-                while (true) {
-                    readCnt = inputStream.read(buffer)
-                    if (readCnt <= 0) {
-                        break
-                    }
-                    baos.write(buffer, 0, readCnt)
-                    val data = baos.toByteArray()
-                    val fresh = analysis(data, idx)
-                    baos.reset()
-                    baos.write(data, fresh, data.size - fresh)
-                }
-
+                inputStream.readBytes(BUFFER_SIZE).let { data -> analysis(data, idx) }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -47,38 +32,45 @@ class IdxReader {
 
         private fun analysis(data: ByteArray, idx: Idx): Int {
             // an index to indicate the last-parsed-byte + 1
-            var idxFresh = 0
+            var idxLeft = 0
 
-            val baos = ByteArrayOutputStream()
+            val buffer = ByteArrayOutputStream()
             val max = data.size - OFFSET_LENGTH - SIZE_LENGTH
-            var i = 0
-            while (i < max) {
-                if (data[i] == '\u0000'.toByte()) {
-                    baos.write(data, idxFresh, i - idxFresh)
-                    val str = baos.toString()
+            var idxRight = 0
 
-                    i += NULL_TERMINATED_LENGTH // skip '\0'
-                    baos.reset()
-                    baos.write(data, i, OFFSET_LENGTH)
-                    val offsetArray = baos.toByteArray()
+            // if 'foobar' with offset=0x01020304 size=0a0b0c0d, it will be store in below format
+            // foobar\0010203040a0b0c0d
+            while (idxRight < max) {
+                if (data[idxRight] == NULL_TERMINATED) {
+                    // read 'foobar'
+                    buffer.write(data, idxLeft, idxRight - idxLeft)
+                    val str = buffer.toString()
+
+                    idxRight += NULL_TERMINATED_LENGTH // skip '\0'
+
+                    // read offset '0x01020304'
+                    buffer.reset()
+                    buffer.write(data, idxRight, OFFSET_LENGTH)
+                    val offsetArray = buffer.toByteArray()
                     val offset = ByteBuffer.wrap(offsetArray).int
-                    i += OFFSET_LENGTH // 64 bits = 8 bytes
-                    baos.reset()
+                    idxRight += OFFSET_LENGTH // 64 bits = 8 bytes
+                    buffer.reset()
 
-                    baos.write(data, i, SIZE_LENGTH)
-                    val sizeArray = baos.toByteArray()
+                    // read size '0x0a0b0c0d'
+                    buffer.write(data, idxRight, SIZE_LENGTH)
+                    val sizeArray = buffer.toByteArray()
                     val size = ByteBuffer.wrap(sizeArray).int
-                    baos.reset()
+                    buffer.reset()
 
-                    i += SIZE_LENGTH
-                    idxFresh = i
+                    idxRight += SIZE_LENGTH
+                    idxLeft = idxRight
 
                     idx.entries.add(IdxEntry(str, offset, size))
                 }
-                i++
+                idxRight++
             }
 
-            return idxFresh
+            return idxLeft
         }
     }
 }
