@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.zeroxlab.momodict.archive.FileSet;
+import org.zeroxlab.momodict.archive.Idx;
 import org.zeroxlab.momodict.archive.Info;
 import org.zeroxlab.momodict.archive.Word;
 import org.zeroxlab.momodict.db.realm.RealmStore;
@@ -59,8 +60,12 @@ public class Reader {
             }
 
             // To read idx file
-            IdxReader idxReader = new IdxReader(idxFile);
-            idxReader.parse();
+            if (idxFile == null || !idxFile.exists()) {
+                throw new RuntimeException("Should give an existing idx file");
+            }
+            final InputStream idxIs = new FileInputStream(idxFile);
+            final Idx idx = IdxReader.Companion.parse(idxIs);
+            idxIs.close();
 
             // To save ifo to database
             Book dict = new Book();
@@ -71,14 +76,14 @@ public class Reader {
             store.addBook(dict);
 
             // To save each words to database
-            if (idxReader.size() != 0) {
-                List<Word> words = DictReader.parse(idxReader.getEntries(),
+            if (idx.size() != 0) {
+                List<Word> words = DictReader.parse(idx.getEntries(),
                         archive.get(FileSet.Type.DICT));
                 List<Entry> entries = new ArrayList<>();
                 for (Word word : words) {
                     Entry entry = new Entry();
                     entry.source = info.getBookName();
-                    entry.wordStr = word.entry.wordStr;
+                    entry.wordStr = word.entry.getWordStr();
                     entry.data = word.data;
                     entries.add(entry);
                 }
