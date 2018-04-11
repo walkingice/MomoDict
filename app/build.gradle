@@ -13,7 +13,7 @@ configurations {
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "org.zeroxlab.momodict"
@@ -32,8 +32,9 @@ android {
 }
 
 dependencies {
-    ext.supportVersion = "25.3.1"
+    ext.supportVersion = "26.1.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:support-compat:$supportVersion"
     implementation "com.android.support:cardview-v7:$supportVersion"
     implementation "com.android.support:recyclerview-v7:$supportVersion"
     implementation "com.android.support:appcompat-v7:$supportVersion"

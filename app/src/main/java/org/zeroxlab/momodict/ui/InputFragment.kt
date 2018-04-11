@@ -134,7 +134,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         })
 
         list.adapter = mAdapter
-        fv.findViewById(R.id.btn_1).setOnClickListener { v -> clearInput() }
+        fv.findViewById<View>(R.id.btn_1).setOnClickListener { v -> clearInput() }
     }
 
     private fun clearInput() {
