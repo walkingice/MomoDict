@@ -8,10 +8,11 @@ import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
 
-@Database(entities = arrayOf(RoomBook::class), version = 1)
+@Database(entities = arrayOf(RoomBook::class, RoomEntry::class), version = 1)
 abstract class RoomStore : Store, RoomDatabase() {
 
     private val bookDao = getBookDao()
+    private val entryDao = getEntryDao()
 
     override fun addBook(book: Book): Boolean {
         if (book.bookName == null) {
@@ -45,19 +46,28 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun addEntries(entries: MutableList<Entry>): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val list = mutableListOf<RoomEntry>()
+        for (entry in entries) {
+            val re = RoomEntry()
+            re.source = entry.source
+            re.data = entry.data
+            re.wordStr = entry.wordStr
+            list.add(re)
+        }
+        entryDao.addEntries(list)
+        return true
     }
 
     override fun queryEntries(keyWord: String?): MutableList<Entry> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return entryDao.queryEntries(keyWord!!).toMutableList()
     }
 
     override fun queryEntries(keyWord: String?, bookName: String): MutableList<Entry> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return entryDao.queryEntries(keyWord!!, bookName!!).toMutableList()
     }
 
     override fun getEntries(keyWord: String?): MutableList<Entry> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return entryDao.getEntries(keyWord!!).toMutableList()
     }
 
     override fun upsertRecord(record: Record): Boolean {
@@ -85,4 +95,5 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     abstract fun getBookDao(): RoomBookDao
+    abstract fun getEntryDao(): RoomEntryDao
 }
