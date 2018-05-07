@@ -53,9 +53,9 @@ public class Reader {
 
             // To read ifo file
             final InputStream is = new FileInputStream(ifoFile);
-            final Info info = IfoReader.Companion.read(is);
+            final Info info = IfoReader.readIfo(is);
             is.close();
-            if (!IfoReader.Companion.isSanity(info)) {
+            if (!IfoReader.isSanity(info)) {
                 throw new RuntimeException("Insanity .ifo file");
             }
 
@@ -64,7 +64,7 @@ public class Reader {
                 throw new RuntimeException("Should give an existing idx file");
             }
             final InputStream idxIs = new FileInputStream(idxFile);
-            final Idx idx = IdxReader.Companion.parse(idxIs);
+            final Idx idx = IdxReader.parseIdx(idxIs);
             idxIs.close();
 
             // To save ifo to database

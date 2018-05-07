@@ -28,7 +28,7 @@ class InfoReaderTest {
         this.javaClass
                 .classLoader
                 .getResourceAsStream("test_dict/test_alphabet/test_alphabet.ifo")
-                .use { IfoReader.read(it) }
+                .use { readIfo(it) }
                 .also { info ->
                     assertNotNull(info)
                     assertEquals(info.author, "Julian Chu")
