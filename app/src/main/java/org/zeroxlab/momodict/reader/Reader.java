@@ -83,7 +83,7 @@ public class Reader {
                 InputStream ips = new FileInputStream(dictPath);
                 BufferedInputStream bis = new BufferedInputStream(ips);
                 InputStream dictIs = DictReader.wrapInputStream(isDict, bis);
-                List<Word> words = DictReader.parse(idx.getEntries(), dictIs);
+                List<Word> words = DictReader.parseDict(idx.getEntries(), dictIs);
                 List<Entry> entries = new ArrayList<>();
                 for (Word word : words) {
                     Entry entry = new Entry();

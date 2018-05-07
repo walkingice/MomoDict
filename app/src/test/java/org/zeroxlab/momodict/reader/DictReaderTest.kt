@@ -37,8 +37,8 @@ class DictReaderTest {
         this.javaClass
                 .classLoader
                 .getResourceAsStream("test_dict/test_alphabet/test_alphabet.dict.dz")
-                .let { DictReader.wrapInputStream(true, it) }
-                .use { stream -> DictReader.parse(idx.entries, stream) }
+                .let { wrapInputStream(true, it) }
+                .use { stream -> parseDict(idx.entries, stream) }
                 .also {
                     assertEquals(6, it.size)
                     assertEquals("a", it[0].entry.wordStr)
