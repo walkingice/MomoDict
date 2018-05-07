@@ -31,18 +31,18 @@ public class CardRowPresenter implements SelectorAdapter.Presenter<Card> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final Card item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
-        holder.iText1.setText(item.wordStr);
+        holder.iText1.setText(item.getWordStr());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setTag(item.wordStr);
+                view.setTag(item.getWordStr());
                 mListener.onClick(view);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                view.setTag(item.wordStr);
+                view.setTag(item.getWordStr());
                 mLongListener.onLongClick(view);
                 return true;
             }
