@@ -44,14 +44,14 @@ class CompressedFileReaderTest {
     @Test
     fun testExtractFile() {
         val inputStream = this.javaClass.classLoader.getResourceAsStream("test_dict/test_alphabet.tar.bz2")
-        val fileSet = CompressedFileReader.readBzip2File(tmpDir, inputStream)
+        val fileSet = readBzip2File(tmpDir, inputStream)
         assertNotNull(fileSet)
-        assertTrue(fileSet.isSane)
-        assertTrue(fileSet.has(FileSet.Type.IFO))
-        assertTrue(fileSet.has(FileSet.Type.IDX))
-        assertTrue(fileSet.has(FileSet.Type.DICT))
-        assertTrue(fileSet.get(FileSet.Type.IFO).endsWith("test_alphabet.ifo"))
-        assertTrue(fileSet.get(FileSet.Type.IDX).endsWith("test_alphabet.idx"))
-        assertTrue(fileSet.get(FileSet.Type.DICT).endsWith("test_alphabet.dict"))
+        assertTrue(fileSet!!.isSane)
+        assertTrue(fileSet!!.has(FileSet.Type.IFO))
+        assertTrue(fileSet!!.has(FileSet.Type.IDX))
+        assertTrue(fileSet!!.has(FileSet.Type.DICT))
+        assertTrue(fileSet!!.get(FileSet.Type.IFO).endsWith("test_alphabet.ifo"))
+        assertTrue(fileSet!!.get(FileSet.Type.IDX).endsWith("test_alphabet.idx"))
+        assertTrue(fileSet!!.get(FileSet.Type.DICT).endsWith("test_alphabet.dict"))
     }
 }
