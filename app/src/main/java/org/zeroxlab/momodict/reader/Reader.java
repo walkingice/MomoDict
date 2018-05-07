@@ -92,8 +92,8 @@ public class Reader {
                 for (Word word : words) {
                     Entry entry = new Entry();
                     entry.setSource(info.getBookName());
-                    entry.setWordStr(word.entry.getWordStr());
-                    entry.setData(word.data);
+                    entry.setWordStr(word.getEntry().getWordStr());
+                    entry.setData(word.getData());
                     entries.add(entry);
                 }
                 store.addEntries(entries);
