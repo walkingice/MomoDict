@@ -27,7 +27,7 @@ class IdxReaderTest {
                 .classLoader
                 .getResourceAsStream("test_dict/test_alphabet/test_alphabet.idx")
                 .use {
-                    IdxReader.parse(it)
+                    parseIdx(it)
                 }
                 .also {
                     assertNotNull(it)

@@ -64,7 +64,7 @@ public class Reader {
                 throw new RuntimeException("Should give an existing idx file");
             }
             final InputStream idxIs = new FileInputStream(idxFile);
-            final Idx idx = IdxReader.Companion.parse(idxIs);
+            final Idx idx = IdxReader.parseIdx(idxIs);
             idxIs.close();
 
             // To save ifo to database
