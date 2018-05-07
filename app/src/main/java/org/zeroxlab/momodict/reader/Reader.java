@@ -12,6 +12,7 @@ import org.zeroxlab.momodict.model.Book;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Store;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -77,8 +78,12 @@ public class Reader {
 
             // To save each words to database
             if (idx.size() != 0) {
-                List<Word> words = DictReader.parse(idx.getEntries(),
-                        archive.get(FileSet.Type.DICT));
+                final String dictPath = archive.get(FileSet.Type.DICT);
+                final boolean isDict = dictPath.endsWith(".dz");
+                InputStream ips = new FileInputStream(dictPath);
+                BufferedInputStream bis = new BufferedInputStream(ips);
+                InputStream dictIs = DictReader.wrapInputStream(isDict, bis);
+                List<Word> words = DictReader.parseDict(idx.getEntries(), dictIs);
                 List<Entry> entries = new ArrayList<>();
                 for (Word word : words) {
                     Entry entry = new Entry();
