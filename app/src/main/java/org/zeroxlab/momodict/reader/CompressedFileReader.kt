@@ -7,7 +7,6 @@ import org.zeroxlab.momodict.archive.FileSet
 import org.zeroxlab.momodict.archive.TarExtractor
 import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
 import java.math.BigInteger
 import java.security.SecureRandom
@@ -19,50 +18,35 @@ private val DIR_PREFIX = "DICT."
 // to generate random string for directory which contains extracted files
 private val RANDOM_BITS = 32
 
+fun makeTempDir(parentDir: File): File {
+    val random = SecureRandom()
+    val integer = BigInteger(RANDOM_BITS, random)
+    val randomText = integer.toString(RANDOM_BITS)
+    val dirPath = "$parentDir.path/$DIR_PREFIX$randomText"
+    val tmpDir = File(dirPath)
+    val made = tmpDir.mkdirs()
+    return if (made) tmpDir else throw RuntimeException("Cannot create directory: $tmpDir")
+}
+
 /**
  * To extract tar.bz2 file to cache directory.
  *
  * @param outputDir a parent directory. Any cache directory will be under this.
- * @param inputFile the compressed file to be extracted.
+ * @param stream the input stream of the compressed file to be extracted.
  * @return
  */
-fun readBzip2File(outputDir: String, inputFile: String): FileSet? {
-
-    // to make a random path such as /tmp/DICT.ru9527
-    val random = SecureRandom()
-    val integer = BigInteger(RANDOM_BITS, random)
-    val randomText = integer.toString(RANDOM_BITS)
-    val dirPath = "$outputDir/$DIR_PREFIX$randomText"
-    val tmpDir = File(dirPath)
-    val made = tmpDir.mkdirs()
-    if (!made) {
-        throw RuntimeException("Cannot create directory: $tmpDir")
-    }
-
+fun readBzip2File(outputDir: File, stream: InputStream): FileSet? {
     try {
-        // extract bz2 file
-        val fis = FileInputStream(File(inputFile))
-        return readBzip2File(tmpDir, fis)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-
-    return null
-}
-
-
-fun readBzip2File(tmpDir: File, `is`: InputStream): FileSet? {
-    try {
-        val bis = BufferedInputStream(`is`)
+        val bis = BufferedInputStream(stream)
         val b2is = BZip2CompressorInputStream(bis)
 
         // extract tar file
         val extractor = TarExtractor()
-        val archive = extractor.extract(tmpDir, b2is)
+        val archive = extractor.extract(outputDir, b2is)
         if (!archive.isSane) {
             throw Exception("Necessary files missing: " + archive.toString())
         }
-        `is`.close()
+        stream.close()
         return archive
     } catch (e: Exception) {
         e.printStackTrace()

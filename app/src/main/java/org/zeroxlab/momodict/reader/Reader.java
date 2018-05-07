@@ -46,8 +46,12 @@ public class Reader {
      */
     public void parse(@NonNull Context ctx) {
         // extract file
-        final FileSet archive = CompressedFileReader.readBzip2File(mCacheDir, mFilePath);
+        final File cachedir = new File(mCacheDir);
+        final File outputDir = CompressedFileReader.makeTempDir(cachedir);
+        FileSet archive = null;
         try {
+            final InputStream fis = new FileInputStream(new File(mFilePath));
+            archive = CompressedFileReader.readBzip2File(outputDir, fis);
             final Store store = new RealmStore(ctx);
             final File ifoFile = new File(archive.get(FileSet.Type.IFO));
             final File idxFile = new File(archive.get(FileSet.Type.IDX));

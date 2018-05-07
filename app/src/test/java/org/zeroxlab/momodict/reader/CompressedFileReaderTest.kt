@@ -34,6 +34,14 @@ class CompressedFileReaderTest {
     }
 
     @Test
+    fun testMakeTempDir() {
+        val tmp = makeTempDir(tmpDir)
+
+        // created tmp directory should be child of tmpDir
+        assertTrue(tmp.path.startsWith(tmpDir.path))
+    }
+
+    @Test
     fun testResourceExist() {
         val inputStream = this.javaClass.classLoader.getResourceAsStream("test_dict/test_alphabet.tar.bz2")
         assertNotNull(inputStream)
