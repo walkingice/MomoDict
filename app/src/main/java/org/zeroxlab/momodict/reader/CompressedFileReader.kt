@@ -11,19 +11,19 @@ import java.io.InputStream
 import java.math.BigInteger
 import java.security.SecureRandom
 
-
 // Prefix for directory which contains extracted files
-private val DIR_PREFIX = "DICT."
+private const val DIR_PREFIX = "DICT."
 
 // to generate random string for directory which contains extracted files
-private val RANDOM_BITS = 32
+private const val RANDOM_BITS = 32
 
+// to make a random directory such as /tmp/DICT.ru9527
 fun makeTempDir(parentDir: File): File {
-    val random = SecureRandom()
-    val integer = BigInteger(RANDOM_BITS, random)
-    val randomText = integer.toString(RANDOM_BITS)
-    val dirPath = "$parentDir.path/$DIR_PREFIX$randomText"
-    val tmpDir = File(dirPath)
+    val tmpDir = SecureRandom()
+            .let { random -> BigInteger(RANDOM_BITS, random) }
+            .toString(RANDOM_BITS)
+            .let { randomText -> "$parentDir.path/$DIR_PREFIX$randomText" }
+            .let { dirPath -> File(dirPath) }
     val made = tmpDir.mkdirs()
     return if (made) tmpDir else throw RuntimeException("Cannot create directory: $tmpDir")
 }
