@@ -3,9 +3,8 @@ package org.zeroxlab.momodict.reader;
 import org.zeroxlab.momodict.archive.IdxEntry;
 import org.zeroxlab.momodict.archive.Word;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -13,14 +12,15 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class DictReader {
-    public static List<Word> parse(List<IdxEntry> entries, String dictPath) {
+    public static InputStream wrapInputStream(final boolean isDzFile,
+                                              final InputStream is) throws IOException {
+
+        return isDzFile ? new GZIPInputStream(is) : is;
+    }
+
+    public static List<Word> parse(List<IdxEntry> entries, InputStream stream) {
         List<Word> words = new ArrayList<>();
         try {
-            InputStream is = new FileInputStream(dictPath);
-            BufferedInputStream bis = new BufferedInputStream(is);
-            InputStream stream = dictPath.endsWith(".dz")
-                    ? new GZIPInputStream(bis)
-                    : bis;
             for (IdxEntry entry : entries) {
                 Word word = new Word();
                 byte[] data = new byte[entry.getWordDataSize()];
