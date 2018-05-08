@@ -2,17 +2,20 @@ package org.zeroxlab.momodict.db.room
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
 
-@Database(entities = arrayOf(RoomBook::class, RoomEntry::class), version = 1)
+@Database(entities = arrayOf(RoomBook::class, RoomEntry::class, RoomRecord::class), version = 1)
+@TypeConverters(RoomTypeConverter::class)
 abstract class RoomStore : Store, RoomDatabase() {
 
     private val bookDao = getBookDao()
     private val entryDao = getEntryDao()
+    private val recordDao = getRecordDao()
 
     override fun addBook(book: Book): Boolean {
         if (book.bookName == null) {
@@ -71,15 +74,22 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun upsertRecord(record: Record): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return RoomRecord()
+                .also {
+                    it.count = record.count
+                    it.wordStr = record.wordStr
+                    it.time = record.time
+                }
+                .apply { recordDao.addRecord(this) }
+                .run { recordDao.updateRecord(this) != -1 }
     }
 
     override fun removeRecords(keyWord: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return recordDao.removeRecord(keyWord) > 0
     }
 
     override fun getRecords(): MutableList<Record> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return recordDao.getRecords().toMutableList()
     }
 
     override fun upsertCard(card: Card): Boolean {
@@ -96,4 +106,5 @@ abstract class RoomStore : Store, RoomDatabase() {
 
     abstract fun getBookDao(): RoomBookDao
     abstract fun getEntryDao(): RoomEntryDao
+    abstract fun getRecordDao(): RoomRecordDao
 }

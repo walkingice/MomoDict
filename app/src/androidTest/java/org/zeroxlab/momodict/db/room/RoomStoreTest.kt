@@ -11,12 +11,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Entry
+import org.zeroxlab.momodict.model.Record
+import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 class RoomStoreTest {
 
     private val alphabetEntries = ArrayList<Entry>()
     private val numEntries = ArrayList<Entry>()
+
+    private val records = ArrayList<Record>()
     lateinit var db: RoomStore
 
     @Before
@@ -65,6 +69,21 @@ class RoomStoreTest {
             this.wordStr = "three"
             this.data = "number three"
         }.run { numEntries.add(this) }
+
+        Record().apply { wordStr = "ramen" }
+                .apply { count = 100 }
+                .apply { time = Date() }
+                .run { records.add(this) }
+
+        Record().apply { wordStr = "sushi" }
+                .apply { count = 30 }
+                .apply { time = Date() }
+                .run { records.add(this) }
+
+        Record().apply { wordStr = "katsudonn" }
+                .apply { count = 20 }
+                .apply { time = Date() }
+                .run { records.add(this) }
     }
 
     @After
@@ -119,5 +138,46 @@ class RoomStoreTest {
         assertEquals(2, list2.size)
         assertEquals("one", list2[0].wordStr)
         assertEquals("three", list2[1].wordStr)
+    }
+
+    @Test
+    fun testGetRecords() {
+        assertEquals(0, db.records.size)
+        db.upsertRecord(records[0])
+        assertEquals(1, db.records.size)
+        assertEquals("ramen", db.records[0].wordStr)
+
+        db.upsertRecord(records[1])
+        assertEquals(2, db.records.size)
+
+        db.upsertRecord(records[2])
+        assertEquals(3, db.records.size)
+
+        // upsert duplicate, should not add extra record
+        db.upsertRecord(records[2])
+        assertEquals(3, db.records.size)
+    }
+
+    @Test
+    fun testUpsertRecord() {
+        db.upsertRecord(records[0])
+        assertEquals(100, db.records[0].count)
+
+        records[0].count = 101
+        db.upsertRecord(records[0])
+        assertEquals(101, db.records[0].count)
+    }
+
+    @Test
+    fun testRemoveRecord() {
+        db.upsertRecord(records[0])
+        db.upsertRecord(records[1])
+        assertEquals(2, db.records.size)
+
+        db.removeRecords(records[0].wordStr)
+        assertEquals(1, db.records.size)
+
+        db.removeRecords("not-exist")
+        assertEquals(1, db.records.size)
     }
 }
