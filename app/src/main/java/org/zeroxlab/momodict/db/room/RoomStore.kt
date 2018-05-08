@@ -9,13 +9,20 @@ import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
 
-@Database(entities = arrayOf(RoomBook::class, RoomEntry::class, RoomRecord::class), version = 1)
+@Database(
+        entities = arrayOf(
+                RoomBook::class,
+                RoomEntry::class,
+                RoomCard::class,
+                RoomRecord::class),
+        version = 1)
 @TypeConverters(RoomTypeConverter::class)
 abstract class RoomStore : Store, RoomDatabase() {
 
     private val bookDao = getBookDao()
     private val entryDao = getEntryDao()
     private val recordDao = getRecordDao()
+    private val cardDao = getCardDao()
 
     override fun addBook(book: Book): Boolean {
         if (book.bookName == null) {
@@ -93,18 +100,26 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun upsertCard(card: Card): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return RoomCard()
+                .also {
+                    it.wordStr = card.wordStr
+                    it.note = card.note
+                    it.time = card.time
+                }
+                .apply { cardDao.addCard(this) }
+                .run { cardDao.updateCard(this) != -1 }
     }
 
     override fun removeCards(keyWord: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return cardDao.removeCard(keyWord) > 0
     }
 
     override fun getCards(): MutableList<Card> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return cardDao.getCards().toMutableList()
     }
 
     abstract fun getBookDao(): RoomBookDao
     abstract fun getEntryDao(): RoomEntryDao
     abstract fun getRecordDao(): RoomRecordDao
+    abstract fun getCardDao(): RoomCardDao
 }

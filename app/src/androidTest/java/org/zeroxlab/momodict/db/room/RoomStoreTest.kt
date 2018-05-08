@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.zeroxlab.momodict.model.Book
+import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import java.util.Date
@@ -19,6 +20,7 @@ class RoomStoreTest {
 
     private val alphabetEntries = ArrayList<Entry>()
     private val numEntries = ArrayList<Entry>()
+    private val cards = ArrayList<Card>()
 
     private val records = ArrayList<Record>()
     lateinit var db: RoomStore
@@ -84,6 +86,21 @@ class RoomStoreTest {
                 .apply { count = 20 }
                 .apply { time = Date() }
                 .run { records.add(this) }
+
+        Card().apply { wordStr = "ramen" }
+                .apply { note = "My favorite" }
+                .apply { time = Date() }
+                .run { cards.add(this) }
+
+        Card().apply { wordStr = "sushi" }
+                .apply { note = "nice food" }
+                .apply { time = Date() }
+                .run { cards.add(this) }
+
+        Card().apply { wordStr = "katsudonn" }
+                .apply { note = "eat it everyday" }
+                .apply { time = Date() }
+                .run { cards.add(this) }
     }
 
     @After
@@ -180,4 +197,50 @@ class RoomStoreTest {
         db.removeRecords("not-exist")
         assertEquals(1, db.records.size)
     }
+
+    @Test
+    fun testGetCards() {
+        assertEquals(0, db.cards.size)
+
+        db.upsertCard(cards[0])
+        assertEquals(1, db.cards.size)
+        assertEquals(cards[0].wordStr, db.cards[0].wordStr)
+
+        db.upsertCard(cards[1])
+        assertEquals(2, db.cards.size)
+        assertEquals(cards[1].wordStr, db.cards[1].wordStr)
+
+        db.upsertCard(cards[2])
+        assertEquals(3, db.cards.size)
+        assertEquals(cards[2].wordStr, db.cards[2].wordStr)
+    }
+
+    @Test
+    fun testUpsertCard() {
+        db.upsertCard(cards[0])
+        assertEquals(1, db.cards.size)
+        assertEquals(cards[0].wordStr, db.cards[0].wordStr)
+        assertEquals(cards[0].note, db.cards[0].note)
+
+        val updatedNote = "I DO LOVE IT".also { note -> cards[0].note = note }
+
+        db.upsertCard(cards[0])
+        assertEquals(1, db.cards.size)
+        assertEquals(cards[0].wordStr, db.cards[0].wordStr)
+        assertEquals(updatedNote, db.cards[0].note)
+    }
+
+    @Test
+    fun testRemoveCard() {
+        db.upsertCard(cards[0])
+        db.upsertCard(cards[1])
+        assertEquals(2, db.cards.size)
+
+        db.removeCards(cards[0].wordStr)
+        assertEquals(1, db.cards.size)
+
+        db.removeCards("not-exist")
+        assertEquals(1, db.cards.size)
+    }
+
 }
