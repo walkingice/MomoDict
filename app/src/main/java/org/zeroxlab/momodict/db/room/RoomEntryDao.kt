@@ -19,4 +19,7 @@ interface RoomEntryDao {
 
     @Insert
     fun addEntries(entries: List<RoomEntry>)
+
+    @Query("DELETE FROM entries WHERE source = :bookName")
+    fun removeEntriesByBookName(bookName: String)
 }

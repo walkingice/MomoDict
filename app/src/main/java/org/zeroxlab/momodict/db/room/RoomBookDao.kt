@@ -8,6 +8,9 @@ import org.zeroxlab.momodict.model.Book
 @Dao
 interface RoomBookDao {
 
+    @Query("DELETE FROM dictionaries WHERE bookName = :bookName")
+    fun removeBook(bookName: String): Int
+
     @Query("SELECT * from dictionaries")
     fun getAll(): List<Book>
 

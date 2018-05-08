@@ -18,6 +18,7 @@ import java.util.Date
 @RunWith(AndroidJUnit4::class)
 class RoomStoreTest {
 
+    private val books = ArrayList<Book>()
     private val alphabetEntries = ArrayList<Entry>()
     private val numEntries = ArrayList<Entry>()
     private val cards = ArrayList<Card>()
@@ -29,6 +30,12 @@ class RoomStoreTest {
     fun setUp() {
         val ctx = InstrumentationRegistry.getTargetContext()
         db = Room.inMemoryDatabaseBuilder(ctx, RoomStore::class.java).build()
+
+        Book().apply { bookName = "alphabet" }
+                .run { books.add(this) }
+
+        Book().apply { bookName = "numbers" }
+                .run { books.add(this) }
 
         Entry().apply {
             this.source = "alphabet"
@@ -114,14 +121,8 @@ class RoomStoreTest {
 
     @Test
     fun testBook() {
-        val bookA = Book()
-        bookA.bookName = "Book A"
-        bookA.version = "2.4.2"
-        val bookB = Book()
-        bookB.bookName = "Book B"
-        bookB.version = "2.4.2"
-        db.addBook(bookA)
-        db.addBook(bookB)
+        db.addBook(books[0])
+        db.addBook(books[1])
 
         val list = db.books
         assertNotNull(list)
@@ -243,4 +244,22 @@ class RoomStoreTest {
         assertEquals(1, db.cards.size)
     }
 
+    @Test
+    fun testRemoveBook() {
+        db.addBook(books[0])
+        db.addBook(books[1])
+        db.addEntries(alphabetEntries)
+        db.addEntries(numEntries)
+
+        assertEquals(2, db.books.size)
+        assertEquals(2, db.queryEntries("a").size) // a and apple
+        assertEquals(3, db.queryEntries("e").size) // apple, one and three
+
+        // remove numbers
+        db.removeBook(books[1].bookName)
+        assertEquals(1, db.books.size)
+        assertEquals(2, db.queryEntries("a").size) // a and apple
+        assertEquals(1, db.queryEntries("e").size) // apple
+
+    }
 }

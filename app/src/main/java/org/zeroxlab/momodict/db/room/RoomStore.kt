@@ -52,7 +52,10 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun removeBook(bookName: String): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // TODO: use foreign key might be better
+        val removed = bookDao.removeBook(bookName)
+        entryDao.removeEntriesByBookName(bookName)
+        return removed > 0
     }
 
     override fun addEntries(entries: MutableList<Entry>): Boolean {
