@@ -125,4 +125,8 @@ abstract class RoomStore : Store, RoomDatabase() {
     abstract fun getEntryDao(): RoomEntryDao
     abstract fun getRecordDao(): RoomRecordDao
     abstract fun getCardDao(): RoomCardDao
+
+    companion object {
+        val DB_NAME = "room_db"
+    }
 }

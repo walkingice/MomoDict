@@ -9,7 +9,7 @@ class RoomCard {
     @PrimaryKey
     var wordStr: String = ""
 
-    var note: String = ""
+    var note: String? = null
 
     var time: Date = Date()
 }

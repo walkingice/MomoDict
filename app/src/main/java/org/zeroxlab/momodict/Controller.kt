@@ -1,7 +1,8 @@
 package org.zeroxlab.momodict
 
+import android.arch.persistence.room.Room.databaseBuilder
 import android.content.Context
-import org.zeroxlab.momodict.db.realm.RealmStore
+import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.model.Entry
@@ -10,8 +11,8 @@ import org.zeroxlab.momodict.model.Store
 import rx.Observable
 import java.util.Collections
 
-class Controller @JvmOverloads constructor(private val mCtx: Context,
-                                           private val mStore: Store = RealmStore(mCtx)) {
+// FIXME: should avoid main thread
+class Controller @JvmOverloads constructor(private val mCtx: Context, private val mStore: Store = databaseBuilder(mCtx.getApplicationContext(), RoomStore::class.java, RoomStore.DB_NAME).allowMainThreadQueries().build()) {
 
     val books: Observable<Book>
         get() = Observable.from(mStore.books)

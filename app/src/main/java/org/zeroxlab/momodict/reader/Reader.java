@@ -1,5 +1,6 @@
 package org.zeroxlab.momodict.reader;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -7,7 +8,8 @@ import org.zeroxlab.momodict.archive.FileSet;
 import org.zeroxlab.momodict.archive.Idx;
 import org.zeroxlab.momodict.archive.Info;
 import org.zeroxlab.momodict.archive.Word;
-import org.zeroxlab.momodict.db.realm.RealmStore;
+import org.zeroxlab.momodict.db.room.RoomStore;
+import org.zeroxlab.momodict.db.room.RoomStore_Impl;
 import org.zeroxlab.momodict.model.Book;
 import org.zeroxlab.momodict.model.Entry;
 import org.zeroxlab.momodict.model.Store;
@@ -52,7 +54,12 @@ public class Reader {
         try {
             final InputStream fis = new FileInputStream(new File(mFilePath));
             archive = CompressedFileReader.readBzip2File(outputDir, fis);
-            final Store store = new RealmStore(ctx);
+            // FIXME: should avoid main thread
+            final Store store = Room.databaseBuilder(ctx.getApplicationContext(),
+                    RoomStore.class,
+                    RoomStore_Impl.Companion.getDB_NAME())
+                    .allowMainThreadQueries()
+                    .build();
             final File ifoFile = new File(archive.get(FileSet.Type.IFO));
             final File idxFile = new File(archive.get(FileSet.Type.IDX));
 
