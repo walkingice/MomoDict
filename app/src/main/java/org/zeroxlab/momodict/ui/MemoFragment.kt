@@ -32,11 +32,8 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, CardRowPresenter(
-                { view -> onRowClicked(view.tag as String) }
-        ) { view ->
-            onRowLongClicked(view.tag as String)
-            true
-        })
+                { view -> view.tag?.let { onRowClicked(view.tag as String) } },
+                { view -> view.tag?.let { onRowLongClicked(view.tag as String) } }))
         mAdapter = SelectorAdapter(map)
     }
 

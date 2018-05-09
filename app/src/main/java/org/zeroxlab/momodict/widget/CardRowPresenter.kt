@@ -9,26 +9,31 @@ import android.widget.TextView
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Card
 
-class CardRowPresenter(internal var mListener: View.OnClickListener,
-                       internal var mLongListener: View.OnLongClickListener) : SelectorAdapter.Presenter<Card> {
+class CardRowPresenter(private val clickCallback: (v: View) -> Unit,
+                       private val longClickCallback: (v: View) -> Unit) : SelectorAdapter.Presenter<Card> {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val viewGroup = inflater.inflate(
-                R.layout.list_item_card_row, parent, false) as ViewGroup
-        return InnerViewHolder(viewGroup)
+        return LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.list_item_card_row, parent, false)
+                .let { view -> view as ViewGroup }
+                .let { viewGroup -> InnerViewHolder(viewGroup) }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, item: Card) {
         val holder = viewHolder as InnerViewHolder
+
         holder.iText1.text = item.wordStr
+
         holder.itemView.setOnClickListener { view ->
             view.tag = item.wordStr
-            mListener.onClick(view)
+            clickCallback(view)
+            true
         }
+
         holder.itemView.setOnLongClickListener { view ->
             view.tag = item.wordStr
-            mLongListener.onLongClick(view)
+            longClickCallback(view)
             true
         }
     }
@@ -36,12 +41,6 @@ class CardRowPresenter(internal var mListener: View.OnClickListener,
     override fun onUnbindViewHolder(viewHolder: RecyclerView.ViewHolder) {}
 
     internal inner class InnerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var iText1: TextView
-        var iText2: TextView
-
-        init {
-            iText1 = view.findViewById<View>(R.id.text_1) as TextView
-            iText2 = view.findViewById<View>(R.id.text_2) as TextView
-        }
+        var iText1: TextView = view.findViewById<View>(R.id.text_1) as TextView
     }
 }
