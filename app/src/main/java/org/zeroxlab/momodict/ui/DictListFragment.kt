@@ -70,7 +70,7 @@ class DictListFragment : Fragment() {
                 .setTitle("Remove")
                 .setMessage("To remove ${tag.bookName} ?")
                 .setPositiveButton("Remove") { dialogInterface, i ->
-                    finishCb(mCtrl.removeBook(tag.bookName))
+                    finishCb(mCtrl.removeBook(tag.bookName!!))
                 }
                 .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
                     // do nothing on canceling
