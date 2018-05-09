@@ -64,7 +64,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
                 .subscribe({ list ->
                     mAdapter!!.clear()
                     for (entry in list) {
-                        mAdapter!!.addItem(entry.wordStr, SelectorAdapter.Type.A)
+                        mAdapter!!.addItem(entry.wordStr!!, SelectorAdapter.Type.A)
                     }
                     mAdapter!!.notifyDataSetChanged()
                 }) { e -> e.printStackTrace() }

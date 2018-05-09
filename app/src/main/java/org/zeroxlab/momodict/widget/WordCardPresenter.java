@@ -26,8 +26,8 @@ public class WordCardPresenter implements SelectorAdapter.Presenter<Entry> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, Entry item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
-        holder.iText1.setText(item.source);
-        holder.iText2.setText(item.data);
+        holder.iText1.setText(item.getSource());
+        holder.iText2.setText(item.getData());
     }
 
     @Override
