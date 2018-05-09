@@ -31,19 +31,19 @@ public class HistoryRowPresenter implements SelectorAdapter.Presenter<Record> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final Record item) {
         InnerViewHolder holder = (InnerViewHolder) viewHolder;
-        holder.iText1.setText(item.wordStr);
-        holder.iText2.setText(item.count + "");
+        holder.iText1.setText(item.getWordStr());
+        holder.iText2.setText(item.getCount() + "");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.setTag(item.wordStr);
+                view.setTag(item.getWordStr());
                 mListener.onClick(view);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                view.setTag(item.wordStr);
+                view.setTag(item.getWordStr());
                 mLongListener.onLongClick(view);
                 return true;
             }
