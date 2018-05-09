@@ -58,7 +58,7 @@ abstract class RoomStore : Store, RoomDatabase() {
         return removed > 0
     }
 
-    override fun addEntries(entries: MutableList<Entry>): Boolean {
+    override fun addEntries(entries: List<Entry>): Boolean {
         val list = mutableListOf<RoomEntry>()
         for (entry in entries) {
             val re = RoomEntry()
@@ -87,8 +87,8 @@ abstract class RoomStore : Store, RoomDatabase() {
         return RoomRecord()
                 .also {
                     it.count = record.count
-                    it.wordStr = record.wordStr
-                    it.time = record.time
+                    it.wordStr = record.wordStr!!
+                    it.time = record.time!!
                 }
                 .apply { recordDao.addRecord(this) }
                 .run { recordDao.updateRecord(this) != -1 }
@@ -105,9 +105,9 @@ abstract class RoomStore : Store, RoomDatabase() {
     override fun upsertCard(card: Card): Boolean {
         return RoomCard()
                 .also {
-                    it.wordStr = card.wordStr
-                    it.note = card.note
-                    it.time = card.time
+                    it.wordStr = card.wordStr!!
+                    it.note = card.note!!
+                    it.time = card.time!!
                 }
                 .apply { cardDao.addCard(this) }
                 .run { cardDao.updateCard(this) != -1 }

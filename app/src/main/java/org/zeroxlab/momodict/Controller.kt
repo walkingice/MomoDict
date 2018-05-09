@@ -15,7 +15,7 @@ import java.util.Collections
 class Controller @JvmOverloads constructor(private val mCtx: Context, private val mStore: Store = databaseBuilder(mCtx.getApplicationContext(), RoomStore::class.java, RoomStore.DB_NAME).allowMainThreadQueries().build()) {
 
     val books: Observable<Book>
-        get() = Observable.from(mStore.books)
+        get() = Observable.from(mStore.getBooks())
 
     fun removeBook(bookName: String): Boolean {
         return mStore.removeBook(bookName)
@@ -27,27 +27,27 @@ class Controller @JvmOverloads constructor(private val mCtx: Context, private va
         val list = mStore.queryEntries(keyWord)
         list.addAll(exact)
 
-        Collections.sort(list) { left, right -> left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord) }
+        Collections.sort(list) { left, right -> left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord) }
         return Observable.from(list).distinct { item -> item.wordStr }
     }
 
     fun getEntries(keyWord: String): Observable<Entry> {
         val list = mStore.getEntries(keyWord)
 
-        Collections.sort(list) { left, right -> left.wordStr.indexOf(keyWord) - right.wordStr.indexOf(keyWord) }
+        Collections.sort(list) { left, right -> left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord) }
         return Observable.from(list)
     }
 
     // sorting by time. Move latest one to head
     val records: Observable<Record>
         get() {
-            val records = mStore.records
-            Collections.sort(records) { left, right -> if (left.time.before(right.time)) 1 else -1 }
+            val records = mStore.getRecords()
+            Collections.sort(records) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
             return Observable.from(records)
         }
 
     fun clearRecords() {
-        records.subscribe { record -> mStore.removeRecords(record.wordStr) }
+        records.subscribe { record -> mStore.removeRecords(record.wordStr!!) }
     }
 
     fun setRecord(record: Record): Boolean {
@@ -61,8 +61,8 @@ class Controller @JvmOverloads constructor(private val mCtx: Context, private va
     // sorting by time. Move latest one to head
     val cards: Observable<Card>
         get() {
-            val cards = mStore.cards
-            Collections.sort(cards) { left, right -> if (left.time.before(right.time)) 1 else -1 }
+            val cards = mStore.getCards()
+            Collections.sort(cards) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
             return Observable.from(cards)
         }
 

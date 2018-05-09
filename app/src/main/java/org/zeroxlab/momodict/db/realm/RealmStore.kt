@@ -88,7 +88,7 @@ class RealmStore(private val mCtx: Context) : Store {
         return true
     }
 
-    override fun queryEntries(keyWord: String?): List<Entry> {
+    override fun queryEntries(keyWord: String?): MutableList<Entry> {
         val realm = Realm.getDefaultInstance()
         val managedEntries = if (TextUtils.isEmpty(keyWord))
             realm.where(RealmEntry::class.java).findAll()
@@ -97,7 +97,7 @@ class RealmStore(private val mCtx: Context) : Store {
 
         val mapped = map(managedEntries)
         realm.close()
-        return mapped
+        return mapped.toMutableList()
     }
 
     override fun getEntries(keyWord: String?): List<Entry> {
@@ -129,7 +129,7 @@ class RealmStore(private val mCtx: Context) : Store {
         return true
     }
 
-    override fun getRecords(): List<Record> {
+    override fun getRecords(): MutableList<Record> {
         val realm = Realm.getDefaultInstance()
         val records = realm
                 .where(RealmRecord::class.java)
@@ -142,7 +142,7 @@ class RealmStore(private val mCtx: Context) : Store {
                     }
                 }
         realm.close()
-        return records
+        return records.toMutableList()
     }
 
     override fun upsertCard(card: Card): Boolean {
