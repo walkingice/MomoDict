@@ -13,30 +13,28 @@ import org.zeroxlab.momodict.R
 
 import java.io.File
 
-class FileRowPresenter(ctx: Context, private val mListener: View.OnClickListener) : SelectorAdapter.Presenter<FileRowPresenter.Item> {
-    private val mHandler: Handler
+class FileRowPresenter(ctx: Context, private val callback: (v: View) -> Unit) : SelectorAdapter.Presenter<FileRowPresenter.Item> {
 
-    init {
-        mHandler = Handler(ctx.mainLooper)
-    }
+    private val mHandler: Handler = Handler(ctx.mainLooper)
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val viewGroup = inflater.inflate(
-                R.layout.list_item_file_row, parent, false) as ViewGroup
-        return InnerViewHolder(viewGroup)
+        return LayoutInflater.from(parent.context)
+                .let { it.inflate(R.layout.list_item_file_row, parent, false) }
+                .let { InnerViewHolder(it) }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, item: Item) {
         val holder = viewHolder as InnerViewHolder
-        if (item.file.isDirectory) {
-            holder.iTextView.text = item.display
-            holder.iImg.visibility = View.VISIBLE
-        } else if (item.file.isFile) {
-            holder.iTextView.text = item.display
-            holder.iImg.visibility = View.INVISIBLE
-        } else {
-            holder.iTextView.text = "//Unknown//"
+        when {
+            item.file.isDirectory -> {
+                holder.iTextView.text = item.display
+                holder.iImg.visibility = View.VISIBLE
+            }
+            item.file.isFile -> {
+                holder.iTextView.text = item.display
+                holder.iImg.visibility = View.INVISIBLE
+            }
+            else -> holder.iTextView.text = "//Unknown//"
         }
 
         holder.itemView.isEnabled = item.file.canRead()
@@ -44,21 +42,16 @@ class FileRowPresenter(ctx: Context, private val mListener: View.OnClickListener
             view.tag = item.file
 
             // Delay to show ripple effect
-            mHandler.postDelayed({ mListener.onClick(view) }, 250)
+            mHandler.postDelayed({ callback(view) }, 250)
         }
     }
 
     override fun onUnbindViewHolder(viewHolder: RecyclerView.ViewHolder) {}
 
-    class Item(var display: String, var file: File)
+    data class Item(var display: String, var file: File)
 
     internal inner class InnerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var iImg: ImageView
-        var iTextView: TextView
-
-        init {
-            iTextView = view.findViewById<View>(R.id.text_1) as TextView
-            iImg = view.findViewById<View>(R.id.img_1) as ImageView
-        }
+        var iImg: ImageView = view.findViewById<View>(R.id.img_1) as ImageView
+        var iTextView: TextView = view.findViewById<View>(R.id.text_1) as TextView
     }
 }
