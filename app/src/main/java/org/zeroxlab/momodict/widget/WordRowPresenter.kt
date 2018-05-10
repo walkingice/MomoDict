@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class WordRowPresenter(internal var mListener: View.OnClickListener) : SelectorAdapter.Presenter<String> {
+class WordRowPresenter(private val callback: (v: View) -> Unit) : SelectorAdapter.Presenter<String> {
 
     override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val v = inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
-        return InnerViewHolder(v)
+        return LayoutInflater
+                .from(parent.context)
+                .inflate(android.R.layout.simple_list_item_1, parent, false)
+                .let { view -> InnerViewHolder(view) }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, item: String) {
@@ -19,17 +20,13 @@ class WordRowPresenter(internal var mListener: View.OnClickListener) : SelectorA
         holder.iTextView.text = item
         holder.itemView.setOnClickListener { view ->
             view.tag = item
-            mListener.onClick(view)
+            callback(view)
         }
     }
 
     override fun onUnbindViewHolder(viewHolder: RecyclerView.ViewHolder) {}
 
     internal inner class InnerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var iTextView: TextView
-
-        init {
-            iTextView = view.findViewById<View>(android.R.id.text1) as TextView
-        }
+        var iTextView: TextView = view.findViewById<View>(android.R.id.text1) as TextView
     }
 }
