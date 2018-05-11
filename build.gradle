@@ -3,7 +3,7 @@
 buildscript {
 
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
-    ext.kotlin_version = '1.2.10'
+    ext.kotlin_version = '1.2.41'
 
     repositories {
         jcenter()
