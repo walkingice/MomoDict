@@ -2,10 +2,10 @@ package org.zeroxlab.momodict.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -45,7 +45,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        mCtrl = Controller(activity)
+        mCtrl = Controller(activity!!)
 
         // create adapter for RecyclerView. Adapter handles two kinds of row, one for "dictionary"
         // and another for "word".
@@ -112,7 +112,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
     override fun onViewPagerFocused() {
         // if this page becomes visible, show soft-keyboard
         mInput.requestFocus()
-        (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+        (context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
@@ -178,7 +178,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
      * @param text the text of the row which user clicked
      */
     private fun onRowClicked(text: String) {
-        val intent = WordActivity.createIntent(activity, text)
+        val intent = WordActivity.createIntent(activity!!, text)
         startActivity(intent)
     }
 

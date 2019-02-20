@@ -1,8 +1,8 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -34,13 +34,13 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(context)
+        mCtrl = Controller(context!!) // FIXME: remove !!
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, WordCardPresenter())
         mAdapter = SelectorAdapter(map)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
         }
@@ -48,7 +48,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     override fun onResume() {
         super.onResume()
-        mKeyWord = arguments.getString(ARG_KEYWORD)
+        mKeyWord = arguments?.getString(ARG_KEYWORD) ?: return
         onDisplayDetail(mKeyWord)
 
         mSwitch.setOnCheckedChangeListener(null)

@@ -2,7 +2,7 @@ package org.zeroxlab.momodict.widget
 
 import android.content.Context
 import android.os.Handler
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +17,13 @@ class FileRowPresenter(ctx: Context, private val callback: (v: View) -> Unit) : 
 
     private val mHandler: Handler = Handler(ctx.mainLooper)
 
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return LayoutInflater.from(parent.context)
                 .let { it.inflate(R.layout.list_item_file_row, parent, false) }
                 .let { InnerViewHolder(it) }
     }
 
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, item: Item) {
+    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
         val holder = viewHolder as InnerViewHolder
         when {
             item.file.isDirectory -> {
@@ -46,11 +46,11 @@ class FileRowPresenter(ctx: Context, private val callback: (v: View) -> Unit) : 
         }
     }
 
-    override fun onUnbindViewHolder(viewHolder: RecyclerView.ViewHolder) {}
+    override fun onUnbindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {}
 
     data class Item(var display: String, var file: File)
 
-    internal inner class InnerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    internal inner class InnerViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         var iImg: ImageView = view.findViewById<View>(R.id.img_1) as ImageView
         var iTextView: TextView = view.findViewById<View>(R.id.text_1) as TextView
     }

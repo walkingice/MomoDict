@@ -6,8 +6,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +25,7 @@ class FileImportFragment : Fragment() {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        val path = arguments.getString(ARG_PATH)
+        val path = arguments?.getString(ARG_PATH)
         if (TextUtils.isEmpty(path)) {
             throw RuntimeException("No file path to import")
         }
@@ -42,7 +42,7 @@ class FileImportFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val dict = File(arguments.getString(ARG_PATH)!!)
+        val dict = File(arguments?.getString(ARG_PATH)!!)
         mExists = dict.exists() && dict.isFile
         mText!!.text = if (mExists)
             String.format("Using file: %s", dict.name)
@@ -63,7 +63,7 @@ class FileImportFragment : Fragment() {
     }
 
     private fun checkPermission() {
-        val readPermission = ContextCompat.checkSelfPermission(context,
+        val readPermission = ContextCompat.checkSelfPermission(context!!,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
         if (readPermission != PackageManager.PERMISSION_GRANTED) {
             mBtnImport!!.isEnabled = false
@@ -93,14 +93,14 @@ class FileImportFragment : Fragment() {
         mBtnImport!!.isEnabled = false
         mText!!.text = "Importing....."
         val runnable = {
-            val reader = Reader(activity.cacheDir.path,
-                    arguments.getString(ARG_PATH)!!)
-            reader.parse(activity)
+            val reader = Reader(activity!!.cacheDir.path,
+                    arguments!!.getString(ARG_PATH)!!)
+            reader.parse(activity!!)
             val intent = Intent()
-            intent.data = Uri.parse(arguments.getString(ARG_PATH))
-            activity.setResult(Activity.RESULT_OK, intent)
-            activity.runOnUiThread { mText!!.text = "Imported" }
-            activity.finish()
+            intent.data = Uri.parse(arguments!!.getString(ARG_PATH))
+            activity!!.setResult(Activity.RESULT_OK, intent)
+            activity!!.runOnUiThread { mText!!.text = "Imported" }
+            activity!!.finish()
         }
         val t = Thread(runnable)
         t.start()

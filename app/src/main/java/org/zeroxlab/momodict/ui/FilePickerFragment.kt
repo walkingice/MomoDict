@@ -1,9 +1,9 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -27,8 +27,8 @@ class FilePickerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val args = arguments
-        mCurrentPath = args.getString(ARG_PATH)
-        mExtension = args.getString(ARG_EXTENSION, "")
+        mCurrentPath = args?.getString(ARG_PATH)
+        mExtension = args?.getString(ARG_EXTENSION, "")
 
         // check
         val check = File(mCurrentPath!!)
@@ -43,7 +43,7 @@ class FilePickerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A, FileRowPresenter(context) { v -> onFileClicked(v) })
+        map.put(SelectorAdapter.Type.A, FileRowPresenter(context!!) { v -> onFileClicked(v) })
         mAdapter = SelectorAdapter(map)
         return inflater.inflate(R.layout.fragment_file_picker, container, false)
     }
@@ -65,7 +65,7 @@ class FilePickerFragment : Fragment() {
         mBtnChoose.isEnabled = false
         mBtnChoose.setOnClickListener { view ->
             if (activity is FragmentListener) {
-                arguments.putString(ARG_PATH, mChosen)
+                arguments?.putString(ARG_PATH, mChosen)
                 (activity as FragmentListener).onNotified(this,
                         FragmentListener.TYPE.POP_FRAGMENT, null)
             }
@@ -73,7 +73,7 @@ class FilePickerFragment : Fragment() {
 
         mBtnCancel.setOnClickListener { view ->
             if (activity is FragmentListener) {
-                arguments.remove(ARG_PATH)
+                arguments?.remove(ARG_PATH)
                 (activity as FragmentListener).onNotified(this,
                         FragmentListener.TYPE.POP_FRAGMENT, null)
             }

@@ -1,7 +1,7 @@
 package org.zeroxlab.momodict.db.room
 
-import android.arch.persistence.room.Entity
-import android.support.annotation.NonNull
+import androidx.room.Entity
+import androidx.annotation.NonNull
 
 @Entity(tableName = "entries", primaryKeys = arrayOf("source", "wordStr"))
 class RoomEntry {
