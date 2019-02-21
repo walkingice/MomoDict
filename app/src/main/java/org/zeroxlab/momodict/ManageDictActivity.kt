@@ -2,10 +2,10 @@ package org.zeroxlab.momodict
 
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import org.zeroxlab.momodict.ui.DictListFragment
 import org.zeroxlab.momodict.ui.FileImportFragment
 import org.zeroxlab.momodict.ui.FilePickerFragment
@@ -47,9 +47,9 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         val fragPick = supportFragmentManager.findFragmentByTag(TAG_PICK_FILE)
         val fragImport = supportFragmentManager.findFragmentByTag(TAG_IMPORT_FILE)
         if (fragPick != null && fragImport != null) {
-            val chosen = fragPick.arguments.getString(FilePickerFragment.ARG_PATH)
+            val chosen = fragPick.arguments?.getString(FilePickerFragment.ARG_PATH)
             if (chosen != null && chosen.isNotEmpty()) {
-                fragImport.arguments.putString(FileImportFragment.ARG_PATH, chosen)
+                fragImport.arguments?.putString(FileImportFragment.ARG_PATH, chosen)
             }
         }
 
@@ -63,7 +63,7 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
                 .commit()
     }
 
-    override fun onNotified(from: Fragment?, type: FragmentListener.TYPE, payload: Any?) {
+    override fun onNotified(from: androidx.fragment.app.Fragment?, type: FragmentListener.TYPE, payload: Any?) {
         when (type) {
             FragmentListener.TYPE.POP_FRAGMENT -> popFragment()
             FragmentListener.TYPE.VIEW_ACTION -> {
@@ -74,7 +74,7 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         }
     }
 
-    private fun handleViewAction(from: Fragment, payload: Any) {
+    private fun handleViewAction(from: androidx.fragment.app.Fragment, payload: Any) {
         when (payload) {
             DictListFragment.OPEN_IMPORT_FRAGMENT ->
                 replaceFragment(
@@ -87,11 +87,11 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         }
     }
 
-    private fun replaceFragment(frag: Fragment, tag: String) {
+    private fun replaceFragment(frag: androidx.fragment.app.Fragment, tag: String) {
         supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_container, frag, tag)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit()
     }

@@ -1,6 +1,6 @@
 package org.zeroxlab.momodict.reader
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
 import org.zeroxlab.momodict.archive.FileSet
 import org.zeroxlab.momodict.db.room.RoomStore

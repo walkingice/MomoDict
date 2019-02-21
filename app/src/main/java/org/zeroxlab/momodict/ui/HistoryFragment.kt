@@ -2,11 +2,11 @@ package org.zeroxlab.momodict.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -27,14 +27,14 @@ import java.util.HashMap
 /**
  * A fragment to display a list which contains user queried texts.
  */
-class HistoryFragment : Fragment(), ViewPagerFocusable {
+class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
 
     private var mCtrl: Controller? = null
     private var mAdapter: SelectorAdapter? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(activity)
+        mCtrl = Controller(activity!!)
 
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, HistoryRowPresenter(
@@ -46,7 +46,7 @@ class HistoryFragment : Fragment(), ViewPagerFocusable {
         mAdapter = SelectorAdapter(map)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
         val fragmentView = inflater!!.inflate(R.layout.fragment_history, container, false)
         initViews(fragmentView)
         return fragmentView
@@ -61,10 +61,10 @@ class HistoryFragment : Fragment(), ViewPagerFocusable {
      * Callback for [ViewPagerFocusable]. Called when ViewPager focused this fragment
      */
     override fun onViewPagerFocused() {
-        val view = activity.currentFocus
+        val view = activity?.currentFocus
         if (view != null) {
             // hide soft-keyboard since there is no input field in this fragment
-            val imm = activity
+            val imm = activity!!
                     .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
@@ -77,21 +77,21 @@ class HistoryFragment : Fragment(), ViewPagerFocusable {
     }
 
     private fun initViews(fv: View) {
-        val list = fv.findViewById(R.id.list) as RecyclerView
-        val mgr = list.layoutManager as LinearLayoutManager
-        val decoration = DividerItemDecoration(list.context,
+        val list = fv.findViewById(R.id.list) as androidx.recyclerview.widget.RecyclerView
+        val mgr = list.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
+        val decoration = androidx.recyclerview.widget.DividerItemDecoration(list.context,
                 mgr.orientation)
         list.addItemDecoration(decoration)
         list.adapter = mAdapter
     }
 
     private fun onRowClicked(keyWord: String) {
-        val intent = WordActivity.createIntent(activity, keyWord)
+        val intent = WordActivity.createIntent(activity!!, keyWord)
         startActivity(intent)
     }
 
     private fun onRowLongClicked(keyWord: String) {
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(activity!!)
                 .setTitle(keyWord)
                 .setPositiveButton("Remove") { dialogInterface, i ->
                     // remove this word from history

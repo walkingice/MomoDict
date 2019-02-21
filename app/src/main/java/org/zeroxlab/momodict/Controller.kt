@@ -1,6 +1,6 @@
 package org.zeroxlab.momodict
 
-import android.arch.persistence.room.Room.databaseBuilder
+import androidx.room.Room.databaseBuilder
 import android.content.Context
 import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book

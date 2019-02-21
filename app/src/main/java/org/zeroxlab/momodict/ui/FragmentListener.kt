@@ -1,6 +1,6 @@
 package org.zeroxlab.momodict.ui
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 /**
  * This is a listener to for any message from fragments
@@ -13,7 +13,7 @@ interface FragmentListener {
         VIEW_ACTION
     }
 
-    fun onNotified(from: Fragment?,
+    fun onNotified(from: androidx.fragment.app.Fragment?,
                    type: TYPE,
                    payload: Any?)
 }

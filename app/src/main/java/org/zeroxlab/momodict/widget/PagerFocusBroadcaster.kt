@@ -1,9 +1,9 @@
 package org.zeroxlab.momodict.widget
 
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import org.zeroxlab.momodict.MainActivity
 
-class PagerFocusBroadcaster(private val mAdapter: MainActivity.FragmentPagerAdapterImpl) : ViewPager.OnPageChangeListener {
+class PagerFocusBroadcaster(private val mAdapter: MainActivity.FragmentPagerAdapterImpl) : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
 
     override fun onPageSelected(position: Int) = notifyViewPager(position)
 

@@ -1,10 +1,10 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,7 +34,7 @@ class DictListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_dictionaries_list, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         mBtnImport.let {
@@ -66,7 +66,7 @@ class DictListFragment : Fragment() {
                 Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
             }
         }
-        AlertDialog.Builder(activity)
+        AlertDialog.Builder(activity!!)
                 .setTitle("Remove")
                 .setMessage("To remove ${tag.bookName} ?")
                 .setPositiveButton("Remove") { dialogInterface, i ->

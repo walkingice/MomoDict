@@ -18,7 +18,7 @@
         android:padding="@dimen/content_space"
         tools:text="/a/very/very/ver/very/long/absolute/path/from/root/to/current/directory/"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@id/list"
         android:name="org.zeroxlab.momodict.ui.FilePickFragment"
         android:layout_width="match_parent"

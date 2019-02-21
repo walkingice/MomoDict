@@ -3,12 +3,12 @@ package org.zeroxlab.momodict
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.util.SparseArray
 import android.view.Menu
@@ -138,7 +138,8 @@ class MainActivity : AppCompatActivity() {
     /**
      * Adapter for ViewPager. To use addFragment() to add items.
      */
-    inner class FragmentPagerAdapterImpl internal constructor(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+    inner class FragmentPagerAdapterImpl internal constructor(fm: FragmentManager)
+        : FragmentStatePagerAdapter(fm) {
 
         internal val TITLE_INPUT = "input"
         internal val TITLE_HISTORY = "history"
@@ -160,13 +161,13 @@ class MainActivity : AppCompatActivity() {
         override fun getCount(): Int = iTitles.size
         override fun getPageTitle(pos: Int): String = iTitles[pos].toString()
 
-        override fun instantiateItem(container: ViewGroup?, position: Int): Any {
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val frg = super.instantiateItem(container, position) as Fragment
             iFragments.put(position, frg)
             return frg
         }
 
-        override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
             super.destroyItem(container, position, `object`)
             iFragments.remove(position)
         }

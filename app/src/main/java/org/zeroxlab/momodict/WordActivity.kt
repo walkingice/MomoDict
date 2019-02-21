@@ -3,9 +3,9 @@ package org.zeroxlab.momodict
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import org.zeroxlab.momodict.ui.FragmentListener
 import org.zeroxlab.momodict.ui.WordFragment
 
@@ -18,7 +18,7 @@ class WordActivity : AppCompatActivity(), FragmentListener {
         initActionBar()
     }
 
-    override fun onNotified(from: Fragment?, type: FragmentListener.TYPE, payload: Any?) {
+    override fun onNotified(from: androidx.fragment.app.Fragment?, type: FragmentListener.TYPE, payload: Any?) {
         if (type == FragmentListener.TYPE.UPDATE_TITLE) {
             if (payload != null) {
                 var str = payload as String
