@@ -2,6 +2,7 @@ package org.zeroxlab.momodict.db.room
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import org.zeroxlab.momodict.model.Entry
 
@@ -17,7 +18,7 @@ interface RoomEntryDao {
     @Query("SELECT * FROM entries WHERE wordStr LIKE '%' || :keyword || '%' AND source is :bookName")
     fun queryEntries(keyword: String, bookName: String): List<Entry>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addEntries(entries: List<RoomEntry>)
 
     @Query("DELETE FROM entries WHERE source = :bookName")
