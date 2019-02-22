@@ -2,9 +2,14 @@ package org.zeroxlab.momodict.db.room
 
 import androidx.room.Entity
 import androidx.annotation.NonNull
+import androidx.room.PrimaryKey
 
-@Entity(tableName = "entries", primaryKeys = arrayOf("source", "wordStr"))
+@Entity(tableName = "entries")
 class RoomEntry {
+
+    @PrimaryKey(autoGenerate = true)
+    var entryId: Int = 0
+
     @NonNull
     var source: String? = null
 
