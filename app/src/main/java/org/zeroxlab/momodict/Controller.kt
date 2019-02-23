@@ -46,16 +46,15 @@ class Controller @JvmOverloads constructor(
         return Observable.from(list)
     }
 
-    // sorting by time. Move latest one to head
-    val records: Observable<Record>
-        get() {
-            val records = mStore.getRecords()
-            Collections.sort(records) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
-            return Observable.from(records)
-        }
+    fun getRecords(): Observable<Record> {
+        // sorting by time. Move latest one to head
+        val records = mStore.getRecords()
+        records.sortWith(Comparator { left, right -> if (left.time!!.before(right.time)) 1 else -1 })
+        return Observable.from(records)
+    }
 
     fun clearRecords() {
-        records.subscribe { record -> mStore.removeRecords(record.wordStr!!) }
+        getRecords().subscribe { record -> mStore.removeRecords(record.wordStr!!) }
     }
 
     fun setRecord(record: Record): Boolean {
@@ -66,13 +65,12 @@ class Controller @JvmOverloads constructor(
         return mStore.removeRecords(keyWord)
     }
 
-    // sorting by time. Move latest one to head
-    val cards: Observable<Card>
-        get() {
-            val cards = mStore.getCards()
-            Collections.sort(cards) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
-            return Observable.from(cards)
-        }
+    fun getCards(): Observable<Card> {
+        // sorting by time. Move latest one to head
+        val cards = mStore.getCards()
+        Collections.sort(cards) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
+        return Observable.from(cards)
+    }
 
     fun setCard(card: Card): Boolean {
         return mStore.upsertCard(card)

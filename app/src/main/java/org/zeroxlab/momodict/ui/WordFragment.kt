@@ -55,7 +55,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        mCtrl.cards
+        mCtrl.getCards()
                 .filter { card -> mKeyWord == card.wordStr }
                 .first()
                 .subscribe(
@@ -115,7 +115,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun updateRecord(target: String) {
-        mCtrl.records
+        mCtrl.getRecords()
                 .filter { record -> TextUtils.equals(target, record.wordStr) }
                 .toList()
                 .subscribe { list ->
