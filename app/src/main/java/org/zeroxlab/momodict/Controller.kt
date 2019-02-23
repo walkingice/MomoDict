@@ -1,7 +1,7 @@
 package org.zeroxlab.momodict
 
-import androidx.room.Room.databaseBuilder
 import android.content.Context
+import androidx.room.Room.databaseBuilder
 import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Card
@@ -12,7 +12,15 @@ import rx.Observable
 import java.util.Collections
 
 // FIXME: should avoid main thread
-class Controller @JvmOverloads constructor(private val mCtx: Context, private val mStore: Store = databaseBuilder(mCtx.getApplicationContext(), RoomStore::class.java, RoomStore.DB_NAME).allowMainThreadQueries().build()) {
+class Controller @JvmOverloads constructor(
+        private val mCtx: Context,
+        private val mStore: Store = databaseBuilder(
+                mCtx.applicationContext,
+                RoomStore::class.java,
+                RoomStore.DB_NAME)
+                .allowMainThreadQueries()
+                .build()
+) {
 
     val books: Observable<Book>
         get() = Observable.from(mStore.getBooks())
