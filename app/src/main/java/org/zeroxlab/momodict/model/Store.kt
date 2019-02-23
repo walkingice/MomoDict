@@ -14,9 +14,9 @@ interface Store {
 
     fun queryEntries(keyWord: String?): MutableList<Entry>
 
-    fun queryEntries(keyWord: String?, bookName: String): List<Entry>
+    fun queryEntries(keyWord: String?, bookName: String): MutableList<Entry>
 
-    fun getEntries(keyWord: String?): List<Entry>
+    fun getEntries(keyWord: String?): MutableList<Entry>
 
     fun getRecords(): MutableList<Record>
 
@@ -24,7 +24,7 @@ interface Store {
 
     fun removeRecords(keyWord: String): Boolean
 
-    fun getCards(): List<Card>
+    fun getCards(): MutableList<Card>
 
     fun upsertCard(card: Card): Boolean
 

@@ -9,7 +9,6 @@ import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
 import rx.Observable
-import java.util.Collections
 
 // FIXME: should avoid main thread
 class Controller @JvmOverloads constructor(
@@ -25,6 +24,16 @@ class Controller @JvmOverloads constructor(
     val books: Observable<Book>
         get() = Observable.from(mStore.getBooks())
 
+    // sorting by time. Move latest one to head
+    private val recordTimeComparator: Comparator<Record> = Comparator { left, right ->
+        if (left.time!!.before(right.time)) 1 else -1
+    }
+
+    // sorting by time. Move latest one to head
+    private val cardTimeComparator = Comparator<Card> { left, right ->
+        if (left.time!!.before(right.time)) 1 else -1
+    }
+
     fun removeBook(bookName: String): Boolean {
         return mStore.removeBook(bookName)
     }
@@ -33,23 +42,27 @@ class Controller @JvmOverloads constructor(
         // to make sure exact matched words are returned
         val exact = mStore.getEntries(keyWord)
         val list = mStore.queryEntries(keyWord)
-        list.addAll(exact)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+        }
 
-        Collections.sort(list) { left, right -> left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord) }
+        list.addAll(exact)
+        list.sortWith(comparator)
         return Observable.from(list).distinct { item -> item.wordStr }
     }
 
     fun getEntries(keyWord: String): Observable<Entry> {
         val list = mStore.getEntries(keyWord)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+        }
 
-        Collections.sort(list) { left, right -> left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord) }
+        list.sortWith(comparator)
         return Observable.from(list)
     }
 
     fun getRecords(): Observable<Record> {
-        // sorting by time. Move latest one to head
-        val records = mStore.getRecords()
-        records.sortWith(Comparator { left, right -> if (left.time!!.before(right.time)) 1 else -1 })
+        val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
         return Observable.from(records)
     }
 
@@ -66,9 +79,9 @@ class Controller @JvmOverloads constructor(
     }
 
     fun getCards(): Observable<Card> {
-        // sorting by time. Move latest one to head
         val cards = mStore.getCards()
-        Collections.sort(cards) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
+        cards.sortWith(cardTimeComparator)
+
         return Observable.from(cards)
     }
 
