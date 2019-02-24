@@ -16,7 +16,7 @@ import org.zeroxlab.momodict.model.Store
                 Card::class,
                 Record::class),
         version = 1)
-@TypeConverters(RoomTypeConverter::class)
+@TypeConverters(TypeConverter::class)
 abstract class RoomStore : Store, RoomDatabase() {
 
     private val bookDao = getBookDao()

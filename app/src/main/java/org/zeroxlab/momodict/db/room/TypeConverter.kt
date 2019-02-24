@@ -3,7 +3,7 @@ package org.zeroxlab.momodict.db.room
 import androidx.room.TypeConverter
 import java.util.Date
 
-class RoomTypeConverter {
+class TypeConverter {
     @TypeConverter
     fun timestamp2Date(timestamp: Long): Date = Date(timestamp)
 
