@@ -14,7 +14,7 @@ import org.zeroxlab.momodict.model.Store
                 Book::class,
                 Entry::class,
                 Card::class,
-                RoomRecord::class),
+                Record::class),
         version = 1)
 @TypeConverters(RoomTypeConverter::class)
 abstract class RoomStore : Store, RoomDatabase() {
@@ -62,12 +62,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun upsertRecord(record: Record): Boolean {
-        return RoomRecord()
-                .also {
-                    it.count = record.count
-                    it.wordStr = record.wordStr!!
-                    it.time = record.time!!
-                }
+        return record
                 .apply { recordDao.addRecord(this) }
                 .run { recordDao.updateRecord(this) != -1 }
     }
@@ -96,7 +91,7 @@ abstract class RoomStore : Store, RoomDatabase() {
 
     abstract fun getBookDao(): BookDao
     abstract fun getEntryDao(): EntryDao
-    abstract fun getRecordDao(): RoomRecordDao
+    abstract fun getRecordDao(): RecordDao
     abstract fun getCardDao(): CardDao
 
     companion object {
