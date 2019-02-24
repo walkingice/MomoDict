@@ -49,16 +49,16 @@ abstract class RoomStore : Store, RoomDatabase() {
         return true
     }
 
-    override fun queryEntries(keyWord: String?): MutableList<Entry> {
-        return entryDao.queryEntries(keyWord!!).toMutableList()
+    override fun queryEntries(keyWord: String): MutableList<Entry> {
+        return entryDao.queryEntries(keyWord).toMutableList()
     }
 
-    override fun queryEntries(keyWord: String?, bookName: String): MutableList<Entry> {
-        return entryDao.queryEntries(keyWord!!, bookName!!).toMutableList()
+    override fun queryEntries(keyWord: String, bookName: String): MutableList<Entry> {
+        return entryDao.queryEntries(keyWord, bookName!!).toMutableList()
     }
 
-    override fun getEntries(keyWord: String?): MutableList<Entry> {
-        return entryDao.getEntries(keyWord!!).toMutableList()
+    override fun getEntries(keyWord: String): MutableList<Entry> {
+        return entryDao.getEntries(keyWord).toMutableList()
     }
 
     override fun upsertRecord(record: Record): Boolean {
