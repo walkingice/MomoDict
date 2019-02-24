@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "dictionaries")
-class Book(
+data class Book(
         @PrimaryKey
         var bookName: String
 ) {
@@ -17,19 +17,4 @@ class Book(
     var description: String? = null
     var date: String? = null
     var sameTypeSequence: String? = null
-
-    override fun toString(): String {
-        return """
-            version: $version
-            bookName: $bookName
-            wordCount: $wordCount
-            syncWordCount: $syncWordCount
-            author: $author
-            email: $email
-            website: $webSite
-            description: $description
-            time: $date
-            sameTypeSequence: $sameTypeSequence
-            """
-    }
 }

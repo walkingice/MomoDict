@@ -5,12 +5,10 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(tableName = "cards")
-class Card(
+data class Card(
         @PrimaryKey
         var wordStr: String
 ) {
     var time: Date? = null
     var note: String? = null
-
-    override fun toString(): String = "wordStr: $wordStr, time: $time, note: $note"
 }

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(tableName = "records")
-class Record(
+data class Record(
         @PrimaryKey
         var wordStr: String
 ) {
