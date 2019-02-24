@@ -7,8 +7,7 @@ import androidx.room.Query
 import org.zeroxlab.momodict.model.Entry
 
 @Dao
-interface RoomEntryDao {
-
+interface EntryDao {
     @Query("SELECT * FROM entries WHERE wordStr = :keyword")
     fun getEntries(keyword: String): List<Entry>
 
@@ -19,7 +18,7 @@ interface RoomEntryDao {
     fun queryEntries(keyword: String, bookName: String): List<Entry>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addEntries(entries: List<RoomEntry>)
+    fun addEntries(entries: List<Entry>)
 
     @Query("DELETE FROM entries WHERE source = :bookName")
     fun removeEntriesByBookName(bookName: String)

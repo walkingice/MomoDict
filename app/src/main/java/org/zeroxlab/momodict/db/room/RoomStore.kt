@@ -12,7 +12,7 @@ import org.zeroxlab.momodict.model.Store
 @Database(
         entities = arrayOf(
                 Book::class,
-                RoomEntry::class,
+                Entry::class,
                 Card::class,
                 RoomRecord::class),
         version = 1)
@@ -45,15 +45,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun addEntries(entries: List<Entry>): Boolean {
-        val list = mutableListOf<RoomEntry>()
-        for (entry in entries) {
-            val re = RoomEntry()
-            re.source = entry.source
-            re.data = entry.data
-            re.wordStr = entry.wordStr
-            list.add(re)
-        }
-        entryDao.addEntries(list)
+        entryDao.addEntries(entries)
         return true
     }
 
@@ -103,7 +95,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     abstract fun getBookDao(): BookDao
-    abstract fun getEntryDao(): RoomEntryDao
+    abstract fun getEntryDao(): EntryDao
     abstract fun getRecordDao(): RoomRecordDao
     abstract fun getCardDao(): CardDao
 
