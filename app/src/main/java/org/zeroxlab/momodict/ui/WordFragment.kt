@@ -68,8 +68,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                 ) { e ->
                     // keyword not stored
                     if (e is NoSuchElementException) {
-                        mCard = Card()
-                        mCard!!.wordStr = mKeyWord
+                        mCard = Card(mKeyWord)
                         mSwitch.isChecked = false
                     }
                     mSwitch.setOnCheckedChangeListener(this)

@@ -94,17 +94,17 @@ class RoomStoreTest {
                 .apply { time = Date() }
                 .run { records.add(this) }
 
-        Card().apply { wordStr = "ramen" }
+        Card("ramen")
                 .apply { note = "My favorite" }
                 .apply { time = Date() }
                 .run { cards.add(this) }
 
-        Card().apply { wordStr = "sushi" }
+        Card("sushi")
                 .apply { note = "nice food" }
                 .apply { time = Date() }
                 .run { cards.add(this) }
 
-        Card().apply { wordStr = "katsudonn" }
+        Card("katsudonn")
                 .apply { note = "eat it everyday" }
                 .apply { time = Date() }
                 .run { cards.add(this) }

@@ -13,7 +13,7 @@ import org.zeroxlab.momodict.model.Store
         entities = arrayOf(
                 Book::class,
                 RoomEntry::class,
-                RoomCard::class,
+                Card::class,
                 RoomRecord::class),
         version = 1)
 @TypeConverters(RoomTypeConverter::class)
@@ -89,12 +89,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun upsertCard(card: Card): Boolean {
-        return RoomCard()
-                .also {
-                    it.wordStr = card.wordStr!!
-                    it.note = card.note!!
-                    it.time = card.time!!
-                }
+        return card
                 .apply { cardDao.addCard(this) }
                 .run { cardDao.updateCard(this) != -1 }
     }
@@ -110,7 +105,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     abstract fun getBookDao(): BookDao
     abstract fun getEntryDao(): RoomEntryDao
     abstract fun getRecordDao(): RoomRecordDao
-    abstract fun getCardDao(): RoomCardDao
+    abstract fun getCardDao(): CardDao
 
     companion object {
         val DB_NAME = "room_db"
