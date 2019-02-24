@@ -104,8 +104,10 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
                             .filter { card -> TextUtils.equals(keyWord, card.wordStr) }
                             .toList()
                             .subscribe { list ->
-                                val card = if (list.size == 0) Card() else list[0]
-                                card.wordStr = if (TextUtils.isEmpty(card.wordStr)) keyWord else card.wordStr
+                                val card = if (list.size == 0) Card(keyWord) else list[0]
+                                card.wordStr =
+                                        if (TextUtils.isEmpty(card.wordStr)) keyWord
+                                        else card.wordStr
                                 card.time = Date()
                                 mCtrl!!.setCard(card)
                             }

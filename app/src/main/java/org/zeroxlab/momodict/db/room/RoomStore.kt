@@ -11,12 +11,12 @@ import org.zeroxlab.momodict.model.Store
 
 @Database(
         entities = arrayOf(
-                RoomBook::class,
-                RoomEntry::class,
-                RoomCard::class,
-                RoomRecord::class),
+                Book::class,
+                Entry::class,
+                Card::class,
+                Record::class),
         version = 1)
-@TypeConverters(RoomTypeConverter::class)
+@TypeConverters(TypeConverter::class)
 abstract class RoomStore : Store, RoomDatabase() {
 
     private val bookDao = getBookDao()
@@ -25,21 +25,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     private val cardDao = getCardDao()
 
     override fun addBook(book: Book): Boolean {
-        if (book.bookName == null) {
-            return false
-        }
-
-        val roomBook = RoomBook()
-        roomBook.version = book.version
-        roomBook.bookName = book.bookName
-        roomBook.wordCount = book.wordCount
-        roomBook.syncWordCount = book.syncWordCount
-        roomBook.author = book.author
-        roomBook.email = book.email
-        roomBook.website = book.webSite
-        roomBook.description = book.description
-        roomBook.date = book.date
-        bookDao.addBook(roomBook)
+        bookDao.addBook(book)
         return true
     }
 
@@ -59,15 +45,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun addEntries(entries: List<Entry>): Boolean {
-        val list = mutableListOf<RoomEntry>()
-        for (entry in entries) {
-            val re = RoomEntry()
-            re.source = entry.source
-            re.data = entry.data
-            re.wordStr = entry.wordStr
-            list.add(re)
-        }
-        entryDao.addEntries(list)
+        entryDao.addEntries(entries)
         return true
     }
 
@@ -84,12 +62,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun upsertRecord(record: Record): Boolean {
-        return RoomRecord()
-                .also {
-                    it.count = record.count
-                    it.wordStr = record.wordStr!!
-                    it.time = record.time!!
-                }
+        return record
                 .apply { recordDao.addRecord(this) }
                 .run { recordDao.updateRecord(this) != -1 }
     }
@@ -103,12 +76,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun upsertCard(card: Card): Boolean {
-        return RoomCard()
-                .also {
-                    it.wordStr = card.wordStr!!
-                    it.note = card.note!!
-                    it.time = card.time!!
-                }
+        return card
                 .apply { cardDao.addCard(this) }
                 .run { cardDao.updateCard(this) != -1 }
     }
@@ -121,10 +89,10 @@ abstract class RoomStore : Store, RoomDatabase() {
         return cardDao.getCards().toMutableList()
     }
 
-    abstract fun getBookDao(): RoomBookDao
-    abstract fun getEntryDao(): RoomEntryDao
-    abstract fun getRecordDao(): RoomRecordDao
-    abstract fun getCardDao(): RoomCardDao
+    abstract fun getBookDao(): BookDao
+    abstract fun getEntryDao(): EntryDao
+    abstract fun getRecordDao(): RecordDao
+    abstract fun getCardDao(): CardDao
 
     companion object {
         val DB_NAME = "room_db"

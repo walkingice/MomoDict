@@ -8,15 +8,15 @@ import androidx.room.Update
 import org.zeroxlab.momodict.model.Record
 
 @Dao
-interface RoomRecordDao {
+interface RecordDao {
     @Query("SELECT * FROM records")
     fun getRecords(): List<Record>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun addRecord(record: RoomRecord): Long
+    fun addRecord(record: Record): Long
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    fun updateRecord(record: RoomRecord): Int
+    fun updateRecord(record: Record): Int
 
     @Query("DELETE FROM records where wordStr = :keyWord")
     fun removeRecord(keyWord: String): Int

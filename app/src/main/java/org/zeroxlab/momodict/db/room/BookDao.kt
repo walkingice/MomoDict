@@ -6,8 +6,7 @@ import androidx.room.Query
 import org.zeroxlab.momodict.model.Book
 
 @Dao
-interface RoomBookDao {
-
+interface BookDao {
     @Query("DELETE FROM dictionaries WHERE bookName = :bookName")
     fun removeBook(bookName: String): Int
 
@@ -15,5 +14,5 @@ interface RoomBookDao {
     fun getAll(): List<Book>
 
     @Insert
-    fun addBook(book: RoomBook)
+    fun addBook(book: Book)
 }

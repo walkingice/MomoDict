@@ -1,9 +1,14 @@
 package org.zeroxlab.momodict.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.Date
 
-class Record {
-    var wordStr: String? = null
+@Entity(tableName = "records")
+data class Record(
+        @PrimaryKey
+        var wordStr: String
+) {
     var count: Int = 0
     var time: Date? = null
 

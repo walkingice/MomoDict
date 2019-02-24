@@ -63,8 +63,8 @@ class Reader
             idxIs.close()
 
             // To save ifo to database
-            val dict = Book()
-            dict.bookName = info.bookName
+            // TODO: remove !!
+            val dict = Book(info.bookName!!)
             dict.author = info.author
             dict.wordCount = info.wordCount
             dict.date = info.date
@@ -80,11 +80,12 @@ class Reader
                 val words = parseDict(idx.entries, dictIs)
                 val entries = ArrayList<Entry>()
                 for (word in words) {
-                    val entry = Entry()
-                    entry.source = info.bookName
-                    entry.wordStr = word.entry!!.wordStr
-                    entry.data = word.data
-                    entries.add(entry)
+                    if (word.entry != null) {
+                        val entry = Entry(word.entry!!.wordStr)
+                        entry.source = info.bookName
+                        entry.data = word.data
+                        entries.add(entry)
+                    }
                 }
                 store.addEntries(entries)
             }

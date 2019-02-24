@@ -68,8 +68,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                 ) { e ->
                     // keyword not stored
                     if (e is NoSuchElementException) {
-                        mCard = Card()
-                        mCard!!.wordStr = mKeyWord
+                        mCard = Card(mKeyWord)
                         mSwitch.isChecked = false
                     }
                     mSwitch.setOnCheckedChangeListener(this)
@@ -119,7 +118,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                 .filter { record -> TextUtils.equals(target, record.wordStr) }
                 .toList()
                 .subscribe { list ->
-                    val record = (if (list.size == 0) Record() else list[0]).also {
+                    val record = (if (list.size == 0) Record(target) else list[0]).also {
                         it.wordStr = if (it.wordStr.isNullOrEmpty()) target else it.wordStr
                         it.count += 1
                         it.time = Date()
