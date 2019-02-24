@@ -46,8 +46,8 @@ class Controller @JvmOverloads constructor(
             left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
         }
 
-        list.addAll(exact)
         list.sortWith(comparator)
+        exact.forEach { list.add(0, it) }
         return Observable.from(list).distinct { item -> item.wordStr }
     }
 

@@ -12,11 +12,11 @@ interface Store {
 
     fun addEntries(entries: List<Entry>): Boolean
 
-    fun queryEntries(keyWord: String?): MutableList<Entry>
+    fun queryEntries(keyWord: String): MutableList<Entry>
 
-    fun queryEntries(keyWord: String?, bookName: String): MutableList<Entry>
+    fun queryEntries(keyWord: String, bookName: String): MutableList<Entry>
 
-    fun getEntries(keyWord: String?): MutableList<Entry>
+    fun getEntries(keyWord: String): MutableList<Entry>
 
     fun getRecords(): MutableList<Record>
 
