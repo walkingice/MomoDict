@@ -33,7 +33,7 @@ class TarExtractor : Extractor {
         }
 
         if (!archive.isSane) {
-            throw Exception("RealmBook is malformed")
+            throw Exception("Book is malformed")
         }
         return archive
     }
