@@ -100,7 +100,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
                 }
                 .setNeutralButton("Memo") { dialogInterface, i ->
                     // add this word to memo
-                    mCtrl!!.cards
+                    mCtrl!!.getCards()
                             .filter { card -> TextUtils.equals(keyWord, card.wordStr) }
                             .toList()
                             .subscribe { list ->
@@ -119,9 +119,10 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter!!.clear()
-        mCtrl!!.records.subscribe(
-                { record -> mAdapter!!.addItem(record, SelectorAdapter.Type.A) },
-                { e -> e.printStackTrace() }
-        ) { mAdapter!!.notifyDataSetChanged() }
+        mCtrl!!.getRecords()
+                .subscribe(
+                        { record -> mAdapter!!.addItem(record, SelectorAdapter.Type.A) },
+                        { e -> e.printStackTrace() }
+                ) { mAdapter!!.notifyDataSetChanged() }
     }
 }

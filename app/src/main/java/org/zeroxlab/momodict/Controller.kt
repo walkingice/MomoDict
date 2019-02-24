@@ -1,7 +1,7 @@
 package org.zeroxlab.momodict
 
-import androidx.room.Room.databaseBuilder
 import android.content.Context
+import androidx.room.Room.databaseBuilder
 import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Card
@@ -9,13 +9,30 @@ import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
 import rx.Observable
-import java.util.Collections
 
 // FIXME: should avoid main thread
-class Controller @JvmOverloads constructor(private val mCtx: Context, private val mStore: Store = databaseBuilder(mCtx.getApplicationContext(), RoomStore::class.java, RoomStore.DB_NAME).allowMainThreadQueries().build()) {
+class Controller @JvmOverloads constructor(
+        private val mCtx: Context,
+        private val mStore: Store = databaseBuilder(
+                mCtx.applicationContext,
+                RoomStore::class.java,
+                RoomStore.DB_NAME)
+                .allowMainThreadQueries()
+                .build()
+) {
 
     val books: Observable<Book>
         get() = Observable.from(mStore.getBooks())
+
+    // sorting by time. Move latest one to head
+    private val recordTimeComparator: Comparator<Record> = Comparator { left, right ->
+        if (left.time!!.before(right.time)) 1 else -1
+    }
+
+    // sorting by time. Move latest one to head
+    private val cardTimeComparator = Comparator<Card> { left, right ->
+        if (left.time!!.before(right.time)) 1 else -1
+    }
 
     fun removeBook(bookName: String): Boolean {
         return mStore.removeBook(bookName)
@@ -25,29 +42,32 @@ class Controller @JvmOverloads constructor(private val mCtx: Context, private va
         // to make sure exact matched words are returned
         val exact = mStore.getEntries(keyWord)
         val list = mStore.queryEntries(keyWord)
-        list.addAll(exact)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+        }
 
-        Collections.sort(list) { left, right -> left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord) }
+        list.addAll(exact)
+        list.sortWith(comparator)
         return Observable.from(list).distinct { item -> item.wordStr }
     }
 
     fun getEntries(keyWord: String): Observable<Entry> {
         val list = mStore.getEntries(keyWord)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+        }
 
-        Collections.sort(list) { left, right -> left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord) }
+        list.sortWith(comparator)
         return Observable.from(list)
     }
 
-    // sorting by time. Move latest one to head
-    val records: Observable<Record>
-        get() {
-            val records = mStore.getRecords()
-            Collections.sort(records) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
-            return Observable.from(records)
-        }
+    fun getRecords(): Observable<Record> {
+        val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
+        return Observable.from(records)
+    }
 
     fun clearRecords() {
-        records.subscribe { record -> mStore.removeRecords(record.wordStr!!) }
+        getRecords().subscribe { record -> mStore.removeRecords(record.wordStr!!) }
     }
 
     fun setRecord(record: Record): Boolean {
@@ -58,13 +78,12 @@ class Controller @JvmOverloads constructor(private val mCtx: Context, private va
         return mStore.removeRecords(keyWord)
     }
 
-    // sorting by time. Move latest one to head
-    val cards: Observable<Card>
-        get() {
-            val cards = mStore.getCards()
-            Collections.sort(cards) { left, right -> if (left.time!!.before(right.time)) 1 else -1 }
-            return Observable.from(cards)
-        }
+    fun getCards(): Observable<Card> {
+        val cards = mStore.getCards()
+        cards.sortWith(cardTimeComparator)
+
+        return Observable.from(cards)
+    }
 
     fun setCard(card: Card): Boolean {
         return mStore.upsertCard(card)

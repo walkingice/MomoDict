@@ -95,9 +95,10 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter!!.clear()
-        mCtrl!!.cards.subscribe(
-                { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) },
-                { e -> e.printStackTrace() }
-        ) { mAdapter!!.notifyDataSetChanged() }
+        mCtrl!!.getCards()
+                .subscribe(
+                        { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) },
+                        { e -> e.printStackTrace() }
+                ) { mAdapter!!.notifyDataSetChanged() }
     }
 }
