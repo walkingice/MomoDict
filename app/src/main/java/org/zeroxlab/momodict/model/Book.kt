@@ -1,8 +1,14 @@
 package org.zeroxlab.momodict.model
 
-class Book {
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "dictionaries")
+class Book(
+        @PrimaryKey
+        var bookName: String
+) {
     var version: String? = null
-    var bookName: String? = null
     var wordCount: Int = 0
     var syncWordCount: Int = 0
     var author: String? = null

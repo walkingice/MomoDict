@@ -63,8 +63,8 @@ class Reader
             idxIs.close()
 
             // To save ifo to database
-            val dict = Book()
-            dict.bookName = info.bookName
+            // TODO: remove !!
+            val dict = Book(info.bookName!!)
             dict.author = info.author
             dict.wordCount = info.wordCount
             dict.date = info.date
