@@ -163,12 +163,11 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
      */
     private fun onUpdateList() {
         val input = mInput.text.toString().trim { it <= ' ' }
-        Log.d(TAG, "Input: " + input)
-        mAdapter!!.clear()
+        Log.d(TAG, "Input: $input")
         if (TextUtils.isEmpty(input)) {
             // User haven't input anything, just clear the list
+            mAdapter!!.clear()
             mAdapter!!.notifyDataSetChanged()
-
         } else {
             mQuery!!.onNext(input)
         }
