@@ -23,6 +23,7 @@ import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.ViewPagerFocusable
 import org.zeroxlab.momodict.widget.WordRowPresenter
 import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
 import java.util.concurrent.TimeUnit
@@ -59,6 +60,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         mQuery = PublishSubject.create<String>()
         // If user type quickly, do not query until user stop inputting.
         mQuery!!.debounce(INPUT_DELAY.toLong(), TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
                 .concatMap { input -> mCtrl!!.queryEntries(input).toList() }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
@@ -161,12 +163,11 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
      */
     private fun onUpdateList() {
         val input = mInput.text.toString().trim { it <= ' ' }
-        Log.d(TAG, "Input: " + input)
-        mAdapter!!.clear()
+        Log.d(TAG, "Input: $input")
         if (TextUtils.isEmpty(input)) {
             // User haven't input anything, just clear the list
+            mAdapter!!.clear()
             mAdapter!!.notifyDataSetChanged()
-
         } else {
             mQuery!!.onNext(input)
         }
