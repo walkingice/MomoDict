@@ -3,20 +3,20 @@ package org.zeroxlab.momodict
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import com.google.android.material.tabs.TabLayout
 import com.mikepenz.aboutlibraries.LibsBuilder
+import org.zeroxlab.momodict.input.InputFragment
 import org.zeroxlab.momodict.ui.HistoryFragment
-import org.zeroxlab.momodict.ui.InputFragment
 import org.zeroxlab.momodict.ui.MemoFragment
 import org.zeroxlab.momodict.widget.BackKeyHandler
 import org.zeroxlab.momodict.widget.PagerFocusBroadcaster
@@ -114,9 +114,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun onClearHistory() {
         (0..(mAdapter.count - 1))
-                .map { mAdapter.getFragment(it) }
-                .filterIsInstance<HistoryFragment>()
-                .forEach { it.clearHistory() }
+            .map { mAdapter.getFragment(it) }
+            .filterIsInstance<HistoryFragment>()
+            .forEach { it.clearHistory() }
     }
 
     private fun onResultImport(resultCode: Int, data: Intent?) {
@@ -130,16 +130,16 @@ class MainActivity : AppCompatActivity() {
      */
     private fun onShowLicenses() {
         LibsBuilder()
-                .withAboutIconShown(true)
-                .withAboutVersionShown(true)
-                .start(this)
+            .withAboutIconShown(true)
+            .withAboutVersionShown(true)
+            .start(this)
     }
 
     /**
      * Adapter for ViewPager. To use addFragment() to add items.
      */
-    inner class FragmentPagerAdapterImpl internal constructor(fm: FragmentManager)
-        : FragmentStatePagerAdapter(fm) {
+    inner class FragmentPagerAdapterImpl internal constructor(fm: FragmentManager) :
+        FragmentStatePagerAdapter(fm) {
 
         internal val TITLE_INPUT = "input"
         internal val TITLE_HISTORY = "history"

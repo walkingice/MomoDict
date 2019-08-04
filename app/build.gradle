@@ -40,8 +40,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "androidx.appcompat:appcompat:${androidXCompat}"
+    implementation "androidx.appcompat:appcompat:${androidXVersion}"
     implementation "androidx.core:core-ktx:${androidXKtxCoreVersion}"
+    implementation "androidx.fragment:fragment:${androidXVersion}"
     implementation "androidx.cardview:cardview:${androidXVersion}"
     implementation "androidx.recyclerview:recyclerview:${androidXVersion}"
     implementation "com.google.android.material:material:${androidXVersion}"
