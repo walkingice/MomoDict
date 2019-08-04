@@ -23,4 +23,6 @@ ext {
     junitVersion = '4.12'
 
     ktlintVersion = '0.9.2'
+
+    aboutLibrariesVersion = '7.0.1'
 }
