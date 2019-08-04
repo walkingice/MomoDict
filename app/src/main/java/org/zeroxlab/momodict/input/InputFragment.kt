@@ -1,4 +1,4 @@
-package org.zeroxlab.momodict.ui
+package org.zeroxlab.momodict.input
 
 import android.content.Context
 import android.os.Bundle
@@ -32,7 +32,10 @@ import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
 /**
  * Fragment to provide UI which user can input a text to query, and display a list for queried text.
  */
-class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
+class InputFragment :
+    Fragment(),
+    BackKeyHandler,
+    ViewPagerFocusable {
 
     private var mAdapter: SelectorAdapter? = null
     private var mCtrl: Controller? = null
@@ -52,7 +55,7 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         // and another for "word".
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A,
-                WordRowPresenter { view -> onRowClicked(view.tag as String) })
+            WordRowPresenter { view -> onRowClicked(view.tag as String) })
         mAdapter = SelectorAdapter(map)
 
         // This fragment might be destroy if user scroll to third Tab, so we have to re-create it
@@ -60,16 +63,16 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         mQuery = PublishSubject.create<String>()
         // If user type quickly, do not query until user stop inputting.
         mQuery!!.debounce(INPUT_DELAY.toLong(), TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .concatMap { input -> mCtrl!!.queryEntries(input).toList() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    mAdapter!!.clear()
-                    for (entry in list) {
-                        mAdapter!!.addItem(entry.wordStr!!, SelectorAdapter.Type.A)
-                    }
-                    mAdapter!!.notifyDataSetChanged()
-                }) { e -> e.printStackTrace() }
+            .subscribeOn(Schedulers.io())
+            .concatMap { input -> mCtrl!!.queryEntries(input).toList() }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ list ->
+                mAdapter!!.clear()
+                for (entry in list) {
+                    mAdapter!!.addItem(entry.wordStr!!, SelectorAdapter.Type.A)
+                }
+                mAdapter!!.notifyDataSetChanged()
+            }) { e -> e.printStackTrace() }
     }
 
     override fun onDestroy() {
@@ -77,7 +80,11 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         mQuery!!.onCompleted()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_input, container, false)
     }
 
@@ -115,14 +122,16 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
         // if this page becomes visible, show soft-keyboard
         mInput.requestFocus()
         (context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
+            .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     private fun initViews(fv: View) {
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
-        val decoration = DividerItemDecoration(list.context,
-                mgr.orientation)
+        val decoration = DividerItemDecoration(
+            list.context,
+            mgr.orientation
+        )
         list.addItemDecoration(decoration)
 
         mInput.addTextChangedListener(object : TextWatcher {
@@ -149,13 +158,13 @@ class InputFragment : Fragment(), BackKeyHandler, ViewPagerFocusable {
     private fun onUpdateInput() {
         // If there is no any available dictionary, disable Input view.
         mCtrl!!.books
-                .count()
-                .subscribe { count ->
-                    mInput.isEnabled = count > 0
-                    if (count > 0 && !TextUtils.isEmpty(mInput.text)) {
-                        mInput.selectAll()
-                    }
+            .count()
+            .subscribe { count ->
+                mInput.isEnabled = count > 0
+                if (count > 0 && !TextUtils.isEmpty(mInput.text)) {
+                    mInput.selectAll()
                 }
+            }
     }
 
     /**
