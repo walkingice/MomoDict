@@ -2,31 +2,24 @@ package org.zeroxlab.momodict.input
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import org.zeroxlab.momodict.Controller
-import org.zeroxlab.momodict.Momodict
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
+import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.widget.BackKeyHandler
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.ViewPagerFocusable
 import org.zeroxlab.momodict.widget.WordRowPresenter
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subjects.PublishSubject
-import rx.subjects.Subject
-import java.util.concurrent.TimeUnit
 import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
 
 /**
@@ -35,49 +28,28 @@ import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
 class InputFragment :
     Fragment(),
     BackKeyHandler,
+    InputContract.View,
     ViewPagerFocusable {
 
-    private var mAdapter: SelectorAdapter? = null
-    private var mCtrl: Controller? = null
-
-    /**
-     * User input won't be send to mCtrl directly. Instead, send to here so we have more flexibility
-     * to use mCtrl.
-     */
-    private var mQuery: Subject<String, String>? = null
+    private lateinit var presenter: InputPresenter
+    private lateinit var adapter: SelectorAdapter
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
 
-        mCtrl = Controller(activity!!)
+        presenter = InputPresenter(requireActivity(), this)
 
         // create adapter for RecyclerView. Adapter handles two kinds of row, one for "dictionary"
         // and another for "word".
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A,
             WordRowPresenter { view -> onRowClicked(view.tag as String) })
-        mAdapter = SelectorAdapter(map)
-
-        // This fragment might be destroy if user scroll to third Tab, so we have to re-create it
-        // in onCreate callback.
-        mQuery = PublishSubject.create<String>()
-        // If user type quickly, do not query until user stop inputting.
-        mQuery!!.debounce(INPUT_DELAY.toLong(), TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-            .concatMap { input -> mCtrl!!.queryEntries(input).toList() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ list ->
-                mAdapter!!.clear()
-                for (entry in list) {
-                    mAdapter!!.addItem(entry.wordStr!!, SelectorAdapter.Type.A)
-                }
-                mAdapter!!.notifyDataSetChanged()
-            }) { e -> e.printStackTrace() }
+        adapter = SelectorAdapter(map)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mQuery!!.onCompleted()
+        presenter.onDestroy()
     }
 
     override fun onCreateView(
@@ -95,8 +67,7 @@ class InputFragment :
 
     override fun onResume() {
         super.onResume()
-        onUpdateInput()
-        onUpdateList()
+        presenter.onResume()
     }
 
     /**
@@ -125,6 +96,30 @@ class InputFragment :
             .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
+    override fun onEnableInput(enabled: Boolean) {
+        mInput.isEnabled = enabled
+    }
+
+    override fun onUpdateList(entries: List<Entry>) {
+        if (entries.isEmpty()) {
+            // User haven't input anything, just clear the list
+            adapter.clear()
+            adapter.notifyDataSetChanged()
+        } else {
+            adapter.clear()
+            for (entry in entries) {
+                adapter.addItem(entry.wordStr, SelectorAdapter.Type.A)
+            }
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun inputSelectAll() {
+        if (!TextUtils.isEmpty(mInput.text)) {
+            mInput.selectAll()
+        }
+    }
+
     private fun initViews(fv: View) {
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
@@ -138,48 +133,18 @@ class InputFragment :
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                onUpdateList()
+                presenter.changeText(mInput.text.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {}
         })
 
-        list.adapter = mAdapter
-        fv.findViewById<View>(R.id.btn_1).setOnClickListener { v -> clearInput() }
+        list.adapter = adapter
+        fv.findViewById<View>(R.id.btn_1).setOnClickListener { clearInput() }
     }
 
     private fun clearInput() {
         mInput.setText("")
-    }
-
-    /**
-     * To update status of Input view - disable or enable it.
-     */
-    private fun onUpdateInput() {
-        // If there is no any available dictionary, disable Input view.
-        mCtrl!!.books
-            .count()
-            .subscribe { count ->
-                mInput.isEnabled = count > 0
-                if (count > 0 && !TextUtils.isEmpty(mInput.text)) {
-                    mInput.selectAll()
-                }
-            }
-    }
-
-    /**
-     * Update list according to user's input.
-     */
-    private fun onUpdateList() {
-        val input = mInput.text.toString().trim { it <= ' ' }
-        Log.d(TAG, "Input: $input")
-        if (TextUtils.isEmpty(input)) {
-            // User haven't input anything, just clear the list
-            mAdapter!!.clear()
-            mAdapter!!.notifyDataSetChanged()
-        } else {
-            mQuery!!.onNext(input)
-        }
     }
 
     /**
@@ -190,11 +155,5 @@ class InputFragment :
     private fun onRowClicked(text: String) {
         val intent = WordActivity.createIntent(activity!!, text)
         startActivity(intent)
-    }
-
-    companion object {
-
-        private val TAG = Momodict.TAG
-        private val INPUT_DELAY = 300
     }
 }
