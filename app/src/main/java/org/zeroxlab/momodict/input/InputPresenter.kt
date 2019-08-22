@@ -7,7 +7,6 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
-import java.util.Arrays.asList
 import java.util.concurrent.TimeUnit
 
 private const val INPUT_DELAY = 300
@@ -34,6 +33,7 @@ class InputPresenter(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list ->
                     view.onUpdateList(list)
+                    view.setLoading(false)
                 }) { e -> e.printStackTrace() }
     }
 
@@ -56,8 +56,9 @@ class InputPresenter(
     override fun changeText(text: String) {
         val input = text.trim { it <= ' ' }
         if (TextUtils.isEmpty(input)) {
-            view.onUpdateList(asList())
+            view.onUpdateList(listOf())
         } else {
+            view.setLoading(true)
             query.onNext(input)
         }
     }

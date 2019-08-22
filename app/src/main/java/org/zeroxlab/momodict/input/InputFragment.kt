@@ -21,6 +21,7 @@ import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.ViewPagerFocusable
 import org.zeroxlab.momodict.widget.WordRowPresenter
 import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
+import kotlinx.android.synthetic.main.fragment_input.loading as mLoading
 
 /**
  * Fragment to provide UI which user can input a text to query, and display a list for queried text.
@@ -111,6 +112,14 @@ class InputFragment :
                 adapter.addItem(entry.wordStr, SelectorAdapter.Type.A)
             }
             adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun setLoading(isLoading: Boolean) {
+        if (isLoading) {
+            mLoading.show()
+        } else {
+            mLoading.hide()
         }
     }
 

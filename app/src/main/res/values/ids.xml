@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="actionbar" type="id"/>
-    <item name="control_1" type="id"/>
-    <item name="btn_1" type="id"/>
-    <item name="btn_2" type="id"/>
-    <item name="text_1" type="id"/>
-    <item name="text_2" type="id"/>
-    <item name="list" type="id"/>
-    <item name="img_1" type="id"/>
-    <item name="input_1" type="id"/>
-    <item name="fragment_container" type="id"/>
+    <item name="actionbar" type="id" />
+    <item name="control_1" type="id" />
+    <item name="btn_1" type="id" />
+    <item name="btn_2" type="id" />
+    <item name="text_1" type="id" />
+    <item name="text_2" type="id" />
+    <item name="list" type="id" />
+    <item name="img_1" type="id" />
+    <item name="input_1" type="id" />
+    <item name="fragment_container" type="id" />
+    <item name="loading" type="id" />
 </resources>
