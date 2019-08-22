@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,52 +8,67 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:id="@+id/input_fragment_top_header"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@id/list"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/input_fragment_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:layout_margin="@dimen/basic_gutter"
+        app:layout_constraintBottom_toTopOf="@id/list"
+        app:layout_constraintTop_toTopOf="parent"
+        card_view:cardCornerRadius="@dimen/grid_size">
 
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/basic_gutter"
-            card_view:cardCornerRadius="@dimen/grid_size">
+            android:padding="@dimen/grid_size"
+            android:paddingStart="@dimen/basic_gutter"
+            android:paddingEnd="0dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@id/input_1"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/grid_size"
-                android:paddingEnd="0dp"
-                android:paddingStart="@dimen/basic_gutter">
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="Input single word here"
+                android:imeOptions="actionNone"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:textColorHint="#CCCCCC" />
 
-                <EditText
-                    android:id="@id/input_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:hint="Input single word here"
-                    android:imeOptions="actionNone"
-                    android:inputType="text"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:textColorHint="#CCCCCC" />
+            <ImageView
+                android:id="@id/btn_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="Button to clear input"
+                android:src="@android:drawable/ic_delete"
+                android:tint="@color/colorPrimaryDark" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-                <ImageView
-                    android:id="@id/btn_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="Button to clear input"
-                    android:src="@android:drawable/ic_delete"
-                    android:tint="@color/colorPrimaryDark" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-    </FrameLayout>
-
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@id/loading"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@id/list"
@@ -61,6 +76,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         app:layoutManager="LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_fragment_card_view"
         tools:listitem="@android:layout/simple_list_item_1" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

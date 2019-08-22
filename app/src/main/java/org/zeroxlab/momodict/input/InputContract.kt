@@ -12,6 +12,8 @@ interface InputContract {
         fun inputSelectAll()
 
         fun onUpdateList(entries: List<Entry>)
+
+        fun setLoading(isLoading: Boolean)
     }
 
     interface Presenter {
