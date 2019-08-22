@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit
 private const val INPUT_DELAY = 300
 
 class InputPresenter(
-    context: Context,
-    val view: InputContract.View
+        context: Context,
+        val view: InputContract.View
 ) : InputContract.Presenter {
     /**
      * User input won't be send to ctrl directly. Instead, send to here so we have more flexibility
@@ -29,24 +29,24 @@ class InputPresenter(
         query = PublishSubject.create<String>()
         // If user type quickly, do not query until user stop inputting.
         query.debounce(INPUT_DELAY.toLong(), TimeUnit.MILLISECONDS)
-            .subscribeOn(Schedulers.io())
-            .concatMap { input -> controller.queryEntries(input).toList() }
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ list ->
-                view.onUpdateList(list)
-            }) { e -> e.printStackTrace() }
+                .subscribeOn(Schedulers.io())
+                .concatMap { input -> controller.queryEntries(input).toList() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list ->
+                    view.onUpdateList(list)
+                }) { e -> e.printStackTrace() }
     }
 
     override fun onResume() {
         // If there is no any available dictionary, disable Input view.
         controller.books
-            .count()
-            .subscribe { count ->
-                view.onEnableInput(count > 0)
-                if (count > 0) {
-                    view.inputSelectAll()
+                .count()
+                .subscribe { count ->
+                    view.onEnableInput(count > 0)
+                    if (count > 0) {
+                        view.inputSelectAll()
+                    }
                 }
-            }
     }
 
     override fun onDestroy() {

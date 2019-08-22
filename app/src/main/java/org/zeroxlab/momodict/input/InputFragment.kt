@@ -26,10 +26,10 @@ import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
  * Fragment to provide UI which user can input a text to query, and display a list for queried text.
  */
 class InputFragment :
-    Fragment(),
-    BackKeyHandler,
-    InputContract.View,
-    ViewPagerFocusable {
+        Fragment(),
+        BackKeyHandler,
+        InputContract.View,
+        ViewPagerFocusable {
 
     private lateinit var presenter: InputPresenter
     private lateinit var adapter: SelectorAdapter
@@ -43,7 +43,7 @@ class InputFragment :
         // and another for "word".
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A,
-            WordRowPresenter { view -> onRowClicked(view.tag as String) })
+                WordRowPresenter { view -> onRowClicked(view.tag as String) })
         adapter = SelectorAdapter(map)
     }
 
@@ -53,9 +53,9 @@ class InputFragment :
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_input, container, false)
     }
@@ -93,7 +93,7 @@ class InputFragment :
         // if this page becomes visible, show soft-keyboard
         mInput.requestFocus()
         (context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-            .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
+                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     override fun onEnableInput(enabled: Boolean) {
@@ -124,8 +124,8 @@ class InputFragment :
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
         val decoration = DividerItemDecoration(
-            list.context,
-            mgr.orientation
+                list.context,
+                mgr.orientation
         )
         list.addItemDecoration(decoration)
 
