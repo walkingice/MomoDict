@@ -1,7 +1,13 @@
 package org.zeroxlab.momodict
 
 import android.content.Context
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.coroutineScope
 import androidx.room.Room.databaseBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Card
@@ -22,9 +28,6 @@ class Controller @JvmOverloads constructor(
         .build()
 ) {
 
-    val books: Observable<Book>
-        get() = Observable.from(mStore.getBooks())
-
     // sorting by time. Move latest one to head
     private val recordTimeComparator: Comparator<Record> = Comparator { left, right ->
         if (left.time!!.before(right.time)) 1 else -1
@@ -33,6 +36,15 @@ class Controller @JvmOverloads constructor(
     // sorting by time. Move latest one to head
     private val cardTimeComparator = Comparator<Card> { left, right ->
         if (left.time!!.before(right.time)) 1 else -1
+    }
+
+    fun getBooks(scope: CoroutineScope, cb: (List<Book>) -> Unit) {
+        scope.launch(Dispatchers.IO) {
+            val books = mStore.getBooks()
+            withContext(scope.coroutineContext) {
+                cb(books)
+            }
+        }
     }
 
     fun removeBook(bookName: String): Boolean {

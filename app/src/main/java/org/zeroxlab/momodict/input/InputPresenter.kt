@@ -1,7 +1,8 @@
 package org.zeroxlab.momodict.input
 
-import android.content.Context
 import android.text.TextUtils
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.coroutineScope
 import org.zeroxlab.momodict.Controller
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -12,8 +13,8 @@ import java.util.concurrent.TimeUnit
 private const val INPUT_DELAY = 300
 
 class InputPresenter(
-        context: Context,
-        val view: InputContract.View
+    val context: FragmentActivity,
+    val view: InputContract.View
 ) : InputContract.Presenter {
     /**
      * User input won't be send to ctrl directly. Instead, send to here so we have more flexibility
@@ -39,14 +40,12 @@ class InputPresenter(
 
     override fun onResume() {
         // If there is no any available dictionary, disable Input view.
-        controller.books
-                .count()
-                .subscribe { count ->
-                    view.onEnableInput(count > 0)
-                    if (count > 0) {
-                        view.inputSelectAll()
-                    }
-                }
+        controller.getBooks(context.lifecycle.coroutineScope) {
+            view.onEnableInput(it.isNotEmpty())
+            if (it.isNotEmpty()) {
+                view.inputSelectAll()
+            }
+        }
     }
 
     override fun onDestroy() {

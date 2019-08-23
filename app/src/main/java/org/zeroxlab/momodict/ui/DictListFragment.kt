@@ -1,14 +1,15 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Book
@@ -85,8 +86,10 @@ class DictListFragment : Fragment() {
 
     private fun reloadBooks() {
         mAdapter.clear()
-        mCtrl.books.forEach { book -> mAdapter.addItem(book, Type.A) }
-        mAdapter.notifyDataSetChanged()
+        mCtrl.getBooks(this.lifecycle.coroutineScope) {
+            it.forEach { book -> mAdapter.addItem(book, Type.A) }
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun onImportClicked() {
