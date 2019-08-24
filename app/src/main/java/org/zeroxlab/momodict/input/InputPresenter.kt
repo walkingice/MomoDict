@@ -5,7 +5,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.coroutineScope
 import org.zeroxlab.momodict.Controller
 import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import rx.subjects.PublishSubject
 import rx.subjects.Subject
 import java.util.concurrent.TimeUnit
@@ -29,13 +28,13 @@ class InputPresenter(
         query = PublishSubject.create<String>()
         // If user type quickly, do not query until user stop inputting.
         query.debounce(INPUT_DELAY.toLong(), TimeUnit.MILLISECONDS)
-                .subscribeOn(Schedulers.io())
-                .concatMap { input -> controller.queryEntries(input).toList() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ list ->
-                    view.onUpdateList(list)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ input ->
+                controller.queryEntries(context.lifecycle.coroutineScope, input) {
+                    view.onUpdateList(it)
                     view.setLoading(false)
-                }) { e -> e.printStackTrace() }
+                }
+            }) { e -> e.printStackTrace() }
     }
 
     override fun onResume() {

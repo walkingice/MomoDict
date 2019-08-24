@@ -1,8 +1,6 @@
 package org.zeroxlab.momodict
 
 import android.content.Context
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
 import androidx.room.Room.databaseBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,27 +49,30 @@ class Controller @JvmOverloads constructor(
         return mStore.removeBook(bookName)
     }
 
-    fun queryEntries(keyWord: String): Observable<Entry> {
-        // to make sure exact matched words are returned
-        val exact = mStore.getEntries(keyWord)
-        val list = mStore.queryEntries(keyWord)
-        val comparator = Comparator<Entry> { left, right ->
-            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
-        }
+    fun queryEntries(
+        scope: CoroutineScope,
+        keyWord: String,
+        cb: (List<Entry>) -> Unit
+    ) {
+        scope.launch(Dispatchers.IO) {
+            // to make sure exact matched words are returned
+            val exact = syncGetEntries(keyWord)
+            val list = mStore.queryEntries(keyWord)
+            val comparator = Comparator<Entry> { left, right ->
+                left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+            }
 
-        list.sortWith(comparator)
-        exact.forEach { list.add(0, it) }
-        return Observable.from(list).distinct { item -> item.wordStr }
+            list.sortWith(comparator)
+            exact.forEach { list.add(0, it) }
+            val distinct = list.distinctBy { item -> item.wordStr }
+            withContext(scope.coroutineContext) {
+                cb.invoke(distinct)
+            }
+        }
     }
 
     fun getEntries(keyWord: String): Observable<Entry> {
-        val list = mStore.getEntries(keyWord)
-        val comparator = Comparator<Entry> { left, right ->
-            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
-        }
-
-        list.sortWith(comparator)
-        return Observable.from(list)
+        return Observable.from(syncGetEntries(keyWord))
     }
 
     fun getRecords(): Observable<Record> {
@@ -104,5 +105,14 @@ class Controller @JvmOverloads constructor(
 
     fun removeCards(keyWord: String): Boolean {
         return mStore.removeCards(keyWord)
+    }
+
+    private fun syncGetEntries(keyWord: String): List<Entry> {
+        val list = mStore.getEntries(keyWord)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+        }
+        list.sortWith(comparator)
+        return list
     }
 }
