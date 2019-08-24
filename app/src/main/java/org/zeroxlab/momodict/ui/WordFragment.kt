@@ -1,24 +1,21 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Switch
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.RecyclerView
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Card
-import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.WordCardPresenter
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.util.Date
 
 /**
@@ -109,14 +106,10 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
-        Observable.just(target)
-                .subscribeOn(Schedulers.io())
-                .flatMap<Entry> { keyWord -> mCtrl.getEntries(keyWord) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { entry -> mAdapter.addItem(entry, SelectorAdapter.Type.A) },
-                        { e -> e.printStackTrace() }
-                ) { mAdapter.notifyDataSetChanged() }
+        mCtrl.getEntries(lifecycle.coroutineScope, target) { entries ->
+            entries.forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun updateRecord(target: String) {

@@ -71,8 +71,14 @@ class Controller @JvmOverloads constructor(
         }
     }
 
-    fun getEntries(keyWord: String): Observable<Entry> {
-        return Observable.from(syncGetEntries(keyWord))
+    fun getEntries(scope: CoroutineScope, keyWord: String, cb: (List<Entry>) -> Unit) {
+        scope.launch(Dispatchers.IO) {
+            // to make sure exact matched words are returned
+            val exact = syncGetEntries(keyWord)
+            withContext(scope.coroutineContext) {
+                cb(exact)
+            }
+        }
     }
 
     fun getRecords(): Observable<Record> {
