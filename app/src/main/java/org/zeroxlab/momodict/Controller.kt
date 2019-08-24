@@ -12,13 +12,14 @@ import rx.Observable
 
 // FIXME: should avoid main thread
 class Controller @JvmOverloads constructor(
-        private val mCtx: Context,
-        private val mStore: Store = databaseBuilder(
-                mCtx.applicationContext,
-                RoomStore::class.java,
-                RoomStore.DB_NAME)
-                .allowMainThreadQueries()
-                .build()
+    private val mCtx: Context,
+    private val mStore: Store = databaseBuilder(
+        mCtx.applicationContext,
+        RoomStore::class.java,
+        RoomStore.DB_NAME
+    )
+        .allowMainThreadQueries()
+        .build()
 ) {
 
     val books: Observable<Book>

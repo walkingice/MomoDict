@@ -28,9 +28,11 @@ class DictListFragment : Fragment() {
         mCtrl = Controller(activity!!)
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_dictionaries_list, container, false)
     }
 
@@ -42,8 +44,10 @@ class DictListFragment : Fragment() {
         }
 
         mList.let {
-            val decoration = DividerItemDecoration(context,
-                    (it.layoutManager as LinearLayoutManager).orientation)
+            val decoration = DividerItemDecoration(
+                context,
+                (it.layoutManager as LinearLayoutManager).orientation
+            )
             it.addItemDecoration(decoration)
 
             val map = HashMap<Type, SelectorAdapter.Presenter<*>>()
@@ -67,16 +71,16 @@ class DictListFragment : Fragment() {
             }
         }
         AlertDialog.Builder(activity!!)
-                .setTitle("Remove")
-                .setMessage("To remove ${tag.bookName} ?")
-                .setPositiveButton("Remove") { dialogInterface, i ->
-                    finishCb(mCtrl.removeBook(tag.bookName!!))
-                }
-                .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
-                    // do nothing on canceling
-                }
-                .create()
-                .show()
+            .setTitle("Remove")
+            .setMessage("To remove ${tag.bookName} ?")
+            .setPositiveButton("Remove") { dialogInterface, i ->
+                finishCb(mCtrl.removeBook(tag.bookName!!))
+            }
+            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+                // do nothing on canceling
+            }
+            .create()
+            .show()
     }
 
     private fun reloadBooks() {
@@ -87,9 +91,11 @@ class DictListFragment : Fragment() {
 
     private fun onImportClicked() {
         if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(this,
-                    FragmentListener.TYPE.VIEW_ACTION,
-                    OPEN_IMPORT_FRAGMENT)
+            (activity as FragmentListener).onNotified(
+                this,
+                FragmentListener.TYPE.VIEW_ACTION,
+                OPEN_IMPORT_FRAGMENT
+            )
         }
     }
 

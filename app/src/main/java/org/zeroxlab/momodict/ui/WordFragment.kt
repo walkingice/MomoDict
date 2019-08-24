@@ -40,7 +40,11 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         mAdapter = SelectorAdapter(map)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedState: Bundle?
+    ): View? {
         return inflater!!.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
         }
@@ -56,23 +60,23 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
         mCtrl.getCards()
-                .filter { card -> mKeyWord == card.wordStr }
-                .first()
-                .subscribe(
-                        { card ->
-                            // keyword stored
-                            mCard = card
-                            mSwitch.isChecked = true
-                            mSwitch.setOnCheckedChangeListener(this)
-                        }
-                ) { e ->
-                    // keyword not stored
-                    if (e is NoSuchElementException) {
-                        mCard = Card(mKeyWord)
-                        mSwitch.isChecked = false
-                    }
+            .filter { card -> mKeyWord == card.wordStr }
+            .first()
+            .subscribe(
+                { card ->
+                    // keyword stored
+                    mCard = card
+                    mSwitch.isChecked = true
                     mSwitch.setOnCheckedChangeListener(this)
                 }
+            ) { e ->
+                // keyword not stored
+                if (e is NoSuchElementException) {
+                    mCard = Card(mKeyWord)
+                    mSwitch.isChecked = false
+                }
+                mSwitch.setOnCheckedChangeListener(this)
+            }
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
@@ -94,9 +98,11 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     private fun onDisplayDetail(target: String) {
         if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(this,
-                    FragmentListener.TYPE.UPDATE_TITLE,
-                    target)
+            (activity as FragmentListener).onNotified(
+                this,
+                FragmentListener.TYPE.UPDATE_TITLE,
+                target
+            )
         }
 
         mAdapter.clear()
@@ -115,16 +121,16 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     private fun updateRecord(target: String) {
         mCtrl.getRecords()
-                .filter { record -> TextUtils.equals(target, record.wordStr) }
-                .toList()
-                .subscribe { list ->
-                    val record = (if (list.size == 0) Record(target) else list[0]).also {
-                        it.wordStr = if (it.wordStr.isNullOrEmpty()) target else it.wordStr
-                        it.count += 1
-                        it.time = Date()
-                    }
-                    mCtrl.setRecord(record)
+            .filter { record -> TextUtils.equals(target, record.wordStr) }
+            .toList()
+            .subscribe { list ->
+                val record = (if (list.size == 0) Record(target) else list[0]).also {
+                    it.wordStr = if (it.wordStr.isNullOrEmpty()) target else it.wordStr
+                    it.count += 1
+                    it.time = Date()
                 }
+                mCtrl.setRecord(record)
+            }
     }
 
     companion object {

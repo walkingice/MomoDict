@@ -58,12 +58,16 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
     private fun setFragments() {
         val frg = DictListFragment.newInstance()
         supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_container, frg, TAG_DICT_LIST)
-                .commit()
+            .beginTransaction()
+            .add(R.id.fragment_container, frg, TAG_DICT_LIST)
+            .commit()
     }
 
-    override fun onNotified(from: androidx.fragment.app.Fragment?, type: FragmentListener.TYPE, payload: Any?) {
+    override fun onNotified(
+        from: androidx.fragment.app.Fragment?,
+        type: FragmentListener.TYPE,
+        payload: Any?
+    ) {
         when (type) {
             FragmentListener.TYPE.POP_FRAGMENT -> popFragment()
             FragmentListener.TYPE.VIEW_ACTION -> {
@@ -78,22 +82,24 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         when (payload) {
             DictListFragment.OPEN_IMPORT_FRAGMENT ->
                 replaceFragment(
-                        FileImportFragment.newInstance(sEXT_DIR),
-                        TAG_IMPORT_FILE)
+                    FileImportFragment.newInstance(sEXT_DIR),
+                    TAG_IMPORT_FILE
+                )
             FileImportFragment.PICK_A_FILE ->
                 replaceFragment(
-                        FilePickerFragment.newInstance(sEXT_DIR, sEXT),
-                        TAG_PICK_FILE)
+                    FilePickerFragment.newInstance(sEXT_DIR, sEXT),
+                    TAG_PICK_FILE
+                )
         }
     }
 
     private fun replaceFragment(frag: androidx.fragment.app.Fragment, tag: String) {
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, frag, tag)
-                .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.fragment_container, frag, tag)
+            .setTransition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            .addToBackStack(null)
+            .commit()
     }
 
     companion object {

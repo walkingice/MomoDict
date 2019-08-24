@@ -40,8 +40,10 @@ class FilePickerFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, FileRowPresenter(context!!) { v -> onFileClicked(v) })
         mAdapter = SelectorAdapter(map)
@@ -66,16 +68,20 @@ class FilePickerFragment : Fragment() {
         mBtnChoose.setOnClickListener { view ->
             if (activity is FragmentListener) {
                 arguments?.putString(ARG_PATH, mChosen)
-                (activity as FragmentListener).onNotified(this,
-                        FragmentListener.TYPE.POP_FRAGMENT, null)
+                (activity as FragmentListener).onNotified(
+                    this,
+                    FragmentListener.TYPE.POP_FRAGMENT, null
+                )
             }
         }
 
         mBtnCancel.setOnClickListener { view ->
             if (activity is FragmentListener) {
                 arguments?.remove(ARG_PATH)
-                (activity as FragmentListener).onNotified(this,
-                        FragmentListener.TYPE.POP_FRAGMENT, null)
+                (activity as FragmentListener).onNotified(
+                    this,
+                    FragmentListener.TYPE.POP_FRAGMENT, null
+                )
             }
         }
         mList.adapter = mAdapter
@@ -135,8 +141,10 @@ class FilePickerFragment : Fragment() {
         val ARG_PATH = "path_to_open"
         val ARG_EXTENSION = "filename_extension"
 
-        fun newInstance(path: String,
-                        extension: String): FilePickerFragment {
+        fun newInstance(
+            path: String,
+            extension: String
+        ): FilePickerFragment {
             val fragment = FilePickerFragment()
             val args = Bundle()
             args.putString(ARG_PATH, path)

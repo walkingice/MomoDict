@@ -31,13 +31,19 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
         mCtrl = Controller(activity!!) // FIXME: remove !!
 
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A, CardRowPresenter(
+        map.put(
+            SelectorAdapter.Type.A, CardRowPresenter(
                 { view -> view.tag?.let { onRowClicked(view.tag as String) } },
-                { view -> view.tag?.let { onRowLongClicked(view.tag as String) } }))
+                { view -> view.tag?.let { onRowLongClicked(view.tag as String) } })
+        )
         mAdapter = SelectorAdapter(map)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedState: Bundle?
+    ): View? {
         val fragmentView = inflater!!.inflate(R.layout.fragment_memo, container, false)
         initViews(fragmentView)
         return fragmentView
@@ -52,7 +58,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
         val view = activity?.currentFocus
         if (view != null) {
             val imm = activity!!
-                    .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
         onUpdateList()
@@ -61,8 +67,10 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     private fun initViews(fv: View) {
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
-        val decoration = DividerItemDecoration(list.context,
-                mgr.orientation)
+        val decoration = DividerItemDecoration(
+            list.context,
+            mgr.orientation
+        )
         list.addItemDecoration(decoration)
         list.adapter = mAdapter
     }
@@ -80,25 +88,25 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
      */
     private fun onRowLongClicked(keyWord: String) {
         AlertDialog.Builder(activity!!)
-                .setTitle(keyWord)
-                .setPositiveButton("Remove") { dialogInterface, i ->
-                    // remove this word from memo
-                    mCtrl!!.removeCards(keyWord)
-                    onUpdateList()
-                }
-                .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
-                    // do nothing on canceling
-                }
-                .create()
-                .show()
+            .setTitle(keyWord)
+            .setPositiveButton("Remove") { dialogInterface, i ->
+                // remove this word from memo
+                mCtrl!!.removeCards(keyWord)
+                onUpdateList()
+            }
+            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+                // do nothing on canceling
+            }
+            .create()
+            .show()
     }
 
     private fun onUpdateList() {
         mAdapter!!.clear()
         mCtrl!!.getCards()
-                .subscribe(
-                        { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) },
-                        { e -> e.printStackTrace() }
-                ) { mAdapter!!.notifyDataSetChanged() }
+            .subscribe(
+                { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) },
+                { e -> e.printStackTrace() }
+            ) { mAdapter!!.notifyDataSetChanged() }
     }
 }

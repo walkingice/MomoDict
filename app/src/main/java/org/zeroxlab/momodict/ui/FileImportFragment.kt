@@ -31,7 +31,11 @@ class FileImportFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_file_import, container, false)
     }
 
@@ -56,19 +60,27 @@ class FileImportFragment : Fragment() {
         checkPermission()
     }
 
-    override fun onRequestPermissionsResult(reqCode: Int, permissions: Array<String>, response: IntArray) {
+    override fun onRequestPermissionsResult(
+        reqCode: Int,
+        permissions: Array<String>,
+        response: IntArray
+    ) {
         if (reqCode == REQ_CODE_READ_EXTERNAL && response[0] == PackageManager.PERMISSION_GRANTED) {
             mBtnImport!!.isEnabled = mExists
         }
     }
 
     private fun checkPermission() {
-        val readPermission = ContextCompat.checkSelfPermission(context!!,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
+        val readPermission = ContextCompat.checkSelfPermission(
+            context!!,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
         if (readPermission != PackageManager.PERMISSION_GRANTED) {
             mBtnImport!!.isEnabled = false
-            requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                    REQ_CODE_READ_EXTERNAL)
+            requestPermissions(
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+                REQ_CODE_READ_EXTERNAL
+            )
         }
     }
 
@@ -93,8 +105,10 @@ class FileImportFragment : Fragment() {
         mBtnImport!!.isEnabled = false
         mText!!.text = "Importing....."
         val runnable = {
-            val reader = Reader(activity!!.cacheDir.path,
-                    arguments!!.getString(ARG_PATH)!!)
+            val reader = Reader(
+                activity!!.cacheDir.path,
+                arguments!!.getString(ARG_PATH)!!
+            )
             reader.parse(activity!!)
             val intent = Intent()
             intent.data = Uri.parse(arguments!!.getString(ARG_PATH))
