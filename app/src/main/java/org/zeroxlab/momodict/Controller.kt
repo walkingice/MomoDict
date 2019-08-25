@@ -12,9 +12,9 @@ import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
-import rx.Observable
 
 // FIXME: should avoid main thread
+// TODO: How to handle exception in each function call?
 class Controller @JvmOverloads constructor(
     private val mCtx: Context,
     private val mStore: Store = databaseBuilder(
@@ -108,11 +108,14 @@ class Controller @JvmOverloads constructor(
         return mStore.removeRecords(keyWord)
     }
 
-    fun getCards(): Observable<Card> {
-        val cards = mStore.getCards()
-        cards.sortWith(cardTimeComparator)
-
-        return Observable.from(cards)
+    fun getCards(scope: CoroutineScope, cb: ((List<Card>) -> Unit)) {
+        scope.launch(Dispatchers.IO) {
+            val cards = mStore.getCards()
+            cards.sortWith(cardTimeComparator)
+            withContext(scope.coroutineContext) {
+                cb(cards)
+            }
+        }
     }
 
     fun setCard(card: Card): Boolean {

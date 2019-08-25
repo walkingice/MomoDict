@@ -56,24 +56,18 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        mCtrl.getCards()
-            .filter { card -> mKeyWord == card.wordStr }
-            .first()
-            .subscribe(
-                { card ->
-                    // keyword stored
-                    mCard = card
-                    mSwitch.isChecked = true
-                    mSwitch.setOnCheckedChangeListener(this)
-                }
-            ) { e ->
-                // keyword not stored
-                if (e is NoSuchElementException) {
-                    mCard = Card(mKeyWord)
-                    mSwitch.isChecked = false
-                }
-                mSwitch.setOnCheckedChangeListener(this)
+        mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
+            try {
+                val card = it.first { card -> mKeyWord == card.wordStr }
+                mCard = card
+                mSwitch.isChecked = true
+            } catch (e: NoSuchElementException) {
+                // TODO: Using exception to catch 'if card.size == 0' is not a good idea.
+                mCard = Card(mKeyWord)
+                mSwitch.isChecked = false
             }
+            mSwitch.setOnCheckedChangeListener(this)
+        }
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {

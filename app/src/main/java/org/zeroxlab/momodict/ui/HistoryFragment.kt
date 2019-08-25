@@ -107,17 +107,15 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
             }
             .setNeutralButton("Memo") { dialogInterface, i ->
                 // add this word to memo
-                mCtrl!!.getCards()
-                    .filter { card -> TextUtils.equals(keyWord, card.wordStr) }
-                    .toList()
-                    .subscribe { list ->
-                        val card = if (list.size == 0) Card(keyWord) else list[0]
-                        card.wordStr =
-                            if (TextUtils.isEmpty(card.wordStr)) keyWord
-                            else card.wordStr
-                        card.time = Date()
-                        mCtrl!!.setCard(card)
-                    }
+                mCtrl!!.getCards(requireActivity().lifecycle.coroutineScope) {
+                    val list = it.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
+                    val card = if (list.isEmpty()) Card(keyWord) else list[0]
+                    card.wordStr =
+                        if (TextUtils.isEmpty(card.wordStr)) keyWord
+                        else card.wordStr
+                    card.time = Date()
+                    mCtrl!!.setCard(card)
+                }
             }
             .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
                 // do nothing on canceling
@@ -129,7 +127,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     private fun onUpdateList() {
         mAdapter!!.clear()
         mCtrl!!.getRecords(requireActivity().lifecycle.coroutineScope) {
-            it.forEach{ record ->
+            it.forEach { record ->
                 mAdapter!!.addItem(record, SelectorAdapter.Type.A)
             }
             mAdapter!!.notifyDataSetChanged()

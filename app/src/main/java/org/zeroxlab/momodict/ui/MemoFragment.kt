@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.coroutineScope
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
@@ -103,10 +104,9 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter!!.clear()
-        mCtrl!!.getCards()
-            .subscribe(
-                { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) },
-                { e -> e.printStackTrace() }
-            ) { mAdapter!!.notifyDataSetChanged() }
+        mCtrl!!.getCards(requireActivity().lifecycle.coroutineScope) {
+            it.forEach { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) }
+            mAdapter!!.notifyDataSetChanged()
+        }
     }
 }
