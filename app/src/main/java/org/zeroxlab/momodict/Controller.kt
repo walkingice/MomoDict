@@ -2,27 +2,29 @@ package org.zeroxlab.momodict
 
 import android.content.Context
 import androidx.room.Room.databaseBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
-import rx.Observable
 
 // FIXME: should avoid main thread
+// TODO: How to handle exception in each function call?
 class Controller @JvmOverloads constructor(
-        private val mCtx: Context,
-        private val mStore: Store = databaseBuilder(
-                mCtx.applicationContext,
-                RoomStore::class.java,
-                RoomStore.DB_NAME)
-                .allowMainThreadQueries()
-                .build()
+    private val mCtx: Context,
+    private val mStore: Store = databaseBuilder(
+        mCtx.applicationContext,
+        RoomStore::class.java,
+        RoomStore.DB_NAME
+    )
+        .allowMainThreadQueries()
+        .build()
 ) {
-
-    val books: Observable<Book>
-        get() = Observable.from(mStore.getBooks())
 
     // sorting by time. Move latest one to head
     private val recordTimeComparator: Comparator<Record> = Comparator { left, right ->
@@ -34,40 +36,68 @@ class Controller @JvmOverloads constructor(
         if (left.time!!.before(right.time)) 1 else -1
     }
 
+    fun getBooks(scope: CoroutineScope, cb: (List<Book>) -> Unit) {
+        scope.launch(Dispatchers.IO) {
+            val books = mStore.getBooks()
+            withContext(scope.coroutineContext) {
+                cb(books)
+            }
+        }
+    }
+
     fun removeBook(bookName: String): Boolean {
         return mStore.removeBook(bookName)
     }
 
-    fun queryEntries(keyWord: String): Observable<Entry> {
-        // to make sure exact matched words are returned
-        val exact = mStore.getEntries(keyWord)
-        val list = mStore.queryEntries(keyWord)
-        val comparator = Comparator<Entry> { left, right ->
-            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+    fun queryEntries(
+        scope: CoroutineScope,
+        keyWord: String,
+        cb: (List<Entry>) -> Unit
+    ) {
+        scope.launch(Dispatchers.IO) {
+            // to make sure exact matched words are returned
+            val exact = syncGetEntries(keyWord)
+            val list = mStore.queryEntries(keyWord)
+            val comparator = Comparator<Entry> { left, right ->
+                left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+            }
+
+            list.sortWith(comparator)
+            exact.forEach { list.add(0, it) }
+            val distinct = list.distinctBy { item -> item.wordStr }
+            withContext(scope.coroutineContext) {
+                cb.invoke(distinct)
+            }
         }
-
-        list.sortWith(comparator)
-        exact.forEach { list.add(0, it) }
-        return Observable.from(list).distinct { item -> item.wordStr }
     }
 
-    fun getEntries(keyWord: String): Observable<Entry> {
-        val list = mStore.getEntries(keyWord)
-        val comparator = Comparator<Entry> { left, right ->
-            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+    fun getEntries(scope: CoroutineScope, keyWord: String, cb: (List<Entry>) -> Unit) {
+        scope.launch(Dispatchers.IO) {
+            // to make sure exact matched words are returned
+            val exact = syncGetEntries(keyWord)
+            withContext(scope.coroutineContext) {
+                cb(exact)
+            }
         }
-
-        list.sortWith(comparator)
-        return Observable.from(list)
     }
 
-    fun getRecords(): Observable<Record> {
-        val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
-        return Observable.from(records)
+    fun getRecords(scope: CoroutineScope, cb: ((List<Record>) -> Unit)) {
+        scope.launch(Dispatchers.IO) {
+            val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
+            withContext(scope.coroutineContext) {
+                cb.invoke(records)
+            }
+        }
     }
 
-    fun clearRecords() {
-        getRecords().subscribe { record -> mStore.removeRecords(record.wordStr!!) }
+    fun clearRecords(scope: CoroutineScope) {
+        getRecords(scope) { records ->
+            scope.launch(Dispatchers.IO) {
+                records.forEach { r ->
+                    mStore.removeRecords(r.wordStr)
+                }
+            }
+        }
     }
 
     fun setRecord(record: Record): Boolean {
@@ -78,11 +108,14 @@ class Controller @JvmOverloads constructor(
         return mStore.removeRecords(keyWord)
     }
 
-    fun getCards(): Observable<Card> {
-        val cards = mStore.getCards()
-        cards.sortWith(cardTimeComparator)
-
-        return Observable.from(cards)
+    fun getCards(scope: CoroutineScope, cb: ((List<Card>) -> Unit)) {
+        scope.launch(Dispatchers.IO) {
+            val cards = mStore.getCards()
+            cards.sortWith(cardTimeComparator)
+            withContext(scope.coroutineContext) {
+                cb(cards)
+            }
+        }
     }
 
     fun setCard(card: Card): Boolean {
@@ -91,5 +124,14 @@ class Controller @JvmOverloads constructor(
 
     fun removeCards(keyWord: String): Boolean {
         return mStore.removeCards(keyWord)
+    }
+
+    private fun syncGetEntries(keyWord: String): List<Entry> {
+        val list = mStore.getEntries(keyWord)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
+        }
+        list.sortWith(comparator)
+        return list
     }
 }

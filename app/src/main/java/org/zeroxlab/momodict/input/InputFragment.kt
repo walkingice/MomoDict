@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,7 @@ class InputFragment :
 
     private lateinit var presenter: InputPresenter
     private lateinit var adapter: SelectorAdapter
+    private val scope = lifecycleScope
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)

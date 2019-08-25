@@ -1,5 +1,6 @@
 package org.zeroxlab.momodict
 
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
@@ -13,7 +14,6 @@ import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
-import rx.observers.TestObserver
 
 @Config(constants = BuildConfig::class)
 @RunWith(RobolectricTestRunner::class)
@@ -38,36 +38,39 @@ class ControllerTest {
 
     @Test
     fun testSimpleQuery() {
-        val observer = TestObserver<Entry>()
-        mCtrl.queryEntries("one").subscribe(observer)
-        val list = observer.onNextEvents
-        assertEquals(1, list.size)
-        assertEquals("one", list[0].wordStr)
+        runBlocking {
+            mCtrl.queryEntries(this, "one") {
+                assertEquals(1, it.size)
+                assertEquals("one", it[0].wordStr)
+            }
+        }
     }
 
     @Test
     fun testFuzzyQuery() {
-        val observer = TestObserver<Entry>()
-        mCtrl.queryEntries("aaa").subscribe(observer)
-        val list = observer.onNextEvents
-        assertEquals(6, list.size)
-        // "aaa" should be the first one
-        assertEquals("aaa", list[0].wordStr)
+        runBlocking {
+            mCtrl.queryEntries(this, "aaa") {
+                assertEquals(6, it.size)
+                // "aaa" should be the first one
+                assertEquals("aaa", it[0].wordStr)
+            }
+        }
     }
 
     @Test
     fun testFuzzyQuery2() {
-        val observer = TestObserver<Entry>()
-        mCtrl.queryEntries("test").subscribe(observer)
-        val list = observer.onNextEvents
-        assertEquals(4, list.size)
-        // "test" should be the first one
-        assertEquals("test", list[0].wordStr)
+        runBlocking {
+            mCtrl.queryEntries(this, "test") {
+                assertEquals(4, it.size)
+                // "test" should be the first one
+                assertEquals("test", it[0].wordStr)
+            }
+        }
     }
 
     private class FakeStore(
-            var booksList: MutableList<Book>,
-            var entriesList: MutableList<Entry>
+        var booksList: MutableList<Book>,
+        var entriesList: MutableList<Entry>
     ) : Store {
 
         init {
@@ -77,11 +80,11 @@ class ControllerTest {
 
         private fun initBooks(list: MutableList<Book>) {
             Book("alphabet")
-                    .apply { wordCount = 6 }
-                    .let { list.add(it) }
+                .apply { wordCount = 6 }
+                .let { list.add(it) }
             Book("numbers")
-                    .apply { wordCount = 5 }
-                    .let { list.add(it) }
+                .apply { wordCount = 5 }
+                .let { list.add(it) }
         }
 
         override fun addBook(book: Book): Boolean {
@@ -107,8 +110,8 @@ class ControllerTest {
         override fun queryEntries(keyWord: String): MutableList<Entry> {
             val values = mutableListOf<Entry>()
             entriesList
-                    .filter { it.wordStr.contains(keyWord, true) }
-                    .let { values.addAll(it) }
+                .filter { it.wordStr.contains(keyWord, true) }
+                .let { values.addAll(it) }
             return values
         }
 
@@ -119,8 +122,8 @@ class ControllerTest {
         override fun getEntries(keyWord: String): MutableList<Entry> {
             val values = mutableListOf<Entry>()
             entriesList
-                    .filter { it.wordStr.equals(keyWord, true) }
-                    .let { values.addAll(it) }
+                .filter { it.wordStr.equals(keyWord, true) }
+                .let { values.addAll(it) }
             return values
         }
 
@@ -149,8 +152,8 @@ class ControllerTest {
         }
 
         private fun initEntries(
-                list: MutableList<Entry>,
-                books: MutableList<Book>
+            list: MutableList<Entry>,
+            books: MutableList<Book>
         ) {
             // alphabet
             Entry("foo prefix_aaa", "content", books[0].bookName).let { list.add(it) }

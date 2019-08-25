@@ -13,14 +13,6 @@ configurations {
 }
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('/Users/walkingice/.android/debug.keystore')
-            storePassword 'android'
-            keyAlias = 'androiddebugkey'
-            keyPassword 'android'
-        }
-    }
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
@@ -55,12 +47,15 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:${androidXVersion}"
     implementation "com.google.android.material:material:${androidXVersion}"
 
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${androidXLifecycleVersion}"
+
     implementation "androidx.room:room-ktx:${androidRoomVersion}"
     kapt "androidx.room:room-compiler:${androidRoomVersion}"
 
     implementation "androidx.constraintlayout:constraintlayout:${androidXConstraintLayoutVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kotlinCoroutinesVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${kotlinCoroutinesVersion}"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinCoroutinesVersion}"
 
     // For license detection
     // https://github.com/mikepenz/AboutLibraries

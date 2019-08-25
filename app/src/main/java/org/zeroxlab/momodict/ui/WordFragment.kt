@@ -1,24 +1,21 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Switch
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.RecyclerView
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Card
-import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.WordCardPresenter
-import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.util.Date
 
 /**
@@ -40,7 +37,11 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         mAdapter = SelectorAdapter(map)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedState: Bundle?
+    ): View? {
         return inflater!!.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
         }
@@ -55,24 +56,18 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        mCtrl.getCards()
-                .filter { card -> mKeyWord == card.wordStr }
-                .first()
-                .subscribe(
-                        { card ->
-                            // keyword stored
-                            mCard = card
-                            mSwitch.isChecked = true
-                            mSwitch.setOnCheckedChangeListener(this)
-                        }
-                ) { e ->
-                    // keyword not stored
-                    if (e is NoSuchElementException) {
-                        mCard = Card(mKeyWord)
-                        mSwitch.isChecked = false
-                    }
-                    mSwitch.setOnCheckedChangeListener(this)
-                }
+        mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
+            try {
+                val card = it.first { card -> mKeyWord == card.wordStr }
+                mCard = card
+                mSwitch.isChecked = true
+            } catch (e: NoSuchElementException) {
+                // TODO: Using exception to catch 'if card.size == 0' is not a good idea.
+                mCard = Card(mKeyWord)
+                mSwitch.isChecked = false
+            }
+            mSwitch.setOnCheckedChangeListener(this)
+        }
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
@@ -94,37 +89,33 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     private fun onDisplayDetail(target: String) {
         if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(this,
-                    FragmentListener.TYPE.UPDATE_TITLE,
-                    target)
+            (activity as FragmentListener).onNotified(
+                this,
+                FragmentListener.TYPE.UPDATE_TITLE,
+                target
+            )
         }
 
         mAdapter.clear()
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
-        Observable.just(target)
-                .subscribeOn(Schedulers.io())
-                .flatMap<Entry> { keyWord -> mCtrl.getEntries(keyWord) }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { entry -> mAdapter.addItem(entry, SelectorAdapter.Type.A) },
-                        { e -> e.printStackTrace() }
-                ) { mAdapter.notifyDataSetChanged() }
+        mCtrl.getEntries(lifecycle.coroutineScope, target) { entries ->
+            entries.forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun updateRecord(target: String) {
-        mCtrl.getRecords()
-                .filter { record -> TextUtils.equals(target, record.wordStr) }
-                .toList()
-                .subscribe { list ->
-                    val record = (if (list.size == 0) Record(target) else list[0]).also {
-                        it.wordStr = if (it.wordStr.isNullOrEmpty()) target else it.wordStr
-                        it.count += 1
-                        it.time = Date()
-                    }
-                    mCtrl.setRecord(record)
-                }
+        mCtrl!!.getRecords(requireActivity().lifecycle.coroutineScope) {
+            val list = it.filter { record -> TextUtils.equals(target, record.wordStr) }
+            val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
+                r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr
+                r.count += 1
+                r.time = Date()
+            }
+            mCtrl.setRecord(record)
+        }
     }
 
     companion object {

@@ -18,7 +18,11 @@ class WordActivity : AppCompatActivity(), FragmentListener {
         initActionBar()
     }
 
-    override fun onNotified(from: androidx.fragment.app.Fragment?, type: FragmentListener.TYPE, payload: Any?) {
+    override fun onNotified(
+        from: androidx.fragment.app.Fragment?,
+        type: FragmentListener.TYPE,
+        payload: Any?
+    ) {
         if (type == FragmentListener.TYPE.UPDATE_TITLE) {
             if (payload != null) {
                 var str = payload as String
@@ -39,9 +43,9 @@ class WordActivity : AppCompatActivity(), FragmentListener {
     private fun setFragments() {
         val wordFrg = WordFragment.newInstance(intent.getStringExtra(Momodict.EXTRA_DATA_1))
         supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_container, wordFrg)
-                .commit()
+            .beginTransaction()
+            .add(R.id.fragment_container, wordFrg)
+            .commit()
     }
 
     private fun updateTitle(text: CharSequence) {
