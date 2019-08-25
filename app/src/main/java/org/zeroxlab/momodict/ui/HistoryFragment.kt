@@ -2,18 +2,13 @@ package org.zeroxlab.momodict.ui
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.coroutineScope
-
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
@@ -21,7 +16,6 @@ import org.zeroxlab.momodict.model.Card
 import org.zeroxlab.momodict.widget.HistoryRowPresenter
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.ViewPagerFocusable
-
 import java.util.Date
 import java.util.HashMap
 
@@ -30,12 +24,12 @@ import java.util.HashMap
  */
 class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
 
-    private var mCtrl: Controller? = null
-    private var mAdapter: SelectorAdapter? = null
+    private lateinit var mCtrl: Controller
+    private lateinit var mAdapter: SelectorAdapter
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(activity!!)
+        mCtrl = Controller(requireActivity())
 
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, HistoryRowPresenter(
@@ -52,7 +46,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
-        val fragmentView = inflater!!.inflate(R.layout.fragment_history, container, false)
+        val fragmentView = inflater.inflate(R.layout.fragment_history, container, false)
         initViews(fragmentView)
         return fragmentView
     }
@@ -69,7 +63,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
         val view = activity?.currentFocus
         if (view != null) {
             // hide soft-keyboard since there is no input field in this fragment
-            val imm = activity!!
+            val imm = requireActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
@@ -77,7 +71,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     fun clearHistory() {
-        mCtrl!!.clearRecords(requireActivity().lifecycle.coroutineScope)
+        mCtrl.clearRecords(requireActivity().lifecycle.coroutineScope)
         onUpdateList()
     }
 
@@ -93,28 +87,28 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     private fun onRowClicked(keyWord: String) {
-        val intent = WordActivity.createIntent(activity!!, keyWord)
+        val intent = WordActivity.createIntent(requireActivity(), keyWord)
         startActivity(intent)
     }
 
     private fun onRowLongClicked(keyWord: String) {
-        AlertDialog.Builder(activity!!)
+        AlertDialog.Builder(requireActivity())
             .setTitle(keyWord)
             .setPositiveButton("Remove") { dialogInterface, i ->
                 // remove this word from history
-                mCtrl!!.removeRecord(keyWord)
+                mCtrl.removeRecord(keyWord)
                 onUpdateList()
             }
             .setNeutralButton("Memo") { dialogInterface, i ->
                 // add this word to memo
-                mCtrl!!.getCards(requireActivity().lifecycle.coroutineScope) {
+                mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
                     val list = it.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
                     val card = if (list.isEmpty()) Card(keyWord) else list[0]
                     card.wordStr =
                         if (TextUtils.isEmpty(card.wordStr)) keyWord
                         else card.wordStr
                     card.time = Date()
-                    mCtrl!!.setCard(card)
+                    mCtrl.setCard(card)
                 }
             }
             .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
@@ -125,12 +119,12 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     private fun onUpdateList() {
-        mAdapter!!.clear()
-        mCtrl!!.getRecords(requireActivity().lifecycle.coroutineScope) {
+        mAdapter.clear()
+        mCtrl.getRecords(requireActivity().lifecycle.coroutineScope) {
             it.forEach { record ->
-                mAdapter!!.addItem(record, SelectorAdapter.Type.A)
+                mAdapter.addItem(record, SelectorAdapter.Type.A)
             }
-            mAdapter!!.notifyDataSetChanged()
+            mAdapter.notifyDataSetChanged()
         }
     }
 }

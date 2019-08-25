@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,14 +27,13 @@ import kotlinx.android.synthetic.main.fragment_input.loading as mLoading
  * Fragment to provide UI which user can input a text to query, and display a list for queried text.
  */
 class InputFragment :
-        Fragment(),
-        BackKeyHandler,
-        InputContract.View,
-        ViewPagerFocusable {
+    Fragment(),
+    BackKeyHandler,
+    InputContract.View,
+    ViewPagerFocusable {
 
     private lateinit var presenter: InputPresenter
     private lateinit var adapter: SelectorAdapter
-    private val scope = lifecycleScope
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -46,7 +44,7 @@ class InputFragment :
         // and another for "word".
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A,
-                WordRowPresenter { view -> onRowClicked(view.tag as String) })
+            WordRowPresenter { view -> onRowClicked(view.tag as String) })
         adapter = SelectorAdapter(map)
     }
 
@@ -56,9 +54,9 @@ class InputFragment :
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_input, container, false)
     }
@@ -95,8 +93,8 @@ class InputFragment :
     override fun onViewPagerFocused() {
         // if this page becomes visible, show soft-keyboard
         mInput.requestFocus()
-        (context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
+        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     override fun onEnableInput(enabled: Boolean) {
@@ -135,8 +133,8 @@ class InputFragment :
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
         val decoration = DividerItemDecoration(
-                list.context,
-                mgr.orientation
+            list.context,
+            mgr.orientation
         )
         list.addItemDecoration(decoration)
 
@@ -164,7 +162,7 @@ class InputFragment :
      * @param text the text of the row which user clicked
      */
     private fun onRowClicked(text: String) {
-        val intent = WordActivity.createIntent(activity!!, text)
+        val intent = WordActivity.createIntent(requireActivity(), text)
         startActivity(intent)
     }
 }

@@ -26,7 +26,7 @@ class DictListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mCtrl = Controller(activity!!)
+        mCtrl = Controller(requireActivity())
     }
 
     override fun onCreateView(
@@ -71,7 +71,7 @@ class DictListFragment : Fragment() {
                 Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
             }
         }
-        AlertDialog.Builder(activity!!)
+        AlertDialog.Builder(requireActivity())
             .setTitle("Remove")
             .setMessage("To remove ${tag.bookName} ?")
             .setPositiveButton("Remove") { dialogInterface, i ->

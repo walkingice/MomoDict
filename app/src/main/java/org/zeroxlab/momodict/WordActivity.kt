@@ -49,8 +49,7 @@ class WordActivity : AppCompatActivity(), FragmentListener {
     }
 
     private fun updateTitle(text: CharSequence) {
-        val actionBar = supportActionBar
-        actionBar!!.title = text
+        supportActionBar?.title = text
     }
 
     companion object {

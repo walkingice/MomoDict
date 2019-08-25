@@ -22,7 +22,7 @@ class Reader
  * here.
  * @param mFilePath A string as path of a compressed file which will be parsed.
  */
-(private val mCacheDir: String, private val mFilePath: String) {
+    (private val mCacheDir: String, private val mFilePath: String) {
 
     /**
      * To read file and save into database.
@@ -38,11 +38,13 @@ class Reader
             val fis = FileInputStream(File(mFilePath))
             archive = readBzip2File(outputDir, fis)
             // FIXME: should avoid main thread
-            val store = Room.databaseBuilder(ctx.applicationContext,
-                    RoomStore::class.java,
-                    RoomStore.DB_NAME)
-                    .allowMainThreadQueries()
-                    .build()
+            val store = Room.databaseBuilder(
+                ctx.applicationContext,
+                RoomStore::class.java,
+                RoomStore.DB_NAME
+            )
+                .allowMainThreadQueries()
+                .build()
             val ifoFile = File(archive!![FileSet.Type.IFO]!!)
             val idxFile = File(archive[FileSet.Type.IDX]!!)
 
