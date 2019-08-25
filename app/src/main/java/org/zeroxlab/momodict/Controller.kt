@@ -81,13 +81,23 @@ class Controller @JvmOverloads constructor(
         }
     }
 
-    fun getRecords(): Observable<Record> {
-        val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
-        return Observable.from(records)
+    fun getRecords(scope: CoroutineScope, cb: ((List<Record>) -> Unit)) {
+        scope.launch(Dispatchers.IO) {
+            val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
+            withContext(scope.coroutineContext) {
+                cb.invoke(records)
+            }
+        }
     }
 
-    fun clearRecords() {
-        getRecords().subscribe { record -> mStore.removeRecords(record.wordStr!!) }
+    fun clearRecords(scope: CoroutineScope) {
+        getRecords(scope) { records ->
+            scope.launch(Dispatchers.IO) {
+                records.forEach { r ->
+                    mStore.removeRecords(r.wordStr)
+                }
+            }
+        }
     }
 
     fun setRecord(record: Record): Boolean {

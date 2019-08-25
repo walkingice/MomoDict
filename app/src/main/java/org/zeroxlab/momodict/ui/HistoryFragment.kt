@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.coroutineScope
 
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
@@ -76,7 +77,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     fun clearHistory() {
-        mCtrl!!.clearRecords()
+        mCtrl!!.clearRecords(requireActivity().lifecycle.coroutineScope)
         onUpdateList()
     }
 
@@ -127,10 +128,11 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter!!.clear()
-        mCtrl!!.getRecords()
-            .subscribe(
-                { record -> mAdapter!!.addItem(record, SelectorAdapter.Type.A) },
-                { e -> e.printStackTrace() }
-            ) { mAdapter!!.notifyDataSetChanged() }
+        mCtrl!!.getRecords(requireActivity().lifecycle.coroutineScope) {
+            it.forEach{ record ->
+                mAdapter!!.addItem(record, SelectorAdapter.Type.A)
+            }
+            mAdapter!!.notifyDataSetChanged()
+        }
     }
 }

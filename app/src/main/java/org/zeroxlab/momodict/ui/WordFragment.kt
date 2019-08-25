@@ -113,17 +113,15 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun updateRecord(target: String) {
-        mCtrl.getRecords()
-            .filter { record -> TextUtils.equals(target, record.wordStr) }
-            .toList()
-            .subscribe { list ->
-                val record = (if (list.size == 0) Record(target) else list[0]).also {
-                    it.wordStr = if (it.wordStr.isNullOrEmpty()) target else it.wordStr
-                    it.count += 1
-                    it.time = Date()
-                }
-                mCtrl.setRecord(record)
+        mCtrl!!.getRecords(requireActivity().lifecycle.coroutineScope) {
+            val list = it.filter { record -> TextUtils.equals(target, record.wordStr) }
+            val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
+                r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr
+                r.count += 1
+                r.time = Date()
             }
+            mCtrl.setRecord(record)
+        }
     }
 
     companion object {
