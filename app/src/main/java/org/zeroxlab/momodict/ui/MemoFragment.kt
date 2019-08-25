@@ -2,16 +2,16 @@ package org.zeroxlab.momodict.ui
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
@@ -24,12 +24,12 @@ import org.zeroxlab.momodict.widget.ViewPagerFocusable
  */
 class MemoFragment : Fragment(), ViewPagerFocusable {
 
-    private var mCtrl: Controller? = null
-    private var mAdapter: SelectorAdapter? = null
+    private lateinit var mCtrl: Controller
+    private lateinit var mAdapter: SelectorAdapter
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(activity!!) // FIXME: remove !!
+        mCtrl = Controller(requireActivity())
 
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(
@@ -45,7 +45,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
-        val fragmentView = inflater!!.inflate(R.layout.fragment_memo, container, false)
+        val fragmentView = inflater.inflate(R.layout.fragment_memo, container, false)
         initViews(fragmentView)
         return fragmentView
     }
@@ -58,7 +58,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     override fun onViewPagerFocused() {
         val view = activity?.currentFocus
         if (view != null) {
-            val imm = activity!!
+            val imm = requireActivity()
                 .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
@@ -80,7 +80,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
      * Callback when user click a long
      */
     private fun onRowClicked(keyWord: String) {
-        val intent = WordActivity.createIntent(activity!!, keyWord)
+        val intent = WordActivity.createIntent(requireActivity(), keyWord)
         startActivity(intent)
     }
 
@@ -88,11 +88,11 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
      * Callback when user long-click a long
      */
     private fun onRowLongClicked(keyWord: String) {
-        AlertDialog.Builder(activity!!)
+        AlertDialog.Builder(requireActivity())
             .setTitle(keyWord)
             .setPositiveButton("Remove") { dialogInterface, i ->
                 // remove this word from memo
-                mCtrl!!.removeCards(keyWord)
+                mCtrl.removeCards(keyWord)
                 onUpdateList()
             }
             .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
@@ -103,10 +103,10 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     }
 
     private fun onUpdateList() {
-        mAdapter!!.clear()
-        mCtrl!!.getCards(requireActivity().lifecycle.coroutineScope) {
-            it.forEach { card -> mAdapter!!.addItem(card, SelectorAdapter.Type.A) }
-            mAdapter!!.notifyDataSetChanged()
+        mAdapter.clear()
+        mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
+            it.forEach { card -> mAdapter.addItem(card, SelectorAdapter.Type.A) }
+            mAdapter.notifyDataSetChanged()
         }
     }
 }

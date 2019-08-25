@@ -27,11 +27,11 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     private lateinit var mAdapter: SelectorAdapter
     private lateinit var mKeyWord: String
 
-    private var mCard: Card? = null
+    private lateinit var mCard: Card
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(context!!) // FIXME: remove !!
+        mCtrl = Controller(requireActivity())
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(SelectorAdapter.Type.A, WordCardPresenter())
         mAdapter = SelectorAdapter(map)
@@ -42,7 +42,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
-        return inflater!!.inflate(R.layout.fragment_word, container, false).also {
+        return inflater.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
         }
     }
@@ -50,6 +50,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     override fun onResume() {
         super.onResume()
         mKeyWord = arguments?.getString(ARG_KEYWORD) ?: return
+        mCard = Card(mKeyWord) // fallback
         onDisplayDetail(mKeyWord)
 
         mSwitch.setOnCheckedChangeListener(null)
@@ -72,8 +73,8 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
         if (checked) {
-            mCard!!.time = Date()
-            mCtrl.setCard(mCard!!)
+            mCard.time = Date()
+            mCtrl.setCard(mCard)
         } else {
             mCtrl.removeCards(mKeyWord)
         }
@@ -107,7 +108,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun updateRecord(target: String) {
-        mCtrl!!.getRecords(requireActivity().lifecycle.coroutineScope) {
+        mCtrl.getRecords(requireActivity().lifecycle.coroutineScope) {
             val list = it.filter { record -> TextUtils.equals(target, record.wordStr) }
             val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
                 r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr

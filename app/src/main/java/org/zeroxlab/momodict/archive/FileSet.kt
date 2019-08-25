@@ -47,11 +47,7 @@ class FileSet {
     /**
      * Call this to clean extracted files.
      */
-    fun clean() {
-        if (mCleanCallback != null) {
-            mCleanCallback!!.call()
-        }
-    }
+    fun clean() = mCleanCallback?.call()
 
     override fun toString(): String {
         val sb = StringBuilder()

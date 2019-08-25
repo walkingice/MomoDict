@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_file_picker.picker_btn_choose as 
 import kotlinx.android.synthetic.main.fragment_file_picker.picker_current_path as mCurrentPathView
 
 class FilePickerFragment : Fragment() {
-    private var mAdapter: SelectorAdapter? = null
+    private lateinit var mAdapter: SelectorAdapter
     private var mChosen: String? = null
     private var mCurrentPath: String? = null
     private var mExtension: String? = null
@@ -45,7 +45,7 @@ class FilePickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A, FileRowPresenter(context!!) { v -> onFileClicked(v) })
+        map[SelectorAdapter.Type.A] = FileRowPresenter(requireActivity()) { v -> onFileClicked(v) }
         mAdapter = SelectorAdapter(map)
         return inflater.inflate(R.layout.fragment_file_picker, container, false)
     }
@@ -88,26 +88,26 @@ class FilePickerFragment : Fragment() {
     }
 
     private fun updateList(path: String) {
-        mCurrentPathView!!.text = mCurrentPath
-        mAdapter!!.clear()
+        mCurrentPathView.text = mCurrentPath
+        mAdapter.clear()
         val f = File(path)
         if (f.parentFile != null) {
             val parent = FileRowPresenter.Item("..", f.parentFile)
-            mAdapter!!.addItem(parent, SelectorAdapter.Type.A)
+            mAdapter.addItem(parent, SelectorAdapter.Type.A)
         }
         val dir = if (f.isDirectory) f else f.parentFile
         val files = dir.listFiles()
         if (files != null) {
             for (file in dir.listFiles()) {
                 val item = FileRowPresenter.Item(file.name, file)
-                mAdapter!!.addItem(item, SelectorAdapter.Type.A)
+                mAdapter.addItem(item, SelectorAdapter.Type.A)
             }
         }
 
-        mBtnChoose!!.isEnabled = mChosen != null
+        mBtnChoose.isEnabled = mChosen != null
                 && mChosen!!.endsWith(mExtension!!)
                 && File(mChosen!!).canRead()
-        mAdapter!!.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
     private fun onFileClicked(v: View) {

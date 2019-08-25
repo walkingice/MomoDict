@@ -48,11 +48,11 @@ class FileImportFragment : Fragment() {
         super.onResume()
         val dict = File(arguments?.getString(ARG_PATH)!!)
         mExists = dict.exists() && dict.isFile
-        mText!!.text = if (mExists)
+        mText.text = if (mExists)
             String.format("Using file: %s", dict.name)
         else
             String.format("File %s not exists", dict.path)
-        mBtnImport!!.isEnabled = mExists
+        mBtnImport.isEnabled = mExists
     }
 
     override fun onStart() {
@@ -66,17 +66,17 @@ class FileImportFragment : Fragment() {
         response: IntArray
     ) {
         if (reqCode == REQ_CODE_READ_EXTERNAL && response[0] == PackageManager.PERMISSION_GRANTED) {
-            mBtnImport!!.isEnabled = mExists
+            mBtnImport.isEnabled = mExists
         }
     }
 
     private fun checkPermission() {
         val readPermission = ContextCompat.checkSelfPermission(
-            context!!,
+            requireActivity(),
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
         if (readPermission != PackageManager.PERMISSION_GRANTED) {
-            mBtnImport!!.isEnabled = false
+            mBtnImport.isEnabled = false
             requestPermissions(
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 REQ_CODE_READ_EXTERNAL
@@ -85,30 +85,31 @@ class FileImportFragment : Fragment() {
     }
 
     private fun initViews(fv: View) {
-        mBtnChoose!!.setOnClickListener { v ->
+        mBtnChoose.setOnClickListener { v ->
             if (activity is FragmentListener) {
                 val parent = activity as FragmentListener
                 parent.onNotified(this, FragmentListener.TYPE.VIEW_ACTION, PICK_A_FILE)
             }
         }
 
-        mBtnImport!!.setOnClickListener { v -> onImportButtonClicked() }
+        mBtnImport.setOnClickListener { v -> onImportButtonClicked() }
     }
 
     private fun onImportButtonClicked() {
-        mBtnImport!!.isEnabled = false
-        mText!!.text = "Importing....."
+        mBtnImport.isEnabled = false
+        mText.text = "Importing....."
         val runnable = {
+            val activity = requireActivity()
             val reader = Reader(
-                activity!!.cacheDir.path,
+                activity.cacheDir.path,
                 arguments!!.getString(ARG_PATH)!!
             )
-            reader.parse(activity!!)
+            reader.parse(activity)
             val intent = Intent()
             intent.data = Uri.parse(arguments!!.getString(ARG_PATH))
-            activity!!.setResult(Activity.RESULT_OK, intent)
-            activity!!.runOnUiThread { mText!!.text = "Imported" }
-            activity!!.finish()
+            activity.setResult(Activity.RESULT_OK, intent)
+            activity.runOnUiThread { mText.text = "Imported" }
+            activity.finish()
         }
         val t = Thread(runnable)
         t.start()
