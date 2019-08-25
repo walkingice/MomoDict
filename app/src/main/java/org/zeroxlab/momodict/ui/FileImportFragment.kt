@@ -96,12 +96,6 @@ class FileImportFragment : Fragment() {
     }
 
     private fun onImportButtonClicked() {
-        //Observable.just(0)
-        //        .subscribeOn(Schedulers.io())
-        //        .concatMap((i) -> {
-        //            return Observable.just(i);
-        //        })
-        //        .observeOn(MainThread.this)
         mBtnImport!!.isEnabled = false
         mText!!.text = "Importing....."
         val runnable = {
