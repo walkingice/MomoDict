@@ -3,6 +3,7 @@ package org.zeroxlab.momodict.input
 import android.text.TextUtils
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.coroutineScope
+import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import rx.android.schedulers.AndroidSchedulers
 import rx.subjects.PublishSubject
@@ -30,8 +31,9 @@ class InputPresenter(
         query.debounce(INPUT_DELAY.toLong(), TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ input ->
-                controller.queryEntries(context.lifecycle.coroutineScope, input) {
-                    view.onUpdateList(it)
+                context.lifecycle.coroutineScope.launch {
+                    val entries = controller.queryEntries(input)
+                    view.onUpdateList(entries)
                     view.setLoading(false)
                 }
             }) { e -> e.printStackTrace() }

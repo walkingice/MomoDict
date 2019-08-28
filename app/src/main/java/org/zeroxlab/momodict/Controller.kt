@@ -49,26 +49,20 @@ class Controller @JvmOverloads constructor(
         return mStore.removeBook(bookName)
     }
 
-    fun queryEntries(
-        scope: CoroutineScope,
-        keyWord: String,
-        cb: (List<Entry>) -> Unit
-    ) {
-        scope.launch(Dispatchers.IO) {
-            // to make sure exact matched words are returned
-            val exact = syncGetEntries(keyWord)
-            val list = mStore.queryEntries(keyWord)
-            val comparator = Comparator<Entry> { left, right ->
-                left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
-            }
-
-            list.sortWith(comparator)
-            exact.forEach { list.add(0, it) }
-            val distinct = list.distinctBy { item -> item.wordStr }
-            withContext(scope.coroutineContext) {
-                cb.invoke(distinct)
-            }
+    suspend fun queryEntries(
+        keyWord: String
+    ): List<Entry> = withContext(Dispatchers.IO) {
+        // to make sure exact matched words are returned
+        val exact = syncGetEntries(keyWord)
+        val list = mStore.queryEntries(keyWord)
+        val comparator = Comparator<Entry> { left, right ->
+            left.wordStr!!.indexOf(keyWord) - right.wordStr!!.indexOf(keyWord)
         }
+
+        list.sortWith(comparator)
+        exact.forEach { list.add(0, it) }
+        val distinct = list.distinctBy { item -> item.wordStr }
+        distinct
     }
 
     fun getEntries(scope: CoroutineScope, keyWord: String, cb: (List<Entry>) -> Unit) {
