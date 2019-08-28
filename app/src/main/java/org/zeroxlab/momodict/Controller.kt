@@ -65,14 +65,9 @@ class Controller @JvmOverloads constructor(
         distinct
     }
 
-    fun getEntries(scope: CoroutineScope, keyWord: String, cb: (List<Entry>) -> Unit) {
-        scope.launch(Dispatchers.IO) {
-            // to make sure exact matched words are returned
-            val exact = syncGetEntries(keyWord)
-            withContext(scope.coroutineContext) {
-                cb(exact)
-            }
-        }
+    suspend fun getEntries(keyWord: String): List<Entry> = withContext(Dispatchers.IO) {
+        // to make sure exact matched words are returned
+        syncGetEntries(keyWord)
     }
 
     fun getRecords(scope: CoroutineScope, cb: ((List<Record>) -> Unit)) {

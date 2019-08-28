@@ -10,6 +10,7 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Card
@@ -101,8 +102,9 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
-        mCtrl.getEntries(lifecycle.coroutineScope, target) { entries ->
-            entries.forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
+        lifecycle.coroutineScope.launch {
+            mCtrl.getEntries(target)
+                .forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
         }
     }
