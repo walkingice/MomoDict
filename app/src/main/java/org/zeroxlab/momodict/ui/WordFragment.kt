@@ -110,8 +110,9 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun updateRecord(target: String) {
-        mCtrl.getRecords(requireActivity().lifecycle.coroutineScope) {
-            val list = it.filter { record -> TextUtils.equals(target, record.wordStr) }
+        requireActivity().lifecycle.coroutineScope.launch {
+            val records = mCtrl.getRecords()
+            val list = records.filter { record -> TextUtils.equals(target, record.wordStr) }
             val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
                 r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr
                 r.count += 1

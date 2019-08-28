@@ -70,31 +70,23 @@ class Controller @JvmOverloads constructor(
         syncGetEntries(keyWord)
     }
 
-    fun getRecords(scope: CoroutineScope, cb: ((List<Record>) -> Unit)) {
-        scope.launch(Dispatchers.IO) {
-            val records = mStore.getRecords().apply { sortWith(recordTimeComparator) }
-            withContext(scope.coroutineContext) {
-                cb.invoke(records)
-            }
+    suspend fun getRecords(): (List<Record>) = withContext(Dispatchers.IO) {
+        mStore.getRecords().apply { sortWith(recordTimeComparator) }
+    }
+
+    suspend fun clearRecords() = withContext(Dispatchers.IO) {
+        val records = getRecords()
+        records.forEach { r ->
+            mStore.removeRecords(r.wordStr)
         }
     }
 
-    fun clearRecords(scope: CoroutineScope) {
-        getRecords(scope) { records ->
-            scope.launch(Dispatchers.IO) {
-                records.forEach { r ->
-                    mStore.removeRecords(r.wordStr)
-                }
-            }
-        }
+    suspend fun setRecord(record: Record): Boolean = withContext(Dispatchers.IO) {
+        mStore.upsertRecord(record)
     }
 
-    fun setRecord(record: Record): Boolean {
-        return mStore.upsertRecord(record)
-    }
-
-    fun removeRecord(keyWord: String): Boolean {
-        return mStore.removeRecords(keyWord)
+    suspend fun removeRecord(keyWord: String): Boolean = withContext(Dispatchers.IO) {
+        mStore.removeRecords(keyWord)
     }
 
     fun getCards(scope: CoroutineScope, cb: ((List<Card>) -> Unit)) {
