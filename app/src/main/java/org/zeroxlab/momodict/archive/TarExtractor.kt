@@ -4,7 +4,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream
 import org.apache.commons.io.FileUtils
-import rx.functions.Action0
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -17,7 +16,7 @@ class TarExtractor : Extractor {
     @Throws(Exception::class)
     override fun extract(outputDir: File, inputStream: InputStream): FileSet {
         val archive = FileSet()
-        archive.setCleanCallback(Action0 {
+        archive.setCleanCallback {
             try {
                 if (outputDir.isDirectory) {
                     FileUtils.deleteDirectory(outputDir)
@@ -25,7 +24,7 @@ class TarExtractor : Extractor {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        })
+        }
 
         val tis = TarArchiveInputStream(inputStream)
         while (tis.nextEntry != null) {
