@@ -10,6 +10,7 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Card
@@ -57,9 +58,10 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
+        requireActivity().lifecycle.coroutineScope.launch {
+            val cards = mCtrl.getCards()
             try {
-                val card = it.first { card -> mKeyWord == card.wordStr }
+                val card = cards.first { card -> mKeyWord == card.wordStr }
                 mCard = card
                 mSwitch.isChecked = true
             } catch (e: NoSuchElementException) {
@@ -67,16 +69,18 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
                 mCard = Card(mKeyWord)
                 mSwitch.isChecked = false
             }
-            mSwitch.setOnCheckedChangeListener(this)
+            mSwitch.setOnCheckedChangeListener(this@WordFragment)
         }
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
-        if (checked) {
-            mCard.time = Date()
-            mCtrl.setCard(mCard)
-        } else {
-            mCtrl.removeCards(mKeyWord)
+        requireActivity().lifecycle.coroutineScope.launch {
+            if (checked) {
+                mCard.time = Date()
+                mCtrl.setCard(mCard)
+            } else {
+                mCtrl.removeCards(mKeyWord)
+            }
         }
     }
 
@@ -101,15 +105,17 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
-        mCtrl.getEntries(lifecycle.coroutineScope, target) { entries ->
-            entries.forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
+        lifecycle.coroutineScope.launch {
+            mCtrl.getEntries(target)
+                .forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
         }
     }
 
     private fun updateRecord(target: String) {
-        mCtrl.getRecords(requireActivity().lifecycle.coroutineScope) {
-            val list = it.filter { record -> TextUtils.equals(target, record.wordStr) }
+        requireActivity().lifecycle.coroutineScope.launch {
+            val records = mCtrl.getRecords()
+            val list = records.filter { record -> TextUtils.equals(target, record.wordStr) }
             val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
                 r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr
                 r.count += 1

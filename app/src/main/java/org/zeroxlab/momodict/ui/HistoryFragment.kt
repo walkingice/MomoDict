@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.coroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
@@ -71,7 +73,10 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     fun clearHistory() {
-        mCtrl.clearRecords(requireActivity().lifecycle.coroutineScope)
+        // even if Fragment is closed, this coroutine should still finish its job
+        GlobalScope.launch {
+            mCtrl.clearRecords()
+        }
         onUpdateList()
     }
 
@@ -96,13 +101,16 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
             .setTitle(keyWord)
             .setPositiveButton("Remove") { dialogInterface, i ->
                 // remove this word from history
-                mCtrl.removeRecord(keyWord)
-                onUpdateList()
+                requireActivity().lifecycle.coroutineScope.launch {
+                    mCtrl.removeRecord(keyWord)
+                    onUpdateList()
+                }
             }
             .setNeutralButton("Memo") { dialogInterface, i ->
                 // add this word to memo
-                mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
-                    val list = it.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
+                requireActivity().lifecycle.coroutineScope.launch {
+                    val cards = mCtrl.getCards()
+                    val list = cards.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
                     val card = if (list.isEmpty()) Card(keyWord) else list[0]
                     card.wordStr =
                         if (TextUtils.isEmpty(card.wordStr)) keyWord
@@ -120,10 +128,9 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter.clear()
-        mCtrl.getRecords(requireActivity().lifecycle.coroutineScope) {
-            it.forEach { record ->
-                mAdapter.addItem(record, SelectorAdapter.Type.A)
-            }
+        requireActivity().lifecycle.coroutineScope.launch {
+            mCtrl.getRecords()
+                .forEach { record -> mAdapter.addItem(record, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
         }
     }

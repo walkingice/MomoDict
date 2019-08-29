@@ -37,35 +37,26 @@ class ControllerTest {
     }
 
     @Test
-    fun testSimpleQuery() {
-        runBlocking {
-            mCtrl.queryEntries(this, "one") {
-                assertEquals(1, it.size)
-                assertEquals("one", it[0].wordStr)
-            }
-        }
+    fun testSimpleQuery() = runBlocking {
+        val entries = mCtrl.queryEntries("one")
+        assertEquals(1, entries.size)
+        assertEquals("one", entries[0].wordStr)
     }
 
     @Test
-    fun testFuzzyQuery() {
-        runBlocking {
-            mCtrl.queryEntries(this, "aaa") {
-                assertEquals(6, it.size)
-                // "aaa" should be the first one
-                assertEquals("aaa", it[0].wordStr)
-            }
-        }
+    fun testFuzzyQuery() = runBlocking {
+        val entries = mCtrl.queryEntries("aaa")
+        assertEquals(6, entries.size)
+        // "aaa" should be the first one
+        assertEquals("aaa", entries[0].wordStr)
     }
 
     @Test
-    fun testFuzzyQuery2() {
-        runBlocking {
-            mCtrl.queryEntries(this, "test") {
-                assertEquals(4, it.size)
-                // "test" should be the first one
-                assertEquals("test", it[0].wordStr)
-            }
-        }
+    fun testFuzzyQuery2() = runBlocking {
+        val entries = mCtrl.queryEntries("test")
+        assertEquals(4, entries.size)
+        // "test" should be the first one
+        assertEquals("test", entries[0].wordStr)
     }
 
     private class FakeStore(
