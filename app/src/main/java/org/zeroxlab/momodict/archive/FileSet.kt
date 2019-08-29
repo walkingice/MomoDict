@@ -3,7 +3,6 @@ package org.zeroxlab.momodict.archive
 import org.zeroxlab.momodict.archive.FileSet.Type.DICT
 import org.zeroxlab.momodict.archive.FileSet.Type.IDX
 import org.zeroxlab.momodict.archive.FileSet.Type.IFO
-import rx.functions.Action0
 import java.util.HashMap
 
 /**
@@ -12,7 +11,7 @@ import java.util.HashMap
 class FileSet {
 
     private val mPaths = HashMap<Type, String>()
-    private var mCleanCallback: Action0? = null
+    private var mCleanCallback: (() -> Unit)? = null
 
     /**
      * For a dictionary, to check every necessary file exists.
@@ -40,14 +39,14 @@ class FileSet {
         return mPaths[type]
     }
 
-    fun setCleanCallback(cb: Action0) {
+    fun setCleanCallback(cb: (() -> Unit)?) {
         mCleanCallback = cb
     }
 
     /**
      * Call this to clean extracted files.
      */
-    fun clean() = mCleanCallback?.call()
+    fun clean() = mCleanCallback?.invoke()
 
     override fun toString(): String {
         val sb = StringBuilder()
