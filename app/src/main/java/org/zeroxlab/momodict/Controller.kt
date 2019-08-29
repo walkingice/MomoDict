@@ -2,9 +2,7 @@ package org.zeroxlab.momodict
 
 import android.content.Context
 import androidx.room.Room.databaseBuilder
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.zeroxlab.momodict.db.room.RoomStore
 import org.zeroxlab.momodict.model.Book
@@ -13,7 +11,6 @@ import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.model.Record
 import org.zeroxlab.momodict.model.Store
 
-// FIXME: should avoid main thread
 // TODO: How to handle exception in each function call?
 class Controller @JvmOverloads constructor(
     private val mCtx: Context,
@@ -36,17 +33,12 @@ class Controller @JvmOverloads constructor(
         if (left.time!!.before(right.time)) 1 else -1
     }
 
-    fun getBooks(scope: CoroutineScope, cb: (List<Book>) -> Unit) {
-        scope.launch(Dispatchers.IO) {
-            val books = mStore.getBooks()
-            withContext(scope.coroutineContext) {
-                cb(books)
-            }
-        }
+    suspend fun getBooks(): List<Book> = withContext(Dispatchers.IO) {
+        mStore.getBooks()
     }
 
-    fun removeBook(bookName: String): Boolean {
-        return mStore.removeBook(bookName)
+    suspend fun removeBook(bookName: String): Boolean = withContext(Dispatchers.IO) {
+        mStore.removeBook(bookName)
     }
 
     suspend fun queryEntries(

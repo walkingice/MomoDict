@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.model.Book
@@ -75,7 +76,10 @@ class DictListFragment : Fragment() {
             .setTitle("Remove")
             .setMessage("To remove ${tag.bookName} ?")
             .setPositiveButton("Remove") { dialogInterface, i ->
-                finishCb(mCtrl.removeBook(tag.bookName!!))
+                lifecycle.coroutineScope.launch {
+                    val success = mCtrl.removeBook(tag.bookName)
+                    finishCb(success)
+                }
             }
             .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
                 // do nothing on canceling
@@ -86,8 +90,9 @@ class DictListFragment : Fragment() {
 
     private fun reloadBooks() {
         mAdapter.clear()
-        mCtrl.getBooks(this.lifecycle.coroutineScope) {
-            it.forEach { book -> mAdapter.addItem(book, Type.A) }
+        this.lifecycle.coroutineScope.launch {
+            val books = mCtrl.getBooks()
+            books.forEach { book -> mAdapter.addItem(book, Type.A) }
             mAdapter.notifyDataSetChanged()
         }
     }

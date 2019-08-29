@@ -40,10 +40,11 @@ class InputPresenter(
     }
 
     override fun onResume() {
-        // If there is no any available dictionary, disable Input view.
-        controller.getBooks(context.lifecycle.coroutineScope) {
-            view.onEnableInput(it.isNotEmpty())
-            if (it.isNotEmpty()) {
+        context.lifecycle.coroutineScope.launch {
+            // If there is no any available dictionary, disable Input view.
+            val books = controller.getBooks()
+            view.onEnableInput(books.isNotEmpty())
+            if (books.isNotEmpty()) {
                 view.inputSelectAll()
             }
         }
