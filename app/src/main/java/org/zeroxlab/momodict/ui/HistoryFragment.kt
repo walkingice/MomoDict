@@ -108,8 +108,9 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
             }
             .setNeutralButton("Memo") { dialogInterface, i ->
                 // add this word to memo
-                mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
-                    val list = it.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
+                requireActivity().lifecycle.coroutineScope.launch {
+                    val cards = mCtrl.getCards()
+                    val list = cards.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
                     val card = if (list.isEmpty()) Card(keyWord) else list[0]
                     card.wordStr =
                         if (TextUtils.isEmpty(card.wordStr)) keyWord

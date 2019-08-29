@@ -89,22 +89,18 @@ class Controller @JvmOverloads constructor(
         mStore.removeRecords(keyWord)
     }
 
-    fun getCards(scope: CoroutineScope, cb: ((List<Card>) -> Unit)) {
-        scope.launch(Dispatchers.IO) {
-            val cards = mStore.getCards()
-            cards.sortWith(cardTimeComparator)
-            withContext(scope.coroutineContext) {
-                cb(cards)
-            }
-        }
+    suspend fun getCards(): List<Card> = withContext(Dispatchers.IO) {
+        val cards = mStore.getCards()
+        cards.sortWith(cardTimeComparator)
+        cards
     }
 
-    fun setCard(card: Card): Boolean {
-        return mStore.upsertCard(card)
+    suspend fun setCard(card: Card): Boolean = withContext(Dispatchers.IO) {
+        mStore.upsertCard(card)
     }
 
-    fun removeCards(keyWord: String): Boolean {
-        return mStore.removeCards(keyWord)
+    suspend fun removeCards(keyWord: String): Boolean = withContext(Dispatchers.IO) {
+        mStore.removeCards(keyWord)
     }
 
     private fun syncGetEntries(keyWord: String): List<Entry> {

@@ -12,6 +12,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
@@ -92,8 +93,10 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
             .setTitle(keyWord)
             .setPositiveButton("Remove") { dialogInterface, i ->
                 // remove this word from memo
-                mCtrl.removeCards(keyWord)
-                onUpdateList()
+                requireActivity().lifecycle.coroutineScope.launch {
+                    mCtrl.removeCards(keyWord)
+                    onUpdateList()
+                }
             }
             .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
                 // do nothing on canceling
@@ -104,8 +107,9 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter.clear()
-        mCtrl.getCards(requireActivity().lifecycle.coroutineScope) {
-            it.forEach { card -> mAdapter.addItem(card, SelectorAdapter.Type.A) }
+        requireActivity().lifecycle.coroutineScope.launch {
+            val cards = mCtrl.getCards()
+            cards.forEach { card -> mAdapter.addItem(card, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
         }
     }
