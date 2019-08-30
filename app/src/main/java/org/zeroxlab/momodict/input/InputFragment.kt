@@ -48,11 +48,6 @@ class InputFragment :
         adapter = SelectorAdapter(map)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        presenter.onDestroy()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
