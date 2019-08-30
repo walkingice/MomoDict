@@ -54,7 +54,6 @@ dependencies {
 
     implementation "androidx.constraintlayout:constraintlayout:${androidXConstraintLayoutVersion}"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kotlinCoroutinesVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${kotlinCoroutinesVersion}"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinCoroutinesVersion}"
 
     // For license detection
@@ -64,12 +63,6 @@ dependencies {
     // to install apache library
     implementation 'org.apache.commons:commons-compress:1.13'
     implementation group: 'commons-io', name: 'commons-io', version: '2.4'
-
-    // use rx
-    implementation "io.reactivex:rxandroid:${rxAndroidVersion}"
-    // Because RxAndroid releases are few and far between, it is recommended you also
-    // explicitly depend on RxJava's latest version for bug fixes and new features.
-    implementation "io.reactivex:rxjava:${rxJavaVersion}"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}"
 
