@@ -50,9 +50,7 @@ class DictListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mBtnImport.let {
-            it.setOnClickListener({ onImportClicked() })
-        }
+        mBtnImport.setOnClickListener { onImportClicked() }
 
         mList.let {
             val decoration = DividerItemDecoration(
@@ -63,7 +61,7 @@ class DictListFragment : Fragment() {
 
             val map = HashMap<Type, SelectorAdapter.Presenter<*>>()
             val listener = View.OnClickListener { v -> onRemoveBookClicked(v) }
-            map.put(SelectorAdapter.Type.A, BookRowPresenter(listener))
+            map[Type.A] = BookRowPresenter(listener)
 
             it.adapter = SelectorAdapter(map).also { adapter ->
                 mAdapter = adapter
@@ -73,7 +71,7 @@ class DictListFragment : Fragment() {
     }
 
     private fun onRemoveBookClicked(v: View) {
-        var tag: Book = v.tag as Book
+        val tag: Book = v.tag as Book
         val finishCb = fun(success: Boolean) {
             if (success) {
                 reloadBooks()
@@ -84,13 +82,13 @@ class DictListFragment : Fragment() {
         AlertDialog.Builder(requireActivity())
             .setTitle("Remove")
             .setMessage("To remove ${tag.bookName} ?")
-            .setPositiveButton("Remove") { dialogInterface, i ->
+            .setPositiveButton("Remove") { _, _ ->
                 coroutineScope?.launch {
                     val success = mCtrl.removeBook(tag.bookName)
                     finishCb(success)
                 }
             }
-            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 // do nothing on canceling
             }
             .create()
@@ -107,17 +105,12 @@ class DictListFragment : Fragment() {
     }
 
     private fun onImportClicked() {
-        if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(
-                this,
-                FragmentListener.TYPE.VIEW_ACTION,
-                OPEN_IMPORT_FRAGMENT
-            )
-        }
+        val listener = activity as? FragmentListener ?: return
+        listener.onNotified(this, FragmentListener.TYPE.VIEW_ACTION, OPEN_IMPORT_FRAGMENT)
     }
 
     companion object {
-        val OPEN_IMPORT_FRAGMENT = "ask_to_pick_file"
+        const val OPEN_IMPORT_FRAGMENT = "ask_to_pick_file"
         fun newInstance(): DictListFragment {
             return DictListFragment().apply {
                 val bundle = Bundle()
