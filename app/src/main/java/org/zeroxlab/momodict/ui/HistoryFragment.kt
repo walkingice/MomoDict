@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -90,7 +91,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     private fun initViews(fv: View) {
-        val list = fv.findViewById(R.id.list) as androidx.recyclerview.widget.RecyclerView
+        val list = fv.findViewById<RecyclerView>(R.id.list)
         val mgr = list.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val decoration = androidx.recyclerview.widget.DividerItemDecoration(
             list.context,
@@ -108,14 +109,14 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     private fun onRowLongClicked(keyWord: String) {
         AlertDialog.Builder(requireActivity())
             .setTitle(keyWord)
-            .setPositiveButton("Remove") { dialogInterface, i ->
+            .setPositiveButton("Remove") { _, _ ->
                 // remove this word from history
                 coroutineScope?.launch {
                     mCtrl.removeRecord(keyWord)
                     onUpdateList()
                 }
             }
-            .setNeutralButton("Memo") { dialogInterface, i ->
+            .setNeutralButton("Memo") { _, _ ->
                 // add this word to memo
                 coroutineScope?.launch {
                     val cards = mCtrl.getCards()
@@ -128,7 +129,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
                     mCtrl.setCard(card)
                 }
             }
-            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 // do nothing on canceling
             }
             .create()
