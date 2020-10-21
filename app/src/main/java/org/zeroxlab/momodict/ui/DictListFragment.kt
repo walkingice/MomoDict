@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
@@ -25,6 +26,8 @@ class DictListFragment : Fragment() {
     lateinit var mCtrl: Controller
     lateinit var mAdapter: SelectorAdapter
 
+    private var coroutineScope: CoroutineScope? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCtrl = Controller(requireActivity())
@@ -35,7 +38,13 @@ class DictListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         return inflater.inflate(R.layout.fragment_dictionaries_list, container, false)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +85,7 @@ class DictListFragment : Fragment() {
             .setTitle("Remove")
             .setMessage("To remove ${tag.bookName} ?")
             .setPositiveButton("Remove") { dialogInterface, i ->
-                lifecycle.coroutineScope.launch {
+                coroutineScope?.launch {
                     val success = mCtrl.removeBook(tag.bookName)
                     finishCb(success)
                 }
@@ -90,7 +99,7 @@ class DictListFragment : Fragment() {
 
     private fun reloadBooks() {
         mAdapter.clear()
-        this.lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val books = mCtrl.getBooks()
             books.forEach { book -> mAdapter.addItem(book, Type.A) }
             mAdapter.notifyDataSetChanged()

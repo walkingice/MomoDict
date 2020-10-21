@@ -10,6 +10,7 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
@@ -30,6 +31,8 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     private lateinit var mCard: Card
 
+    private var coroutineScope: CoroutineScope? = null
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         mCtrl = Controller(requireActivity())
@@ -43,9 +46,15 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
+        coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         return inflater.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope = null
     }
 
     override fun onResume() {
@@ -58,7 +67,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val cards = mCtrl.getCards()
             try {
                 val card = cards.first { card -> mKeyWord == card.wordStr }
@@ -74,7 +83,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             if (checked) {
                 mCard.time = Date()
                 mCtrl.setCard(mCard)
@@ -105,7 +114,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
-        lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             mCtrl.getEntries(target)
                 .forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
@@ -113,7 +122,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun updateRecord(target: String) {
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val records = mCtrl.getRecords()
             val list = records.filter { record -> TextUtils.equals(target, record.wordStr) }
             val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
