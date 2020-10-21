@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
@@ -25,6 +26,8 @@ class DictListFragment : Fragment() {
     lateinit var mCtrl: Controller
     lateinit var mAdapter: SelectorAdapter
 
+    private var coroutineScope: CoroutineScope? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCtrl = Controller(requireActivity())
@@ -35,15 +38,19 @@ class DictListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         return inflater.inflate(R.layout.fragment_dictionaries_list, container, false)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mBtnImport.let {
-            it.setOnClickListener({ onImportClicked() })
-        }
+        mBtnImport.setOnClickListener { onImportClicked() }
 
         mList.let {
             val decoration = DividerItemDecoration(
@@ -54,7 +61,7 @@ class DictListFragment : Fragment() {
 
             val map = HashMap<Type, SelectorAdapter.Presenter<*>>()
             val listener = View.OnClickListener { v -> onRemoveBookClicked(v) }
-            map.put(SelectorAdapter.Type.A, BookRowPresenter(listener))
+            map[Type.A] = BookRowPresenter(listener)
 
             it.adapter = SelectorAdapter(map).also { adapter ->
                 mAdapter = adapter
@@ -64,7 +71,7 @@ class DictListFragment : Fragment() {
     }
 
     private fun onRemoveBookClicked(v: View) {
-        var tag: Book = v.tag as Book
+        val tag: Book = v.tag as Book
         val finishCb = fun(success: Boolean) {
             if (success) {
                 reloadBooks()
@@ -75,13 +82,13 @@ class DictListFragment : Fragment() {
         AlertDialog.Builder(requireActivity())
             .setTitle("Remove")
             .setMessage("To remove ${tag.bookName} ?")
-            .setPositiveButton("Remove") { dialogInterface, i ->
-                lifecycle.coroutineScope.launch {
+            .setPositiveButton("Remove") { _, _ ->
+                coroutineScope?.launch {
                     val success = mCtrl.removeBook(tag.bookName)
                     finishCb(success)
                 }
             }
-            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 // do nothing on canceling
             }
             .create()
@@ -90,7 +97,7 @@ class DictListFragment : Fragment() {
 
     private fun reloadBooks() {
         mAdapter.clear()
-        this.lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val books = mCtrl.getBooks()
             books.forEach { book -> mAdapter.addItem(book, Type.A) }
             mAdapter.notifyDataSetChanged()
@@ -98,17 +105,12 @@ class DictListFragment : Fragment() {
     }
 
     private fun onImportClicked() {
-        if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(
-                this,
-                FragmentListener.TYPE.VIEW_ACTION,
-                OPEN_IMPORT_FRAGMENT
-            )
-        }
+        val listener = activity as? FragmentListener ?: return
+        listener.onNotified(this, FragmentListener.TYPE.VIEW_ACTION, OPEN_IMPORT_FRAGMENT)
     }
 
     companion object {
-        val OPEN_IMPORT_FRAGMENT = "ask_to_pick_file"
+        const val OPEN_IMPORT_FRAGMENT = "ask_to_pick_file"
         fun newInstance(): DictListFragment {
             return DictListFragment().apply {
                 val bundle = Bundle()

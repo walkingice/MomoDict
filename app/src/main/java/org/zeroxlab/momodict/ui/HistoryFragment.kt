@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.coroutineScope
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
@@ -29,6 +31,8 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     private lateinit var mCtrl: Controller
     private lateinit var mAdapter: SelectorAdapter
 
+    private var coroutineScope: CoroutineScope? = null
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
         mCtrl = Controller(requireActivity())
@@ -48,9 +52,15 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
+        coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         val fragmentView = inflater.inflate(R.layout.fragment_history, container, false)
         initViews(fragmentView)
         return fragmentView
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope = null
     }
 
     override fun onResume() {
@@ -81,7 +91,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     }
 
     private fun initViews(fv: View) {
-        val list = fv.findViewById(R.id.list) as androidx.recyclerview.widget.RecyclerView
+        val list = fv.findViewById<RecyclerView>(R.id.list)
         val mgr = list.layoutManager as androidx.recyclerview.widget.LinearLayoutManager
         val decoration = androidx.recyclerview.widget.DividerItemDecoration(
             list.context,
@@ -99,16 +109,16 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
     private fun onRowLongClicked(keyWord: String) {
         AlertDialog.Builder(requireActivity())
             .setTitle(keyWord)
-            .setPositiveButton("Remove") { dialogInterface, i ->
+            .setPositiveButton("Remove") { _, _ ->
                 // remove this word from history
-                requireActivity().lifecycle.coroutineScope.launch {
+                coroutineScope?.launch {
                     mCtrl.removeRecord(keyWord)
                     onUpdateList()
                 }
             }
-            .setNeutralButton("Memo") { dialogInterface, i ->
+            .setNeutralButton("Memo") { _, _ ->
                 // add this word to memo
-                requireActivity().lifecycle.coroutineScope.launch {
+                coroutineScope?.launch {
                     val cards = mCtrl.getCards()
                     val list = cards.filter { card -> TextUtils.equals(keyWord, card.wordStr) }
                     val card = if (list.isEmpty()) Card(keyWord) else list[0]
@@ -119,7 +129,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
                     mCtrl.setCard(card)
                 }
             }
-            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 // do nothing on canceling
             }
             .create()
@@ -128,7 +138,7 @@ class HistoryFragment : androidx.fragment.app.Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter.clear()
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             mCtrl.getRecords()
                 .forEach { record -> mAdapter.addItem(record, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()

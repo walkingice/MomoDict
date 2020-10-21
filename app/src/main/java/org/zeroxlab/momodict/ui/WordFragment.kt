@@ -10,6 +10,7 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
@@ -30,11 +31,12 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     private lateinit var mCard: Card
 
+    private var coroutineScope: CoroutineScope? = null
+
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(requireActivity())
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A, WordCardPresenter())
+        map[SelectorAdapter.Type.A] = WordCardPresenter()
         mAdapter = SelectorAdapter(map)
     }
 
@@ -43,9 +45,16 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
+        mCtrl = Controller(requireActivity())
+        coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         return inflater.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope = null
     }
 
     override fun onResume() {
@@ -58,7 +67,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
         // if the keyword is already stored as memo, retrieve it.
         // otherwise create a new Card
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val cards = mCtrl.getCards()
             try {
                 val card = cards.first { card -> mKeyWord == card.wordStr }
@@ -74,7 +83,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             if (checked) {
                 mCard.time = Date()
                 mCtrl.setCard(mCard)
@@ -85,27 +94,25 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun initViews(fv: View) {
-        val list = fv.findViewById(R.id.list) as RecyclerView
+        val list = fv.findViewById<RecyclerView>(R.id.list)
         list.adapter = mAdapter
 
-        mSwitch = fv.findViewById(R.id.control_1) as Switch
-        mSwitch.setOnCheckedChangeListener { v, checked -> }
+        mSwitch = fv.findViewById(R.id.control_1)
+        mSwitch.setOnCheckedChangeListener { _, _ -> }
     }
 
     private fun onDisplayDetail(target: String) {
-        if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(
-                this,
-                FragmentListener.TYPE.UPDATE_TITLE,
-                target
-            )
-        }
+        (activity as? FragmentListener)?.onNotified(
+            this,
+            FragmentListener.TYPE.UPDATE_TITLE,
+            target
+        )
 
         mAdapter.clear()
         updateRecord(target)
 
         // get translation of keyword from each dictionaries
-        lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             mCtrl.getEntries(target)
                 .forEach { mAdapter.addItem(it, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
@@ -113,7 +120,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun updateRecord(target: String) {
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val records = mCtrl.getRecords()
             val list = records.filter { record -> TextUtils.equals(target, record.wordStr) }
             val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
@@ -127,7 +134,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     companion object {
 
-        private val ARG_KEYWORD = "key_word"
+        private const val ARG_KEYWORD = "key_word"
 
         fun newInstance(keyWord: String): WordFragment {
             val fragment = WordFragment()

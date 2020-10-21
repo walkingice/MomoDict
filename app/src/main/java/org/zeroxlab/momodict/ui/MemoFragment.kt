@@ -12,6 +12,7 @@ import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
 import org.zeroxlab.momodict.R
@@ -27,6 +28,8 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
     private lateinit var mCtrl: Controller
     private lateinit var mAdapter: SelectorAdapter
+
+    private var coroutineScope: CoroutineScope? = null
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -46,9 +49,15 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
+        coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         val fragmentView = inflater.inflate(R.layout.fragment_memo, container, false)
         initViews(fragmentView)
         return fragmentView
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        coroutineScope = null
     }
 
     override fun onResume() {
@@ -91,14 +100,14 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     private fun onRowLongClicked(keyWord: String) {
         AlertDialog.Builder(requireActivity())
             .setTitle(keyWord)
-            .setPositiveButton("Remove") { dialogInterface, i ->
+            .setPositiveButton("Remove") { _, _ ->
                 // remove this word from memo
-                requireActivity().lifecycle.coroutineScope.launch {
+                coroutineScope?.launch {
                     mCtrl.removeCards(keyWord)
                     onUpdateList()
                 }
             }
-            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 // do nothing on canceling
             }
             .create()
@@ -107,7 +116,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
     private fun onUpdateList() {
         mAdapter.clear()
-        requireActivity().lifecycle.coroutineScope.launch {
+        coroutineScope?.launch {
             val cards = mCtrl.getCards()
             cards.forEach { card -> mAdapter.addItem(card, SelectorAdapter.Type.A) }
             mAdapter.notifyDataSetChanged()
