@@ -35,9 +35,8 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        mCtrl = Controller(requireActivity())
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A, WordCardPresenter())
+        map[SelectorAdapter.Type.A] = WordCardPresenter()
         mAdapter = SelectorAdapter(map)
     }
 
@@ -46,6 +45,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
+        mCtrl = Controller(requireActivity())
         coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         return inflater.inflate(R.layout.fragment_word, container, false).also {
             initViews(it)
@@ -94,21 +94,19 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     }
 
     private fun initViews(fv: View) {
-        val list = fv.findViewById(R.id.list) as RecyclerView
+        val list = fv.findViewById<RecyclerView>(R.id.list)
         list.adapter = mAdapter
 
-        mSwitch = fv.findViewById(R.id.control_1) as Switch
-        mSwitch.setOnCheckedChangeListener { v, checked -> }
+        mSwitch = fv.findViewById(R.id.control_1)
+        mSwitch.setOnCheckedChangeListener { _, _ -> }
     }
 
     private fun onDisplayDetail(target: String) {
-        if (activity is FragmentListener) {
-            (activity as FragmentListener).onNotified(
-                this,
-                FragmentListener.TYPE.UPDATE_TITLE,
-                target
-            )
-        }
+        (activity as? FragmentListener)?.onNotified(
+            this,
+            FragmentListener.TYPE.UPDATE_TITLE,
+            target
+        )
 
         mAdapter.clear()
         updateRecord(target)
@@ -136,7 +134,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     companion object {
 
-        private val ARG_KEYWORD = "key_word"
+        private const val ARG_KEYWORD = "key_word"
 
         fun newInstance(keyWord: String): WordFragment {
             val fragment = WordFragment()
