@@ -100,14 +100,14 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     private fun onRowLongClicked(keyWord: String) {
         AlertDialog.Builder(requireActivity())
             .setTitle(keyWord)
-            .setPositiveButton("Remove") { dialogInterface, i ->
+            .setPositiveButton("Remove") { _, _ ->
                 // remove this word from memo
                 coroutineScope?.launch {
                     mCtrl.removeCards(keyWord)
                     onUpdateList()
                 }
             }
-            .setNegativeButton(android.R.string.cancel) { dialogInterface, i ->
+            .setNegativeButton(android.R.string.cancel) { _, _ ->
                 // do nothing on canceling
             }
             .create()
