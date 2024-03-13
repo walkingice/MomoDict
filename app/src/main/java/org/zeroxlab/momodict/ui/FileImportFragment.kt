@@ -6,21 +6,19 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.zeroxlab.momodict.R
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import org.zeroxlab.momodict.databinding.FragmentFileImportBinding
 import org.zeroxlab.momodict.reader.Reader
 import java.io.File
-import kotlinx.android.synthetic.main.fragment_file_import.btn_1 as mBtnChoose
-import kotlinx.android.synthetic.main.fragment_file_import.btn_2 as mBtnImport
-import kotlinx.android.synthetic.main.fragment_file_import.text_1 as mText
 
 class FileImportFragment : Fragment() {
 
+    private lateinit var binding: FragmentFileImportBinding
     private var mExists = false
 
     override fun onCreate(savedState: Bundle?) {
@@ -36,7 +34,8 @@ class FileImportFragment : Fragment() {
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_file_import, container, false)
+        binding = FragmentFileImportBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
@@ -48,11 +47,11 @@ class FileImportFragment : Fragment() {
         super.onResume()
         val dict = File(arguments?.getString(ARG_PATH)!!)
         mExists = dict.exists() && dict.isFile
-        mText.text = if (mExists)
+        binding.text1.text = if (mExists)
             String.format("Using file: %s", dict.name)
         else
             String.format("File %s not exists", dict.path)
-        mBtnImport.isEnabled = mExists
+        binding.btn2.isEnabled = mExists
     }
 
     override fun onStart() {
@@ -66,7 +65,7 @@ class FileImportFragment : Fragment() {
         response: IntArray
     ) {
         if (reqCode == REQ_CODE_READ_EXTERNAL && response[0] == PackageManager.PERMISSION_GRANTED) {
-            mBtnImport.isEnabled = mExists
+            binding.btn2.isEnabled = mExists
         }
     }
 
@@ -76,7 +75,7 @@ class FileImportFragment : Fragment() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
         if (readPermission != PackageManager.PERMISSION_GRANTED) {
-            mBtnImport.isEnabled = false
+            binding.btn2.isEnabled = false
             requestPermissions(
                 arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
                 REQ_CODE_READ_EXTERNAL
@@ -85,19 +84,19 @@ class FileImportFragment : Fragment() {
     }
 
     private fun initViews(fv: View) {
-        mBtnChoose.setOnClickListener { v ->
+        binding.btn1.setOnClickListener { v ->
             if (activity is FragmentListener) {
                 val parent = activity as FragmentListener
                 parent.onNotified(this, FragmentListener.TYPE.VIEW_ACTION, PICK_A_FILE)
             }
         }
 
-        mBtnImport.setOnClickListener { v -> onImportButtonClicked() }
+        binding.btn2.setOnClickListener { v -> onImportButtonClicked() }
     }
 
     private fun onImportButtonClicked() {
-        mBtnImport.isEnabled = false
-        mText.text = "Importing....."
+        binding.btn2.isEnabled = false
+        binding.text1.text = "Importing....."
         val runnable = {
             val activity = requireActivity()
             val reader = Reader(
@@ -108,7 +107,7 @@ class FileImportFragment : Fragment() {
             val intent = Intent()
             intent.data = Uri.parse(arguments!!.getString(ARG_PATH))
             activity.setResult(Activity.RESULT_OK, intent)
-            activity.runOnUiThread { mText.text = "Imported" }
+            activity.runOnUiThread { binding.text1.text = "Imported" }
             activity.finish()
         }
         val t = Thread(runnable)

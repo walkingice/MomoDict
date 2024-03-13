@@ -1,8 +1,9 @@
-package org.zeroxlab.momodict
+package org.zeroxlab.momodict.utils
 
 object AppConstants {
 
     val BUILD_TYPE_RELEASE = "release"
 
-    fun isReleaseBuild(): Boolean = BUILD_TYPE_RELEASE.equals(BuildConfig.BUILD_TYPE)
+    //FIXME
+    fun isReleaseBuild(): Boolean = BUILD_TYPE_RELEASE.equals(true)
 }

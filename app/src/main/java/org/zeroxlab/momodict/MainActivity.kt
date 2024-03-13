@@ -13,14 +13,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mikepenz.aboutlibraries.LibsBuilder
+import org.zeroxlab.momodict.databinding.ActivityWithOneViewpagerBinding
 import org.zeroxlab.momodict.input.InputFragment
 import org.zeroxlab.momodict.ui.HistoryFragment
 import org.zeroxlab.momodict.ui.MemoFragment
 import org.zeroxlab.momodict.widget.BackKeyHandler
 import org.zeroxlab.momodict.widget.PagerFocusBroadcaster
-import kotlinx.android.synthetic.main.activity_with_one_viewpager.fragment_container as mPager
 
 /**
  * Main Activity, it consists several tabs which present by ViewPager.
@@ -29,10 +30,13 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mAdapter: FragmentPagerAdapterImpl
 
+    private lateinit var mPager: ViewPager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_with_one_viewpager)
-        initView()
+        val binding = ActivityWithOneViewpagerBinding.inflate(layoutInflater)
+        initView(binding)
+        setContentView(binding.root)
         // Should enable StrictMode for #13
         //StrictModeUtil.enableInDevMode()
     }
@@ -53,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     public override fun onActivityResult(reqCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(reqCode, resultCode, data)
         when (reqCode) {
             REQ_CODE_IMPORT -> onResultImport(resultCode, data)
         }
@@ -78,7 +83,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initView() {
+    private fun initView(binding: ActivityWithOneViewpagerBinding) {
+        mPager = binding.fragmentContainer
         // To create fragments for Tabs, and manage them by FragmentPagerAdapterImpl
         mAdapter = FragmentPagerAdapterImpl(supportFragmentManager)
 
@@ -88,12 +94,12 @@ class MainActivity : AppCompatActivity() {
             addOnPageChangeListener(PagerFocusBroadcaster(mAdapter))
         }
 
-        with(findViewById(R.id.tabs) as TabLayout) {
+        with(binding.tabs) {
             setupWithViewPager(mPager)
         }
 
         //init action bar
-        (findViewById(R.id.actionbar) as Toolbar).let {
+        (binding.actionbar).let {
             it.setNavigationIcon(R.mipmap.ic_logo)
             setSupportActionBar(it)
         }

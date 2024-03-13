@@ -15,13 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.zeroxlab.momodict.R
 import org.zeroxlab.momodict.WordActivity
+import org.zeroxlab.momodict.databinding.FragmentInputBinding
 import org.zeroxlab.momodict.model.Entry
 import org.zeroxlab.momodict.widget.BackKeyHandler
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.ViewPagerFocusable
 import org.zeroxlab.momodict.widget.WordRowPresenter
-import kotlinx.android.synthetic.main.fragment_input.input_1 as mInput
-import kotlinx.android.synthetic.main.fragment_input.loading as mLoading
 
 /**
  * Fragment to provide UI which user can input a text to query, and display a list for queried text.
@@ -34,6 +33,8 @@ class InputFragment :
 
     private lateinit var presenter: InputPresenter
     private lateinit var adapter: SelectorAdapter
+
+    private lateinit var binding: FragmentInputBinding
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
@@ -53,7 +54,8 @@ class InputFragment :
         container: ViewGroup?,
         savedState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_input, container, false)
+        binding = FragmentInputBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
@@ -74,7 +76,7 @@ class InputFragment :
      * @return true if this fragment handled back-key-event
      */
     override fun backKeyHandled(): Boolean {
-        if (TextUtils.isEmpty(mInput.text)) {
+        if (TextUtils.isEmpty(binding.input1.text)) {
             return false
         } else {
             clearInput()
@@ -87,13 +89,13 @@ class InputFragment :
      */
     override fun onViewPagerFocused() {
         // if this page becomes visible, show soft-keyboard
-        mInput.requestFocus()
+        binding.input1.requestFocus()
         (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
             .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     override fun onEnableInput(enabled: Boolean) {
-        mInput.isEnabled = enabled
+        binding.input1.isEnabled = enabled
     }
 
     override fun onUpdateList(entries: List<Entry>) {
@@ -112,15 +114,15 @@ class InputFragment :
 
     override fun setLoading(isLoading: Boolean) {
         if (isLoading) {
-            mLoading.show()
+            binding.loading.show()
         } else {
-            mLoading.hide()
+            binding.loading.hide()
         }
     }
 
     override fun inputSelectAll() {
-        if (!TextUtils.isEmpty(mInput.text)) {
-            mInput.selectAll()
+        if (!TextUtils.isEmpty(binding.input1.text)) {
+            binding.input1.selectAll()
         }
     }
 
@@ -133,11 +135,11 @@ class InputFragment :
         )
         list.addItemDecoration(decoration)
 
-        mInput.addTextChangedListener(object : TextWatcher {
+        binding.input1.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
 
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                presenter.changeText(mInput.text.toString())
+                presenter.changeText(binding.input1.text.toString())
             }
 
             override fun afterTextChanged(editable: Editable) {}
@@ -148,7 +150,7 @@ class InputFragment :
     }
 
     private fun clearInput() {
-        mInput.setText("")
+        binding.input1.setText("")
     }
 
     /**

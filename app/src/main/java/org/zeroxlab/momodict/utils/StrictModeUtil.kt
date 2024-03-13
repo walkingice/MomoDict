@@ -1,6 +1,7 @@
 package org.zeroxlab.momodict
 
 import android.os.StrictMode
+import org.zeroxlab.momodict.utils.AppConstants
 
 object StrictModeUtil {
 

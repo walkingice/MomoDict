@@ -3,7 +3,6 @@ package org.zeroxlab.momodict
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import org.zeroxlab.momodict.ui.FragmentListener
@@ -37,11 +36,13 @@ class WordActivity : AppCompatActivity(), FragmentListener {
     private fun initActionBar() {
         val toolbar = findViewById(R.id.actionbar) as Toolbar
         setSupportActionBar(toolbar)
-        updateTitle(intent.getStringExtra(Momodict.EXTRA_DATA_1))
+        updateTitle(intent.getStringExtra(Momodict.EXTRA_DATA_1).toString())
     }
 
     private fun setFragments() {
-        val wordFrg = WordFragment.newInstance(intent.getStringExtra(Momodict.EXTRA_DATA_1))
+        val wordFrg = WordFragment.newInstance(
+            intent.getStringExtra(Momodict.EXTRA_DATA_1).toString()
+        )
         supportFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, wordFrg)

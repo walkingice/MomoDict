@@ -17,7 +17,7 @@ private const val BUFFER_SIZE = 8192
 fun parseIdx(inputStream: InputStream): Idx {
     val idx = Idx()
     try {
-        inputStream.readBytes(BUFFER_SIZE).let { data -> analysis(data, idx) }
+        inputStream.readBytes().let { data -> analysis(data, idx) }
     } catch (e: Exception) {
         e.printStackTrace()
     }

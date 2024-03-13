@@ -1,24 +1,20 @@
 package org.zeroxlab.momodict.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import org.zeroxlab.momodict.R
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import org.zeroxlab.momodict.databinding.FragmentFilePickerBinding
 import org.zeroxlab.momodict.widget.FileRowPresenter
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import java.io.File
-import java.util.HashMap
-import kotlinx.android.synthetic.main.fragment_file_picker.list as mList
-import kotlinx.android.synthetic.main.fragment_file_picker.picker_btn_cancel as mBtnCancel
-import kotlinx.android.synthetic.main.fragment_file_picker.picker_btn_choose as mBtnChoose
-import kotlinx.android.synthetic.main.fragment_file_picker.picker_current_path as mCurrentPathView
 
 class FilePickerFragment : Fragment() {
+    private lateinit var binding: FragmentFilePickerBinding
     private lateinit var mAdapter: SelectorAdapter
     private var mChosen: String? = null
     private var mCurrentPath: String? = null
@@ -47,7 +43,8 @@ class FilePickerFragment : Fragment() {
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map[SelectorAdapter.Type.A] = FileRowPresenter(requireActivity()) { v -> onFileClicked(v) }
         mAdapter = SelectorAdapter(map)
-        return inflater.inflate(R.layout.fragment_file_picker, container, false)
+        binding = FragmentFilePickerBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
@@ -61,11 +58,11 @@ class FilePickerFragment : Fragment() {
     }
 
     private fun initViews() {
-        val mgr = mList.layoutManager as LinearLayoutManager
-        mList.addItemDecoration(DividerItemDecoration(context, mgr.orientation))
+        val mgr = binding.list.layoutManager as LinearLayoutManager
+        binding.list.addItemDecoration(DividerItemDecoration(context, mgr.orientation))
 
-        mBtnChoose.isEnabled = false
-        mBtnChoose.setOnClickListener { view ->
+        binding.pickerBtnChoose.isEnabled = false
+        binding.pickerBtnChoose.setOnClickListener { view ->
             if (activity is FragmentListener) {
                 arguments?.putString(ARG_PATH, mChosen)
                 (activity as FragmentListener).onNotified(
@@ -75,7 +72,7 @@ class FilePickerFragment : Fragment() {
             }
         }
 
-        mBtnCancel.setOnClickListener { view ->
+        binding.pickerBtnCancel.setOnClickListener { view ->
             if (activity is FragmentListener) {
                 arguments?.remove(ARG_PATH)
                 (activity as FragmentListener).onNotified(
@@ -84,11 +81,11 @@ class FilePickerFragment : Fragment() {
                 )
             }
         }
-        mList.adapter = mAdapter
+        binding.list.adapter = mAdapter
     }
 
     private fun updateList(path: String) {
-        mCurrentPathView.text = mCurrentPath
+        binding.pickerCurrentPath.text = mCurrentPath
         mAdapter.clear()
         val f = File(path)
         if (f.parentFile != null) {
@@ -104,9 +101,9 @@ class FilePickerFragment : Fragment() {
             }
         }
 
-        mBtnChoose.isEnabled = mChosen != null
-                && mChosen!!.endsWith(mExtension!!)
-                && File(mChosen!!).canRead()
+        binding.pickerBtnChoose.isEnabled = mChosen != null
+            && mChosen!!.endsWith(mExtension!!)
+            && File(mChosen!!).canRead()
         mAdapter.notifyDataSetChanged()
     }
 

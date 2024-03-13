@@ -13,16 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.zeroxlab.momodict.Controller
-import org.zeroxlab.momodict.R
+import org.zeroxlab.momodict.databinding.FragmentDictionariesListBinding
 import org.zeroxlab.momodict.model.Book
 import org.zeroxlab.momodict.widget.BookRowPresenter
 import org.zeroxlab.momodict.widget.SelectorAdapter
 import org.zeroxlab.momodict.widget.SelectorAdapter.Type
-import kotlinx.android.synthetic.main.fragment_dictionaries_list.btn_1 as mBtnImport
-import kotlinx.android.synthetic.main.fragment_dictionaries_list.list as mList
 
 class DictListFragment : Fragment() {
 
+    lateinit var binding: FragmentDictionariesListBinding
     lateinit var mCtrl: Controller
     lateinit var mAdapter: SelectorAdapter
 
@@ -38,8 +37,9 @@ class DictListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val binding = FragmentDictionariesListBinding.inflate(inflater)
         coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
-        return inflater.inflate(R.layout.fragment_dictionaries_list, container, false)
+        return binding.root
     }
 
     override fun onDestroyView() {
@@ -50,9 +50,9 @@ class DictListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mBtnImport.setOnClickListener { onImportClicked() }
+        binding.btn1.setOnClickListener { onImportClicked() }
 
-        mList.let {
+        binding.list.let {
             val decoration = DividerItemDecoration(
                 context,
                 (it.layoutManager as LinearLayoutManager).orientation

@@ -75,6 +75,9 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
                     handleViewAction(from, payload)
                 }
             }
+
+            FragmentListener.TYPE.START_ACTIVITY -> Unit
+            FragmentListener.TYPE.UPDATE_TITLE -> Unit
         }
     }
 
@@ -85,6 +88,7 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
                     FileImportFragment.newInstance(sEXT_DIR),
                     TAG_IMPORT_FILE
                 )
+
             FileImportFragment.PICK_A_FILE ->
                 replaceFragment(
                     FilePickerFragment.newInstance(sEXT_DIR, sEXT),
