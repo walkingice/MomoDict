@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.zeroxlab.momodict"
+        applicationId "cc.jchu.momodict"
         minSdkVersion 21
         targetSdkVersion 34
         versionCode 1
