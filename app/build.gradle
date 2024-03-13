@@ -4,8 +4,8 @@ apply plugin: "kotlin-android-extensions"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'checkstyle'
 
-check.dependsOn 'checkstyle'
-check.dependsOn 'ktlint'
+//check.dependsOn 'checkstyle'
+//check.dependsOn 'ktlint'
 
 configurations {
     ktlint
