@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
-apply plugin: "kotlin-android-extensions"
+apply plugin: "kotlin-parcelize"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'checkstyle'
 
@@ -12,11 +12,17 @@ configurations {
 }
 
 android {
-    compileSdkVersion 29
+    namespace "org.zeroxlab.momodict"
+    compileSdkVersion 34
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
     defaultConfig {
         applicationId "org.zeroxlab.momodict"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -26,6 +32,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     // ./gradlew --stacktrace :app:assembleDebug found issue:

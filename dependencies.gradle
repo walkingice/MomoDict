@@ -1,7 +1,7 @@
 ext {
-    androidGradle = '4.0.1'
+    androidGradle = '8.2.2'
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-gradle-plugin
-    kotlinVersion = '1.3.72'
+    kotlinVersion = '1.9.23'
     kotlinCoroutinesVersion = '1.3.7'
 
     // google related
