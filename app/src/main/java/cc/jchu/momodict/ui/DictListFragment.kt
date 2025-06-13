@@ -37,7 +37,7 @@ class DictListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentDictionariesListBinding.inflate(inflater)
+        binding = FragmentDictionariesListBinding.inflate(inflater)
         coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         return binding.root
     }
