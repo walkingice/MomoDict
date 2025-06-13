@@ -13,8 +13,6 @@ ext {
     androidRoomVersion = '2.1.0'
     androidRoomTestingVersion = '2.1.0'
 
-    realmGradlePlugin ='4.3.1'
-
     robolectricVersion = '3.5.1'
     mockitoCoreVersion = '2.12.0'
     junitVersion = '4.12'
