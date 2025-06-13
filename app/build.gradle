@@ -15,8 +15,8 @@ android {
     namespace "org.zeroxlab.momodict"
     compileSdkVersion 34
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     defaultConfig {
@@ -72,7 +72,7 @@ dependencies {
     implementation 'org.apache.commons:commons-compress:1.13'
     implementation group: 'commons-io', name: 'commons-io', version: '2.4'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.2-alpha01', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -103,6 +103,12 @@ task checkstyle(type: Checkstyle) {
     exclude '**/gen/**'
 
     classpath = files()
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "21"
+    }
 }
 
 repositories {
