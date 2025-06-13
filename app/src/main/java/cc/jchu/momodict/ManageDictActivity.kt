@@ -1,9 +1,12 @@
 package cc.jchu.momodict
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
+import android.provider.Settings
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import cc.jchu.momodict.ui.DictListFragment
@@ -89,11 +92,26 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
                     TAG_IMPORT_FILE
                 )
 
-            FileImportFragment.PICK_A_FILE ->
-                replaceFragment(
-                    FilePickerFragment.newInstance(sEXT_DIR, sEXT),
-                    TAG_PICK_FILE
-                )
+            FileImportFragment.PICK_A_FILE -> onPickFileClicked()
+        }
+    }
+
+    private fun onPickFileClicked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            requestManageExternalStoragePermission()
+        } else {
+            val pickerFragment = FilePickerFragment.newInstance(sEXT_DIR, sEXT)
+            replaceFragment(pickerFragment, TAG_PICK_FILE)
+        }
+    }
+
+    private fun requestManageExternalStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
         }
     }
 
