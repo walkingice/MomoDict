@@ -12,7 +12,7 @@ configurations {
 }
 
 android {
-    namespace "org.zeroxlab.momodict"
+    namespace "cc.jchu.momodict"
     compileSdkVersion 34
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
