@@ -18,7 +18,7 @@ configurations {
 
 android {
     namespace "cc.jchu.momodict"
-    compileSdk 34
+    compileSdk 35
     compileOptions {
         sourceCompatibility = "21"
         targetCompatibility = "21"
