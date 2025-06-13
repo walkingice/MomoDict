@@ -4,9 +4,6 @@ apply plugin: "kotlin-parcelize"
 apply plugin: 'kotlin-kapt'
 apply plugin: 'checkstyle'
 
-//check.dependsOn 'checkstyle'
-//check.dependsOn 'ktlint'
-
 kotlin {
     jvmToolchain(21)
 }
@@ -56,44 +53,34 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "androidx.appcompat:appcompat:${androidXVersion}"
-    implementation "androidx.core:core-ktx:${androidXKtxCoreVersion}"
-    implementation "androidx.fragment:fragment:${androidXVersion}"
-    implementation "androidx.cardview:cardview:${androidXVersion}"
-    implementation "androidx.recyclerview:recyclerview:${androidXVersion}"
-    implementation "com.google.android.material:material:${androidXVersion}"
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.fragment
+    implementation libs.androidx.cardview
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.material
+    implementation libs.androidx.lifecycle.runtime
+    implementation libs.androidx.room.ktx
+    kapt libs.androidx.room.compiler
+    implementation libs.androidx.constraintlayout
 
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${androidXLifecycleVersion}"
+    implementation libs.kotlinx.coroutines.android
+    testImplementation libs.kotlinx.coroutines.test
 
-    implementation "androidx.room:room-ktx:${androidRoomVersion}"
-    kapt "androidx.room:room-compiler:${androidRoomVersion}"
+    implementation libs.aboutlibraries
+    implementation libs.commons.compress
+    implementation libs.commons.io
+    implementation libs.kotlin.stdlib
 
-    implementation "androidx.constraintlayout:constraintlayout:${androidXConstraintLayoutVersion}"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${kotlinCoroutinesVersion}"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:${kotlinCoroutinesVersion}"
-
-    // For license detection
-    // https://github.com/mikepenz/AboutLibraries
-    implementation "com.mikepenz:aboutlibraries:${aboutLibrariesVersion}"
-
-    // to install apache library
-    implementation 'org.apache.commons:commons-compress:1.13'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.4'
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}"
+    testImplementation libs.junit
+    testImplementation libs.robolectric
+    testImplementation libs.mockito.core
+    testImplementation libs.androidx.room.testing
+    ktlint libs.ktlint
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.2-alpha01', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation "junit:junit:${junitVersion}"
-
-    testImplementation "org.robolectric:robolectric:${robolectricVersion}"
-    testImplementation "org.mockito:mockito-core:${mockitoCoreVersion}"
-
-    // Test helpers for Room
-    testImplementation "androidx.room:room-testing:${androidRoomTestingVersion}"
-
-    ktlint "com.github.shyiko:ktlint:${ktlintVersion}"
 }
 
 task ktlint(type: JavaExec) {
