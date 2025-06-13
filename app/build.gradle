@@ -7,22 +7,30 @@ apply plugin: 'checkstyle'
 //check.dependsOn 'checkstyle'
 //check.dependsOn 'ktlint'
 
+kotlin {
+    jvmToolchain(21)
+}
+
+repositories {
+    mavenCentral()
+}
+
 configurations {
     ktlint
 }
 
 android {
     namespace "cc.jchu.momodict"
-    compileSdkVersion 34
+    compileSdk 34
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_21
-        targetCompatibility JavaVersion.VERSION_21
+        sourceCompatibility = "21"
+        targetCompatibility = "21"
     }
 
     defaultConfig {
         applicationId "cc.jchu.momodict"
-        minSdkVersion 21
-        targetSdkVersion 34
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -103,14 +111,4 @@ task checkstyle(type: Checkstyle) {
     exclude '**/gen/**'
 
     classpath = files()
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "21"
-    }
-}
-
-repositories {
-    mavenCentral()
 }
