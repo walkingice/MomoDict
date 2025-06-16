@@ -36,13 +36,13 @@ This file provides guidelines for agentic coding agents operating in this Androi
 ./gradlew connectedAndroidTest
 
 # Run a specific test class
-./gradlew test --tests "org.zeroxlab.momodict.reader.DictReaderTest"
+./gradlew test --tests "cc.jchu.momodict.reader.DictReaderTest"
 
 # Run a specific test method
-./gradlew test --tests "org.zeroxlab.momodict.reader.DictReaderTest.testParseAlphabet"
+./gradlew test --tests "cc.jchu.momodict.reader.DictReaderTest.testParseAlphabet"
 
 # Run a specific package's tests
-./gradlew test --tests "org.zeroxlab.momodict.reader"
+./gradlew test --tests "cc.jchu.momodict.reader"
 
 # Run tests with code coverage
 ./gradlew test jacocoTestReport
@@ -70,7 +70,7 @@ This file provides guidelines for agentic coding agents operating in this Androi
 - Variable names: camelCase (`context`, `controller`, `debounceJob`)
 - Constants: UPPER_SNAKE_CASE (`INPUT_DELAY`, `MAX_RETRY_COUNT`)
 - Method names: camelCase (`initView`, `debounceQuery`, `onOptionsItemSelected`)
-- Package names: lowercase (`org.zeroxlab.momodict.db.room`)
+- Package names: lowercase (`cc.jchu.momodict.db.room`)
 
 ### Types and Kotlin Features
 - Prefer `val` over `var` when possible

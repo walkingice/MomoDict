@@ -1,4 +1,4 @@
-package org.zeroxlab.momodict
+package cc.jchu.momodict
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -9,11 +9,11 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
-import org.zeroxlab.momodict.model.Book
-import org.zeroxlab.momodict.model.Card
-import org.zeroxlab.momodict.model.Entry
-import org.zeroxlab.momodict.model.Record
-import org.zeroxlab.momodict.model.Store
+import cc.jchu.momodict.model.Book
+import cc.jchu.momodict.model.Card
+import cc.jchu.momodict.model.Entry
+import cc.jchu.momodict.model.Record
+import cc.jchu.momodict.model.Store
 
 @Config(constants = BuildConfig::class)
 @RunWith(RobolectricTestRunner::class)

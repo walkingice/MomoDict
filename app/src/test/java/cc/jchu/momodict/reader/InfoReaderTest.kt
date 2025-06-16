@@ -1,4 +1,4 @@
-package org.zeroxlab.momodict.reader
+package cc.jchu.momodict.reader
 
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import org.zeroxlab.momodict.BuildConfig
+import cc.jchu.momodict.BuildConfig
 
 @Config(constants = BuildConfig::class)
 @RunWith(RobolectricTestRunner::class)

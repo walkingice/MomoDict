@@ -1,4 +1,4 @@
-package org.zeroxlab.momodict;
+package cc.jchu.momodict;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("org.zeroxlab.momodict", appContext.getPackageName());
+        assertEquals("cc.jchu.momodict", appContext.getPackageName());
     }
 }

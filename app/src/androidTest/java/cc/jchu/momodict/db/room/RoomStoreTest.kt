@@ -1,18 +1,18 @@
-package org.zeroxlab.momodict.db.room
+package cc.jchu.momodict.db.room
 
 import androidx.room.Room
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
+import cc.jchu.momodict.model.Book
+import cc.jchu.momodict.model.Card
+import cc.jchu.momodict.model.Entry
+import cc.jchu.momodict.model.Record
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.zeroxlab.momodict.model.Book
-import org.zeroxlab.momodict.model.Card
-import org.zeroxlab.momodict.model.Entry
-import org.zeroxlab.momodict.model.Record
 import java.util.Date
 
 @RunWith(AndroidJUnit4::class)

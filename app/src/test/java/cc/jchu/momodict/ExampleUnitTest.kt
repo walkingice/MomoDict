@@ -1,4 +1,4 @@
-package org.zeroxlab.momodict
+package cc.jchu.momodict
 
 import org.junit.Test
 
