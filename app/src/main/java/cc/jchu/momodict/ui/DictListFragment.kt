@@ -10,17 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import cc.jchu.momodict.Controller
 import cc.jchu.momodict.databinding.FragmentDictionariesListBinding
 import cc.jchu.momodict.model.Book
 import cc.jchu.momodict.widget.BookRowPresenter
 import cc.jchu.momodict.widget.SelectorAdapter
 import cc.jchu.momodict.widget.SelectorAdapter.Type
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 class DictListFragment : Fragment() {
-
     lateinit var binding: FragmentDictionariesListBinding
     lateinit var mCtrl: Controller
     lateinit var mAdapter: SelectorAdapter
@@ -35,7 +34,7 @@ class DictListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentDictionariesListBinding.inflate(inflater)
         coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
@@ -47,26 +46,31 @@ class DictListFragment : Fragment() {
         coroutineScope = null
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btn1.setOnClickListener { onImportClicked() }
 
         binding.list.let {
-            val decoration = DividerItemDecoration(
-                context,
-                (it.layoutManager as LinearLayoutManager).orientation
-            )
+            val decoration =
+                DividerItemDecoration(
+                    context,
+                    (it.layoutManager as LinearLayoutManager).orientation,
+                )
             it.addItemDecoration(decoration)
 
             val map = HashMap<Type, SelectorAdapter.Presenter<*>>()
             val listener = View.OnClickListener { v -> onRemoveBookClicked(v) }
             map[Type.A] = BookRowPresenter(listener)
 
-            it.adapter = SelectorAdapter(map).also { adapter ->
-                mAdapter = adapter
-                reloadBooks()
-            }
+            it.adapter =
+                SelectorAdapter(map).also { adapter ->
+                    mAdapter = adapter
+                    reloadBooks()
+                }
         }
     }
 
@@ -111,6 +115,7 @@ class DictListFragment : Fragment() {
 
     companion object {
         const val OPEN_IMPORT_FRAGMENT = "ask_to_pick_file"
+
         fun newInstance(): DictListFragment {
             return DictListFragment().apply {
                 val bundle = Bundle()

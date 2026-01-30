@@ -1,5 +1,6 @@
 package cc.jchu.momodict.reader
 
+import cc.jchu.momodict.archive.FileSet
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.After
@@ -9,15 +10,10 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-
-import cc.jchu.momodict.archive.FileSet
 import java.io.File
-
 
 @RunWith(RobolectricTestRunner::class)
 class CompressedFileReaderTest {
-
     private lateinit var tmpFolder: TemporaryFolder
     private lateinit var tmpDir: File
 

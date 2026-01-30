@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "dictionaries")
 data class Book(
-        @PrimaryKey
-        var bookName: String
+    @PrimaryKey
+    var bookName: String,
 ) {
     var version: String? = null
     var wordCount: Int = 0

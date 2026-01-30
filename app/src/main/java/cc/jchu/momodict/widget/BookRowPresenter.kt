@@ -1,17 +1,15 @@
 package cc.jchu.momodict.widget
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
+import androidx.recyclerview.widget.RecyclerView
 import cc.jchu.momodict.R
 import cc.jchu.momodict.model.Book
 
 class BookRowPresenter(listener: View.OnClickListener) : SelectorAdapter.Presenter<Book> {
-
     val rmListener = listener
 
     override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
@@ -23,16 +21,20 @@ class BookRowPresenter(listener: View.OnClickListener) : SelectorAdapter.Present
         return holder
     }
 
-    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Book) {
+    override fun onBindViewHolder(
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        item: Book,
+    ) {
         val holder = viewHolder as InnerViewHolder
         holder.titleText.text = item.bookName
         holder.arrowIcon.setImageLevel(IMG_LEVEL_UP)
-        holder.description.text = """
+        holder.description.text =
+            """
                 |Author: ${item.author}
                 |Words: ${item.wordCount}
                 |Date: ${item.date}
                 |Description: ${item.description}
-        """.trimMargin()
+            """.trimMargin()
         holder.rmBtn.setOnClickListener({ v ->
             v.tag = item
             rmListener.onClick(v)

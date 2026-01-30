@@ -4,18 +4,19 @@ import android.os.StrictMode
 import cc.jchu.momodict.utils.AppConstants
 
 object StrictModeUtil {
-
     fun enableInDevMode() {
         if (AppConstants.isReleaseBuild()) {
             return
         }
 
-        val threadPolicy = StrictMode.ThreadPolicy.Builder()
+        val threadPolicy =
+            StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
                 .penaltyDialog()
                 .build()
-        val vmPolicy = StrictMode.VmPolicy.Builder()
+        val vmPolicy =
+            StrictMode.VmPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
                 .penaltyDeath()

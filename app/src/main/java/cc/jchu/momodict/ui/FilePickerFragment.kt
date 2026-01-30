@@ -37,8 +37,9 @@ class FilePickerFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map[SelectorAdapter.Type.A] = FileRowPresenter(requireActivity()) { v -> onFileClicked(v) }
@@ -47,7 +48,10 @@ class FilePickerFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        fragmentView: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(fragmentView, savedInstanceState)
         initViews()
     }
@@ -67,7 +71,8 @@ class FilePickerFragment : Fragment() {
                 arguments?.putString(ARG_PATH, mChosen)
                 (activity as FragmentListener).onNotified(
                     this,
-                    FragmentListener.TYPE.POP_FRAGMENT, null
+                    FragmentListener.TYPE.POP_FRAGMENT,
+                    null,
                 )
             }
         }
@@ -77,7 +82,8 @@ class FilePickerFragment : Fragment() {
                 arguments?.remove(ARG_PATH)
                 (activity as FragmentListener).onNotified(
                     this,
-                    FragmentListener.TYPE.POP_FRAGMENT, null
+                    FragmentListener.TYPE.POP_FRAGMENT,
+                    null,
                 )
             }
         }
@@ -101,9 +107,9 @@ class FilePickerFragment : Fragment() {
             }
         }
 
-        binding.pickerBtnChoose.isEnabled = mChosen != null
-            && mChosen!!.endsWith(mExtension!!)
-            && File(mChosen!!).canRead()
+        binding.pickerBtnChoose.isEnabled = mChosen != null &&
+            mChosen!!.endsWith(mExtension!!) &&
+            File(mChosen!!).canRead()
         mAdapter.notifyDataSetChanged()
     }
 
@@ -134,13 +140,12 @@ class FilePickerFragment : Fragment() {
     }
 
     companion object {
-
         val ARG_PATH = "path_to_open"
         val ARG_EXTENSION = "filename_extension"
 
         fun newInstance(
             path: String,
-            extension: String
+            extension: String,
         ): FilePickerFragment {
             val fragment = FilePickerFragment()
             val args = Bundle()

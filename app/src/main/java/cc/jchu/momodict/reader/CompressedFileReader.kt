@@ -2,9 +2,9 @@
 
 package cc.jchu.momodict.reader
 
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import cc.jchu.momodict.archive.FileSet
 import cc.jchu.momodict.archive.TarExtractor
+import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.InputStream
@@ -19,7 +19,8 @@ private const val RANDOM_BITS = 32
 
 // to make a random directory such as /tmp/DICT.ru9527
 fun makeTempDir(parentDir: File): File {
-    val tmpDir = SecureRandom()
+    val tmpDir =
+        SecureRandom()
             .let { random -> BigInteger(RANDOM_BITS, random) }
             .toString(RANDOM_BITS)
             .let { randomText -> "$parentDir.path/$DIR_PREFIX$randomText" }
@@ -35,7 +36,10 @@ fun makeTempDir(parentDir: File): File {
  * @param stream the input stream of the compressed file to be extracted.
  * @return
  */
-fun readBzip2File(outputDir: File, stream: InputStream): FileSet? {
+fun readBzip2File(
+    outputDir: File,
+    stream: InputStream,
+): FileSet? {
     try {
         val bis = BufferedInputStream(stream)
         val b2is = BZip2CompressorInputStream(bis)
@@ -54,4 +58,3 @@ fun readBzip2File(outputDir: File, stream: InputStream): FileSet? {
 
     return null
 }
-

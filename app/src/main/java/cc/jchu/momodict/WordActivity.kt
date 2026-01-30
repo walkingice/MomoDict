@@ -9,7 +9,6 @@ import cc.jchu.momodict.ui.FragmentListener
 import cc.jchu.momodict.ui.WordFragment
 
 class WordActivity : AppCompatActivity(), FragmentListener {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_with_one_fragment)
@@ -20,7 +19,7 @@ class WordActivity : AppCompatActivity(), FragmentListener {
     override fun onNotified(
         from: androidx.fragment.app.Fragment?,
         type: FragmentListener.TYPE,
-        payload: Any?
+        payload: Any?,
     ) {
         if (type == FragmentListener.TYPE.UPDATE_TITLE) {
             if (payload != null) {
@@ -29,7 +28,6 @@ class WordActivity : AppCompatActivity(), FragmentListener {
                     updateTitle(str)
                 }
             }
-
         }
     }
 
@@ -40,9 +38,10 @@ class WordActivity : AppCompatActivity(), FragmentListener {
     }
 
     private fun setFragments() {
-        val wordFrg = WordFragment.newInstance(
-            intent.getStringExtra(Momodict.EXTRA_DATA_1).toString()
-        )
+        val wordFrg =
+            WordFragment.newInstance(
+                intent.getStringExtra(Momodict.EXTRA_DATA_1).toString(),
+            )
         supportFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, wordFrg)
@@ -54,7 +53,10 @@ class WordActivity : AppCompatActivity(), FragmentListener {
     }
 
     companion object {
-        fun createIntent(ctx: Context, text: String): Intent {
+        fun createIntent(
+            ctx: Context,
+            text: String,
+        ): Intent {
             val intent = Intent(ctx, WordActivity::class.java)
             intent.putExtra(Momodict.EXTRA_DATA_1, text)
             return intent

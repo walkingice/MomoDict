@@ -6,8 +6,8 @@ import java.util.Date
 
 @Entity(tableName = "cards")
 data class Card(
-        @PrimaryKey
-        var wordStr: String
+    @PrimaryKey
+    var wordStr: String,
 ) {
     var time: Date? = null
     var note: String? = null

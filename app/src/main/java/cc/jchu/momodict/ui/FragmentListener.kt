@@ -10,10 +10,12 @@ interface FragmentListener {
         START_ACTIVITY,
         UPDATE_TITLE,
         POP_FRAGMENT,
-        VIEW_ACTION
+        VIEW_ACTION,
     }
 
-    fun onNotified(from: androidx.fragment.app.Fragment?,
-                   type: TYPE,
-                   payload: Any?)
+    fun onNotified(
+        from: androidx.fragment.app.Fragment?,
+        type: TYPE,
+        payload: Any?,
+    )
 }

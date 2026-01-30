@@ -17,7 +17,6 @@ import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 class RoomStoreTest {
-
     private val books = ArrayList<Book>()
     private val alphabetEntries = ArrayList<Entry>()
     private val numEntries = ArrayList<Entry>()
@@ -71,34 +70,34 @@ class RoomStoreTest {
         }.run { numEntries.add(this) }
 
         Record("ramen")
-                .apply { count = 100 }
-                .apply { time = Date() }
-                .run { records.add(this) }
+            .apply { count = 100 }
+            .apply { time = Date() }
+            .run { records.add(this) }
 
         Record("sushi")
-                .apply { count = 30 }
-                .apply { time = Date() }
-                .run { records.add(this) }
+            .apply { count = 30 }
+            .apply { time = Date() }
+            .run { records.add(this) }
 
         Record("katsudonn")
-                .apply { count = 20 }
-                .apply { time = Date() }
-                .run { records.add(this) }
+            .apply { count = 20 }
+            .apply { time = Date() }
+            .run { records.add(this) }
 
         Card("ramen")
-                .apply { note = "My favorite" }
-                .apply { time = Date() }
-                .run { cards.add(this) }
+            .apply { note = "My favorite" }
+            .apply { time = Date() }
+            .run { cards.add(this) }
 
         Card("sushi")
-                .apply { note = "nice food" }
-                .apply { time = Date() }
-                .run { cards.add(this) }
+            .apply { note = "nice food" }
+            .apply { time = Date() }
+            .run { cards.add(this) }
 
         Card("katsudonn")
-                .apply { note = "eat it everyday" }
-                .apply { time = Date() }
-                .run { cards.add(this) }
+            .apply { note = "eat it everyday" }
+            .apply { time = Date() }
+            .run { cards.add(this) }
     }
 
     @After

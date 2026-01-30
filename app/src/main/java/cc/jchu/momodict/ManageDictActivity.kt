@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import cc.jchu.momodict.ui.DictListFragment
@@ -15,7 +14,6 @@ import cc.jchu.momodict.ui.FilePickerFragment
 import cc.jchu.momodict.ui.FragmentListener
 
 class ManageDictActivity : AppCompatActivity(), FragmentListener {
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_with_one_fragment)
@@ -55,7 +53,6 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
                 fragImport.arguments?.putString(FileImportFragment.ARG_PATH, chosen)
             }
         }
-
     }
 
     private fun setFragments() {
@@ -69,7 +66,7 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
     override fun onNotified(
         from: androidx.fragment.app.Fragment?,
         type: FragmentListener.TYPE,
-        payload: Any?
+        payload: Any?,
     ) {
         when (type) {
             FragmentListener.TYPE.POP_FRAGMENT -> popFragment()
@@ -84,12 +81,15 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         }
     }
 
-    private fun handleViewAction(from: androidx.fragment.app.Fragment, payload: Any) {
+    private fun handleViewAction(
+        from: androidx.fragment.app.Fragment,
+        payload: Any,
+    ) {
         when (payload) {
             DictListFragment.OPEN_IMPORT_FRAGMENT ->
                 replaceFragment(
                     FileImportFragment.newInstance(sEXT_DIR),
-                    TAG_IMPORT_FILE
+                    TAG_IMPORT_FILE,
                 )
 
             FileImportFragment.PICK_A_FILE -> onPickFileClicked()
@@ -115,7 +115,10 @@ class ManageDictActivity : AppCompatActivity(), FragmentListener {
         }
     }
 
-    private fun replaceFragment(frag: androidx.fragment.app.Fragment, tag: String) {
+    private fun replaceFragment(
+        frag: androidx.fragment.app.Fragment,
+        tag: String,
+    ) {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, frag, tag)

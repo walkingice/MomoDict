@@ -2,28 +2,28 @@ package cc.jchu.momodict.widget
 
 import android.content.Context
 import android.os.Handler
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
+import androidx.recyclerview.widget.RecyclerView
 import cc.jchu.momodict.R
-
 import java.io.File
 
 class FileRowPresenter(ctx: Context, private val callback: (v: View) -> Unit) : SelectorAdapter.Presenter<FileRowPresenter.Item> {
-
     private val mHandler: Handler = Handler(ctx.mainLooper)
 
     override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return LayoutInflater.from(parent.context)
-                .let { it.inflate(R.layout.list_item_file_row, parent, false) }
-                .let { InnerViewHolder(it) }
+            .let { it.inflate(R.layout.list_item_file_row, parent, false) }
+            .let { InnerViewHolder(it) }
     }
 
-    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Item) {
+    override fun onBindViewHolder(
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        item: Item,
+    ) {
         val holder = viewHolder as InnerViewHolder
         when {
             item.file.isDirectory -> {

@@ -30,7 +30,6 @@ class InputFragment :
     BackKeyHandler,
     InputContract.View,
     ViewPagerFocusable {
-
     private lateinit var presenter: InputPresenter
     private lateinit var adapter: SelectorAdapter
 
@@ -44,21 +43,26 @@ class InputFragment :
         // create adapter for RecyclerView. Adapter handles two kinds of row, one for "dictionary"
         // and another for "word".
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
-        map.put(SelectorAdapter.Type.A,
-            WordRowPresenter { view -> onRowClicked(view.tag as String) })
+        map.put(
+            SelectorAdapter.Type.A,
+            WordRowPresenter { view -> onRowClicked(view.tag as String) },
+        )
         adapter = SelectorAdapter(map)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedState: Bundle?
+        savedState: Bundle?,
     ): View? {
         binding = FragmentInputBinding.inflate(inflater)
         return binding.root
     }
 
-    override fun onViewCreated(fragmentView: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        fragmentView: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(fragmentView, savedInstanceState)
         initViews(fragmentView)
     }
@@ -129,21 +133,34 @@ class InputFragment :
     private fun initViews(fv: View) {
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
-        val decoration = DividerItemDecoration(
-            list.context,
-            mgr.orientation
-        )
+        val decoration =
+            DividerItemDecoration(
+                list.context,
+                mgr.orientation,
+            )
         list.addItemDecoration(decoration)
 
-        binding.input1.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
+        binding.input1.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int,
+                ) {}
 
-            override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
-                presenter.changeText(binding.input1.text.toString())
-            }
+                override fun onTextChanged(
+                    charSequence: CharSequence,
+                    i: Int,
+                    i1: Int,
+                    i2: Int,
+                ) {
+                    presenter.changeText(binding.input1.text.toString())
+                }
 
-            override fun afterTextChanged(editable: Editable) {}
-        })
+                override fun afterTextChanged(editable: Editable) {}
+            },
+        )
 
         list.adapter = adapter
         fv.findViewById<View>(R.id.btn_1).setOnClickListener { clearInput() }

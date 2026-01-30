@@ -11,11 +11,17 @@ import java.io.RandomAccessFile
 import java.util.zip.GZIPInputStream
 
 @Throws(IOException::class)
-fun wrapInputStream(isDzFile: Boolean, stream: InputStream): InputStream {
+fun wrapInputStream(
+    isDzFile: Boolean,
+    stream: InputStream,
+): InputStream {
     return if (isDzFile) GZIPInputStream(stream) else stream
 }
 
-fun parseDict(entries: List<IdxEntry>, stream: InputStream): List<Word> {
+fun parseDict(
+    entries: List<IdxEntry>,
+    stream: InputStream,
+): List<Word> {
     val words = ArrayList<Word>()
     try {
         for (entry in entries) {
@@ -35,7 +41,10 @@ fun parseDict(entries: List<IdxEntry>, stream: InputStream): List<Word> {
     return words
 }
 
-fun read(entry: IdxEntry, dict: File) {
+fun read(
+    entry: IdxEntry,
+    dict: File,
+) {
     try {
         val rf = RandomAccessFile(dict, "r")
         val data = ByteArray(entry.wordDataSize)
@@ -45,5 +54,4 @@ fun read(entry: IdxEntry, dict: File) {
     } catch (e: Exception) {
         e.printStackTrace()
     }
-
 }

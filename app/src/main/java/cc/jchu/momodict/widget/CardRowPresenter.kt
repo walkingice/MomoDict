@@ -1,26 +1,29 @@
 package cc.jchu.momodict.widget
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
+import androidx.recyclerview.widget.RecyclerView
 import cc.jchu.momodict.R
 import cc.jchu.momodict.model.Card
 
-class CardRowPresenter(private val clickCallback: (v: View) -> Unit,
-                       private val longClickCallback: (v: View) -> Unit) : SelectorAdapter.Presenter<Card> {
-
+class CardRowPresenter(
+    private val clickCallback: (v: View) -> Unit,
+    private val longClickCallback: (v: View) -> Unit,
+) : SelectorAdapter.Presenter<Card> {
     override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.list_item_card_row, parent, false)
-                .let { view -> view as ViewGroup }
-                .let { viewGroup -> InnerViewHolder(viewGroup) }
+            .from(parent.context)
+            .inflate(R.layout.list_item_card_row, parent, false)
+            .let { view -> view as ViewGroup }
+            .let { viewGroup -> InnerViewHolder(viewGroup) }
     }
 
-    override fun onBindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, item: Card) {
+    override fun onBindViewHolder(
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        item: Card,
+    ) {
         val holder = viewHolder as InnerViewHolder
 
         holder.iText1.text = item.wordStr

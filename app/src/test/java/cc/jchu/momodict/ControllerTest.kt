@@ -1,5 +1,10 @@
 package cc.jchu.momodict
 
+import cc.jchu.momodict.model.Book
+import cc.jchu.momodict.model.Card
+import cc.jchu.momodict.model.Entry
+import cc.jchu.momodict.model.Record
+import cc.jchu.momodict.model.Store
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -8,16 +13,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
-import org.robolectric.annotation.Config
-import cc.jchu.momodict.model.Book
-import cc.jchu.momodict.model.Card
-import cc.jchu.momodict.model.Entry
-import cc.jchu.momodict.model.Record
-import cc.jchu.momodict.model.Store
 
 @RunWith(RobolectricTestRunner::class)
 class ControllerTest {
-
     private val booksList = mutableListOf<Book>()
     private val entriesList = mutableListOf<Entry>()
     private lateinit var mCtrl: Controller
@@ -36,33 +34,35 @@ class ControllerTest {
     }
 
     @Test
-    fun testSimpleQuery() = runBlocking {
-        val entries = mCtrl.queryEntries("one")
-        assertEquals(1, entries.size)
-        assertEquals("one", entries[0].wordStr)
-    }
+    fun testSimpleQuery() =
+        runBlocking {
+            val entries = mCtrl.queryEntries("one")
+            assertEquals(1, entries.size)
+            assertEquals("one", entries[0].wordStr)
+        }
 
     @Test
-    fun testFuzzyQuery() = runBlocking {
-        val entries = mCtrl.queryEntries("aaa")
-        assertEquals(6, entries.size)
-        // "aaa" should be the first one
-        assertEquals("aaa", entries[0].wordStr)
-    }
+    fun testFuzzyQuery() =
+        runBlocking {
+            val entries = mCtrl.queryEntries("aaa")
+            assertEquals(6, entries.size)
+            // "aaa" should be the first one
+            assertEquals("aaa", entries[0].wordStr)
+        }
 
     @Test
-    fun testFuzzyQuery2() = runBlocking {
-        val entries = mCtrl.queryEntries("test")
-        assertEquals(4, entries.size)
-        // "test" should be the first one
-        assertEquals("test", entries[0].wordStr)
-    }
+    fun testFuzzyQuery2() =
+        runBlocking {
+            val entries = mCtrl.queryEntries("test")
+            assertEquals(4, entries.size)
+            // "test" should be the first one
+            assertEquals("test", entries[0].wordStr)
+        }
 
     private class FakeStore(
         var booksList: MutableList<Book>,
-        var entriesList: MutableList<Entry>
+        var entriesList: MutableList<Entry>,
     ) : Store {
-
         init {
             initBooks(booksList)
             initEntries(entriesList, booksList)
@@ -82,7 +82,7 @@ class ControllerTest {
         }
 
         override fun getBook(name: String): Book {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun getBooks(): List<Book> {
@@ -90,7 +90,7 @@ class ControllerTest {
         }
 
         override fun removeBook(bookName: String): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun addEntries(entries: List<Entry>): Boolean {
@@ -105,8 +105,11 @@ class ControllerTest {
             return values
         }
 
-        override fun queryEntries(keyWord: String, bookName: String): MutableList<Entry> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        override fun queryEntries(
+            keyWord: String,
+            bookName: String,
+        ): MutableList<Entry> {
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun getEntries(keyWord: String): MutableList<Entry> {
@@ -118,32 +121,32 @@ class ControllerTest {
         }
 
         override fun getRecords(): MutableList<Record> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun upsertRecord(record: Record): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun removeRecords(keyWord: String): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun getCards(): MutableList<Card> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun upsertCard(card: Card): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         override fun removeCards(keyWord: String): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
         }
 
         private fun initEntries(
             list: MutableList<Entry>,
-            books: MutableList<Book>
+            books: MutableList<Book>,
         ) {
             // alphabet
             Entry("foo prefix_aaa", "content", books[0].bookName).let { list.add(it) }

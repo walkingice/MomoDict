@@ -12,9 +12,11 @@ import java.io.IOException
 import java.io.InputStream
 
 class TarExtractor : Extractor {
-
     @Throws(Exception::class)
-    override fun extract(outputDir: File, inputStream: InputStream): FileSet {
+    override fun extract(
+        outputDir: File,
+        inputStream: InputStream,
+    ): FileSet {
         val archive = FileSet()
         archive.setCleanCallback {
             try {
@@ -38,11 +40,12 @@ class TarExtractor : Extractor {
     }
 
     @Throws(Exception::class)
-    private fun onEntryFound(parent: File,
-                             iStream: InputStream,
-                             entry: TarArchiveEntry,
-                             archive: FileSet) {
-
+    private fun onEntryFound(
+        parent: File,
+        iStream: InputStream,
+        entry: TarArchiveEntry,
+        archive: FileSet,
+    ) {
         val fileName = entry.name
         if (entry.isDirectory) {
             val dir = File(parent, fileName)

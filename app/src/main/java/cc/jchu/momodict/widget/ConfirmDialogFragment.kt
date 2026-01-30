@@ -7,7 +7,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 
 class ConfirmDialogFragment : DialogFragment() {
-
     private var mPosListener = sEmptyClickCallback
     private var mNegListener = sEmptyClickCallback
 
@@ -15,10 +14,10 @@ class ConfirmDialogFragment : DialogFragment() {
         val title = arguments.getInt(sTitle)
 
         return AlertDialog.Builder(activity)
-                .setTitle(title)
-                .setPositiveButton(android.R.string.ok, mPosListener)
-                .setNegativeButton(android.R.string.cancel, mNegListener)
-                .create()
+            .setTitle(title)
+            .setPositiveButton(android.R.string.ok, mPosListener)
+            .setNegativeButton(android.R.string.cancel, mNegListener)
+            .create()
     }
 
     fun setPositiveCallback(listener: DialogInterface.OnClickListener) {
@@ -30,7 +29,6 @@ class ConfirmDialogFragment : DialogFragment() {
     }
 
     companion object {
-
         private val sTitle = "title"
 
         fun newInstance(posListener: DialogInterface.OnClickListener): ConfirmDialogFragment {
@@ -41,8 +39,9 @@ class ConfirmDialogFragment : DialogFragment() {
             return fragment
         }
 
-        private val sEmptyClickCallback: DialogInterface.OnClickListener = DialogInterface.OnClickListener { dialogInterface, i ->
-            // do nothing
-        }
+        private val sEmptyClickCallback: DialogInterface.OnClickListener =
+            DialogInterface.OnClickListener { dialogInterface, i ->
+                // do nothing
+            }
     }
 }

@@ -18,6 +18,7 @@ interface InputContract {
 
     interface Presenter {
         fun changeText(text: String)
+
         fun onResume()
     }
 }

@@ -9,7 +9,6 @@ import java.util.HashMap
  * A structure for extracted files path.
  */
 class FileSet {
-
     private val mPaths = HashMap<Type, String>()
     private var mCleanCallback: (() -> Unit)? = null
 
@@ -23,14 +22,17 @@ class FileSet {
     enum class Type {
         IFO,
         IDX,
-        DICT
+        DICT,
     }
 
     fun has(type: Type): Boolean {
         return mPaths.containsKey(type)
     }
 
-    operator fun set(type: Type, path: String) {
+    operator fun set(
+        type: Type,
+        path: String,
+    ) {
         mPaths[type] = path
     }
 

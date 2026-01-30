@@ -10,15 +10,17 @@ import cc.jchu.momodict.model.Record
 import cc.jchu.momodict.model.Store
 
 @Database(
-        entities = arrayOf(
-                Book::class,
-                Entry::class,
-                Card::class,
-                Record::class),
-        version = 1)
+    entities =
+        arrayOf(
+            Book::class,
+            Entry::class,
+            Card::class,
+            Record::class,
+        ),
+    version = 1,
+)
 @TypeConverters(TypeConverter::class)
 abstract class RoomStore : Store, RoomDatabase() {
-
     private val bookDao = getBookDao()
     private val entryDao = getEntryDao()
     private val recordDao = getRecordDao()
@@ -30,7 +32,7 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     override fun getBook(name: String): Book {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getBooks(): MutableList<Book> {
@@ -53,7 +55,10 @@ abstract class RoomStore : Store, RoomDatabase() {
         return entryDao.queryEntries(keyWord).toMutableList()
     }
 
-    override fun queryEntries(keyWord: String, bookName: String): MutableList<Entry> {
+    override fun queryEntries(
+        keyWord: String,
+        bookName: String,
+    ): MutableList<Entry> {
         return entryDao.queryEntries(keyWord, bookName!!).toMutableList()
     }
 
@@ -63,8 +68,8 @@ abstract class RoomStore : Store, RoomDatabase() {
 
     override fun upsertRecord(record: Record): Boolean {
         return record
-                .apply { recordDao.addRecord(this) }
-                .run { recordDao.updateRecord(this) != -1 }
+            .apply { recordDao.addRecord(this) }
+            .run { recordDao.updateRecord(this) != -1 }
     }
 
     override fun removeRecords(keyWord: String): Boolean {
@@ -77,8 +82,8 @@ abstract class RoomStore : Store, RoomDatabase() {
 
     override fun upsertCard(card: Card): Boolean {
         return card
-                .apply { cardDao.addCard(this) }
-                .run { cardDao.updateCard(this) != -1 }
+            .apply { cardDao.addCard(this) }
+            .run { cardDao.updateCard(this) != -1 }
     }
 
     override fun removeCards(keyWord: String): Boolean {
@@ -90,8 +95,11 @@ abstract class RoomStore : Store, RoomDatabase() {
     }
 
     abstract fun getBookDao(): BookDao
+
     abstract fun getEntryDao(): EntryDao
+
     abstract fun getRecordDao(): RecordDao
+
     abstract fun getCardDao(): CardDao
 
     companion object {

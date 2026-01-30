@@ -17,7 +17,10 @@ fun readIfo(inputStream: InputStream): Info {
     return info
 }
 
-private fun parseLine(line: String, info: Info) {
+private fun parseLine(
+    line: String,
+    info: Info,
+) {
     val pattern = Pattern.compile("(.+)=(.*)")
     val m = pattern.matcher(line)
     if (m.find()) {

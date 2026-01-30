@@ -12,20 +12,19 @@ import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import cc.jchu.momodict.Controller
 import cc.jchu.momodict.R
 import cc.jchu.momodict.WordActivity
 import cc.jchu.momodict.widget.CardRowPresenter
 import cc.jchu.momodict.widget.SelectorAdapter
 import cc.jchu.momodict.widget.ViewPagerFocusable
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * A fragment to display a list of texts as user's memo.
  */
 class MemoFragment : Fragment(), ViewPagerFocusable {
-
     private lateinit var mCtrl: Controller
     private lateinit var mAdapter: SelectorAdapter
 
@@ -37,9 +36,11 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
 
         val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
         map.put(
-            SelectorAdapter.Type.A, CardRowPresenter(
+            SelectorAdapter.Type.A,
+            CardRowPresenter(
                 { view -> view.tag?.let { onRowClicked(view.tag as String) } },
-                { view -> view.tag?.let { onRowLongClicked(view.tag as String) } })
+                { view -> view.tag?.let { onRowLongClicked(view.tag as String) } },
+            ),
         )
         mAdapter = SelectorAdapter(map)
     }
@@ -47,7 +48,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedState: Bundle?
+        savedState: Bundle?,
     ): View? {
         coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
         val fragmentView = inflater.inflate(R.layout.fragment_memo, container, false)
@@ -68,8 +69,9 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     override fun onViewPagerFocused() {
         val view = activity?.currentFocus
         if (view != null) {
-            val imm = requireActivity()
-                .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                requireActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
         onUpdateList()
@@ -78,10 +80,11 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
     private fun initViews(fv: View) {
         val list = fv.findViewById(R.id.list) as RecyclerView
         val mgr = list.layoutManager as LinearLayoutManager
-        val decoration = DividerItemDecoration(
-            list.context,
-            mgr.orientation
-        )
+        val decoration =
+            DividerItemDecoration(
+                list.context,
+                mgr.orientation,
+            )
         list.addItemDecoration(decoration)
         list.adapter = mAdapter
     }

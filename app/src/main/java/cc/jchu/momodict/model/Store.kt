@@ -1,7 +1,6 @@
 package cc.jchu.momodict.model
 
 interface Store {
-
     fun addBook(book: Book): Boolean
 
     fun getBook(name: String): Book
@@ -14,7 +13,10 @@ interface Store {
 
     fun queryEntries(keyWord: String): MutableList<Entry>
 
-    fun queryEntries(keyWord: String, bookName: String): MutableList<Entry>
+    fun queryEntries(
+        keyWord: String,
+        bookName: String,
+    ): MutableList<Entry>
 
     fun getEntries(keyWord: String): MutableList<Entry>
 

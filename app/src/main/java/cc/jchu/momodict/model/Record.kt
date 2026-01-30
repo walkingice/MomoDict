@@ -6,8 +6,8 @@ import java.util.Date
 
 @Entity(tableName = "records")
 data class Record(
-        @PrimaryKey
-        var wordStr: String
+    @PrimaryKey
+    var wordStr: String,
 ) {
     var count: Int = 0
     var time: Date? = null

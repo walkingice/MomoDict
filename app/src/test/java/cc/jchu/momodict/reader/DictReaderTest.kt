@@ -1,20 +1,16 @@
 package cc.jchu.momodict.reader
 
+import cc.jchu.momodict.archive.Idx
+import cc.jchu.momodict.archive.IdxEntry
 import junit.framework.Assert.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
-
-import cc.jchu.momodict.archive.Idx
-import cc.jchu.momodict.archive.IdxEntry
-
 
 @RunWith(RobolectricTestRunner::class)
 class DictReaderTest {
-
     val idx = Idx()
 
     @Before
@@ -35,25 +31,25 @@ class DictReaderTest {
     @Test
     fun testParseAlphabet() {
         this.javaClass
-                .classLoader
-                .getResourceAsStream("test_dict/test_alphabet/test_alphabet.dict.dz")
-                .let { wrapInputStream(true, it) }
-                .use { stream -> parseDict(idx.entries, stream) }
-                .also {
-                    assertEquals(6, it.size)
-                    assertEquals("a", it[0].entry!!.wordStr)
-                    assertEquals("char a", it[0].data)
-                    assertEquals("b", it[1].entry!!.wordStr)
-                    assertEquals("char b", it[1].data)
-                    assertEquals("c", it[2].entry!!.wordStr)
-                    assertEquals("char c", it[2].data)
+            .classLoader
+            .getResourceAsStream("test_dict/test_alphabet/test_alphabet.dict.dz")
+            .let { wrapInputStream(true, it) }
+            .use { stream -> parseDict(idx.entries, stream) }
+            .also {
+                assertEquals(6, it.size)
+                assertEquals("a", it[0].entry!!.wordStr)
+                assertEquals("char a", it[0].data)
+                assertEquals("b", it[1].entry!!.wordStr)
+                assertEquals("char b", it[1].data)
+                assertEquals("c", it[2].entry!!.wordStr)
+                assertEquals("char c", it[2].data)
 
-                    assertEquals("d", it[3].entry!!.wordStr)
-                    assertEquals("char d\nline 2", it[3].data)
-                    assertEquals("e", it[4].entry!!.wordStr)
-                    assertEquals("char e\nline 2", it[4].data)
-                    assertEquals("f", it[5].entry!!.wordStr)
-                    assertEquals("char f\nline 2", it[5].data)
-                }
+                assertEquals("d", it[3].entry!!.wordStr)
+                assertEquals("char d\nline 2", it[3].data)
+                assertEquals("e", it[4].entry!!.wordStr)
+                assertEquals("char e\nline 2", it[4].data)
+                assertEquals("f", it[5].entry!!.wordStr)
+                assertEquals("char f\nline 2", it[5].data)
+            }
     }
 }

@@ -10,14 +10,14 @@ import android.widget.Switch
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.coroutineScope
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import cc.jchu.momodict.Controller
 import cc.jchu.momodict.R
 import cc.jchu.momodict.model.Card
 import cc.jchu.momodict.model.Record
 import cc.jchu.momodict.widget.SelectorAdapter
 import cc.jchu.momodict.widget.WordCardPresenter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.Date
 
 /**
@@ -43,7 +43,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedState: Bundle?
+        savedState: Bundle?,
     ): View? {
         mCtrl = Controller(requireActivity())
         coroutineScope = viewLifecycleOwner.lifecycle.coroutineScope
@@ -82,7 +82,10 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         }
     }
 
-    override fun onCheckedChanged(compoundButton: CompoundButton, checked: Boolean) {
+    override fun onCheckedChanged(
+        compoundButton: CompoundButton,
+        checked: Boolean,
+    ) {
         coroutineScope?.launch {
             if (checked) {
                 mCard.time = Date()
@@ -105,7 +108,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         (activity as? FragmentListener)?.onNotified(
             this,
             FragmentListener.TYPE.UPDATE_TITLE,
-            target
+            target,
         )
 
         mAdapter.clear()
@@ -123,24 +126,25 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
         coroutineScope?.launch {
             val records = mCtrl.getRecords()
             val list = records.filter { record -> TextUtils.equals(target, record.wordStr) }
-            val record = (if (list.isEmpty()) Record(target) else list[0]).also { r ->
-                r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr
-                r.count += 1
-                r.time = Date()
-            }
+            val record =
+                (if (list.isEmpty()) Record(target) else list[0]).also { r ->
+                    r.wordStr = if (r.wordStr.isEmpty()) target else r.wordStr
+                    r.count += 1
+                    r.time = Date()
+                }
             mCtrl.setRecord(record)
         }
     }
 
     companion object {
-
         private const val ARG_KEYWORD = "key_word"
 
         fun newInstance(keyWord: String): WordFragment {
             val fragment = WordFragment()
-            fragment.arguments = Bundle().apply {
-                putString(ARG_KEYWORD, keyWord)
-            }
+            fragment.arguments =
+                Bundle().apply {
+                    putString(ARG_KEYWORD, keyWord)
+                }
             return fragment
         }
     }

@@ -26,7 +26,10 @@ fun parseIdx(inputStream: InputStream): Idx {
     return idx
 }
 
-private fun analysis(data: ByteArray, idx: Idx): Int {
+private fun analysis(
+    data: ByteArray,
+    idx: Idx,
+): Int {
     // an index to indicate the last-parsed-byte + 1
     var idxLeft = 0
 

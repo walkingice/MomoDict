@@ -17,7 +17,10 @@ interface EntryDao {
 
     // TODO: can the limitation be configurable?
     @Query("SELECT * FROM entries WHERE wordStr LIKE '%' || :keyword || '%' AND source is :bookName LIMIT 0, 1000")
-    fun queryEntries(keyword: String, bookName: String): List<Entry>
+    fun queryEntries(
+        keyword: String,
+        bookName: String,
+    ): List<Entry>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun addEntries(entries: List<Entry>)

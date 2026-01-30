@@ -1,7 +1,7 @@
 package cc.jchu.momodict.reader
 
-import androidx.room.Room
 import android.content.Context
+import androidx.room.Room
 import cc.jchu.momodict.archive.FileSet
 import cc.jchu.momodict.db.room.RoomStore
 import cc.jchu.momodict.model.Book
@@ -22,8 +22,7 @@ class Reader
  * here.
  * @param mFilePath A string as path of a compressed file which will be parsed.
  */
-    (private val mCacheDir: String, private val mFilePath: String) {
-
+(private val mCacheDir: String, private val mFilePath: String) {
     /**
      * To read file and save into database.
      *
@@ -38,20 +37,21 @@ class Reader
             val fis = FileInputStream(File(mFilePath))
             archive = readBzip2File(outputDir, fis)
             // FIXME: should avoid main thread
-            val store = Room.databaseBuilder(
-                ctx.applicationContext,
-                RoomStore::class.java,
-                RoomStore.DB_NAME
-            )
-                .allowMainThreadQueries()
-                .build()
+            val store =
+                Room.databaseBuilder(
+                    ctx.applicationContext,
+                    RoomStore::class.java,
+                    RoomStore.DB_NAME,
+                )
+                    .allowMainThreadQueries()
+                    .build()
             val ifoFile = File(archive!![FileSet.Type.IFO]!!)
             val idxFile = File(archive[FileSet.Type.IDX]!!)
 
             // To read ifo file
-            val `is` = FileInputStream(ifoFile)
-            val info = readIfo(`is`)
-            `is`.close()
+            val stream = FileInputStream(ifoFile)
+            val info = readIfo(stream)
+            stream.close()
             if (!isSanity(info)) {
                 throw RuntimeException("Insanity .ifo file")
             }
