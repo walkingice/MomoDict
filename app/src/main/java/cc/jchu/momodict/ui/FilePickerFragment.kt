@@ -41,7 +41,7 @@ class FilePickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
+        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter>()
         map[SelectorAdapter.Type.A] = FileRowPresenter(requireActivity()) { v -> onFileClicked(v) }
         mAdapter = SelectorAdapter(map)
         binding = FragmentFilePickerBinding.inflate(inflater)

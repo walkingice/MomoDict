@@ -62,7 +62,7 @@ class DictListFragment : Fragment() {
                 )
             it.addItemDecoration(decoration)
 
-            val map = HashMap<Type, SelectorAdapter.Presenter<*>>()
+            val map = HashMap<Type, SelectorAdapter.Presenter>()
             val listener = View.OnClickListener { v -> onRemoveBookClicked(v) }
             map[Type.A] = BookRowPresenter(listener)
 

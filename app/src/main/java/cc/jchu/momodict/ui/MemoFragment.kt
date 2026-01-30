@@ -34,7 +34,7 @@ class MemoFragment : Fragment(), ViewPagerFocusable {
         super.onCreate(savedState)
         mCtrl = Controller(requireActivity())
 
-        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
+        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter>()
         map.put(
             SelectorAdapter.Type.A,
             CardRowPresenter(

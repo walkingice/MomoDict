@@ -42,7 +42,7 @@ class InputFragment :
 
         // create adapter for RecyclerView. Adapter handles two kinds of row, one for "dictionary"
         // and another for "word".
-        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
+        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter>()
         map.put(
             SelectorAdapter.Type.A,
             WordRowPresenter { view -> onRowClicked(view.tag as String) },

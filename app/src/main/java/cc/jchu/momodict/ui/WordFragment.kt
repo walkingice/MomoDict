@@ -35,7 +35,7 @@ class WordFragment : Fragment(), CompoundButton.OnCheckedChangeListener {
 
     override fun onCreate(savedState: Bundle?) {
         super.onCreate(savedState)
-        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter<*>>()
+        val map = HashMap<SelectorAdapter.Type, SelectorAdapter.Presenter>()
         map[SelectorAdapter.Type.A] = WordCardPresenter()
         mAdapter = SelectorAdapter(map)
     }

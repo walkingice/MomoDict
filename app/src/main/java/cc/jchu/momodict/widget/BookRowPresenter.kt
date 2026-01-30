@@ -9,23 +9,24 @@ import androidx.recyclerview.widget.RecyclerView
 import cc.jchu.momodict.R
 import cc.jchu.momodict.model.Book
 
-class BookRowPresenter(listener: View.OnClickListener) : SelectorAdapter.Presenter<Book> {
+class BookRowPresenter(listener: View.OnClickListener) : SelectorAdapter.Presenter {
     val rmListener = listener
 
-    override fun onCreateViewHolder(parent: ViewGroup): androidx.recyclerview.widget.RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val group = inflater.inflate(R.layout.list_item_expandable, parent, false) as ViewGroup
         val bookDetails = inflater.inflate(R.layout.book_detail, group, false) as ViewGroup
         val holder = InnerViewHolder(group, bookDetails)
-        group.setOnClickListener({ v -> toggleExpand(holder) })
+        group.setOnClickListener { v -> toggleExpand(holder) }
         return holder
     }
 
     override fun onBindViewHolder(
-        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
-        item: Book,
+        viewHolder: RecyclerView.ViewHolder,
+        item: Any?,
     ) {
         val holder = viewHolder as InnerViewHolder
+        val item = item as Book
         holder.titleText.text = item.bookName
         holder.arrowIcon.setImageLevel(IMG_LEVEL_UP)
         holder.description.text =
@@ -35,13 +36,13 @@ class BookRowPresenter(listener: View.OnClickListener) : SelectorAdapter.Present
                 |Date: ${item.date}
                 |Description: ${item.description}
             """.trimMargin()
-        holder.rmBtn.setOnClickListener({ v ->
+        holder.rmBtn.setOnClickListener { v ->
             v.tag = item
             rmListener.onClick(v)
-        })
+        }
     }
 
-    override fun onUnbindViewHolder(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {}
+    override fun onUnbindViewHolder(viewHolder: RecyclerView.ViewHolder) {}
 
     private fun toggleExpand(holder: InnerViewHolder) {
         val drawable = holder.arrowIcon.drawable
@@ -49,7 +50,8 @@ class BookRowPresenter(listener: View.OnClickListener) : SelectorAdapter.Present
         holder.details.visibility = if (drawable.level == IMG_LEVEL_UP) View.GONE else View.VISIBLE
     }
 
-    internal inner class InnerViewHolder(view: View, bookDetails: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    internal inner class InnerViewHolder(view: View, bookDetails: View) :
+        RecyclerView.ViewHolder(view) {
         val titleText: TextView = view.findViewById(R.id.text_1) as TextView
         val arrowIcon: ImageView = view.findViewById(R.id.img_1) as ImageView
         val details: ViewGroup = view.findViewById(R.id.expand_details) as ViewGroup
