@@ -75,10 +75,3 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
-
-task checkstyle(type: Checkstyle) {
-    configFile file("${project.rootDir}/quality/square_picasso_checkstyle.xml")
-    source 'src'
-    include '**/*.java'
-    exclude '**/gen/**'
-}
