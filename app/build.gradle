@@ -1,8 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: "kotlin-android"
-apply plugin: "kotlin-parcelize"
-apply plugin: 'kotlin-kapt'
-
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'org.jlleitschuh.gradle.ktlint' version '12.1.2'
+}
 
 kotlin {
     jvmToolchain(17)
@@ -10,10 +12,6 @@ kotlin {
 
 repositories {
     mavenCentral()
-}
-
-configurations {
-    ktlint
 }
 
 android {
@@ -69,7 +67,6 @@ dependencies {
     testImplementation libs.robolectric
     testImplementation libs.mockito.core
     testImplementation libs.androidx.room.testing
-    ktlint libs.ktlint
 
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.2-alpha01', {
         exclude group: 'com.android.support', module: 'support-annotations'
