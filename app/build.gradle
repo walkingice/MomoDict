@@ -42,13 +42,6 @@ android {
     buildFeatures {
         viewBinding = true
     }
-
-    // ./gradlew --stacktrace :app:assembleDebug found issue:
-    //     "More than one file was found with OS independent path 'META-INF/library-core_release.kotlin_module'"
-    // maybe 'realm' should remove this file?
-    packagingOptions {
-        exclude 'META-INF/library-core_release.kotlin_module'
-    }
 }
 
 dependencies {
