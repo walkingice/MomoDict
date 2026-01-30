@@ -2,10 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-parcelize"
 apply plugin: 'kotlin-kapt'
-apply plugin: 'checkstyle'
+
 
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
 repositories {
@@ -20,8 +20,8 @@ android {
     namespace "cc.jchu.momodict"
     compileSdk 35
     compileOptions {
-        sourceCompatibility = "21"
-        targetCompatibility = "21"
+        sourceCompatibility = "17"
+        targetCompatibility = "17"
     }
 
     defaultConfig {
@@ -83,19 +83,9 @@ dependencies {
     })
 }
 
-task ktlint(type: JavaExec) {
-    main = "com.github.shyiko.ktlint.Main"
-    classpath = configurations.ktlint
-    args "src/**/*.kt"
-    // prepend "--reporter=plain?group_by_file" arg to change the reporter
-    // see https://github.com/shyiko/ktlint
-}
-
 task checkstyle(type: Checkstyle) {
     configFile file("${project.rootDir}/quality/square_picasso_checkstyle.xml")
     source 'src'
     include '**/*.java'
     exclude '**/gen/**'
-
-    classpath = files()
 }

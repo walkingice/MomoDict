@@ -37,8 +37,8 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinCoroutines" }
 
 aboutlibraries = { group = "com.mikepenz", name = "aboutlibraries", version.ref = "aboutLibraries" }
-commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.13" }
-commons-io = { group = "commons-io", name = "commons-io", version = "2.4" }
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version = "1.27.1" }
+commons-io = { group = "commons-io", name = "commons-io", version = "2.18.0" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
