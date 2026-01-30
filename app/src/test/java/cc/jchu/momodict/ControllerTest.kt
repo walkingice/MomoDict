@@ -15,7 +15,6 @@ import cc.jchu.momodict.model.Entry
 import cc.jchu.momodict.model.Record
 import cc.jchu.momodict.model.Store
 
-@Config(constants = BuildConfig::class)
 @RunWith(RobolectricTestRunner::class)
 class ControllerTest {
 

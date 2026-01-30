@@ -9,9 +9,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import cc.jchu.momodict.BuildConfig
 
-@Config(constants = BuildConfig::class)
+
 @RunWith(RobolectricTestRunner::class)
 class InfoReaderTest {
 

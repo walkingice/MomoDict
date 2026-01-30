@@ -7,11 +7,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import cc.jchu.momodict.BuildConfig
+
 import cc.jchu.momodict.archive.Idx
 import cc.jchu.momodict.archive.IdxEntry
 
-@Config(constants = BuildConfig::class)
+
 @RunWith(RobolectricTestRunner::class)
 class DictReaderTest {
 
